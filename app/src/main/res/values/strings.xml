@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">Projet_mobile</string>
+
+    <!--    inscription-->
+    <string name="textInsTitre">INSCRIPTION</string>
+    <string name="textInsPrenom">Prénom :</string>
+    <string name="editInsPrenom">Prénom</string>
+    <string name="textInsNom">Nom :</string>
+    <string name="editInsNom">Nom</string>
+    <string name="textInsNationalite">Nationalite :</string>
+    <string name="editInsNationalite">Nationalite</string>
+    <string name="textInsDateNais">Date Naissance :</string>
+    <string name="editInsDateNais">Date Naissance</string>
+    <string name="textInsEmail">Email :</string>
+    <string name="editInsEmail">Email</string>
+    <string name="textInsPassword">Password :</string>
+    <string name="editInsPassword">Password</string>
+    <string name="textInsTelephone">Téléphone :</string>
+    <string name="editInsTelephone">Téléphone</string>
+    <string name="textInsVille">Ville :</string>
+    <string name="editInsVille">Ville</string>
+    <string name="textInsCV">CV :</string>
+    <string name="editInsCV">CV</string>
+    <string name="buttonInsValider">Valider</string>
+    <string name="textInsConfirmation">Confirmez-vous les champs saisi ?</string>
+    <string name="textInsOui">Oui</string>
+    <string name="textInsNon">Non</string>
+    <string name="textInsEnvoie">Information envoye</string>
+    <string name="textInsCouleurEdit">Changer la couleur des champs d\'edition en sarcelle</string>
+    <string name="textInsCouleurFond">Changer la couleur de fond en cyan clair</string>
+    <string name="textInsAffichage">Affichage des données</string>
+
+
+
+    <!--    authentifiction-->
+
 </resources>
