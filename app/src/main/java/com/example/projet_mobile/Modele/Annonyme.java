@@ -9,7 +9,6 @@ public class Annonyme {
 
     public Annonyme(boolean acc, String addr){
         accepte = acc;
-        System.out.println("============="+accepte);
         if(acc) {
             String adress[] = sep(addr);
             lieu = adress[0] + " " + adress[1] + " " + adress[2] + " " + adress[3] + " " + adress[4];

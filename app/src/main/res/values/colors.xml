@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bleu_head">#1660AF</color>
     <color name="cyan_clair">#A1D4D4</color>
+    <color name="col">#DBA2D5</color>
+    <color name="col2">#7E1D8E</color>
+    <color name="gris">#919191</color>
+    <color name="back">#F5F5F5</color>
+    <color name="rouge">#FF0000</color>
 </resources>
