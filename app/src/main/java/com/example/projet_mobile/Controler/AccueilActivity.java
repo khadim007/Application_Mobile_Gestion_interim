@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -39,6 +40,7 @@ public class AccueilActivity extends AppCompatActivity {
     private boolean accepte;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    SharedPreferences sharedPreferences;
 
     private Accueil accueil;
     private ListView listView;
@@ -61,21 +63,22 @@ public class AccueilActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
+        sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
 
-        localisation();
+        localisation(this);
         getID();
         click();
     }
 
     // ----------------------------------------------------------- Gerer la localisation avec les permissions
-    private void localisation(){
+    private void localisation(Context c){
         accepte = false;
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                annonyme = new Annonyme(accepte, getAddress(latitude, longitude));
+                annonyme = new Annonyme(accepte, getAddress(latitude, longitude), c);
             }
 
             @Override
@@ -186,7 +189,19 @@ public class AccueilActivity extends AppCompatActivity {
     }
 
     public void onImageCompteClick(View view) {
-        Intent intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
-        startActivity(intent);
+        int id = sharedPreferences.getInt("id", 0);
+        String role = sharedPreferences.getString("role", "");
+        if(id == 0){
+            Intent intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
+            startActivity(intent);
+        }else{
+            if("employeur".equals(role)){
+                Intent intent = new Intent( AccueilActivity.this, EspaceEmployeurActivity.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent( AccueilActivity.this, EspaceCandidatInscritActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 }

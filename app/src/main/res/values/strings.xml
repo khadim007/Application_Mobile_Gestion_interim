@@ -1,13 +1,25 @@
 <resources>
     <!--    general    -->
     <string name="app_name">Projet_mobile</string>
-    <string name="url">http://172.25.0.181:3000/</string>
+    <string name="url">http://10.188.162.31:3000/</string>
+
+    <string name="textInscription">INSCRIPTION</string>
+    <string name="textAuthentification">AUTHENTIFICATION</string>
+    <string name="textEmail">Email :</string>
+    <string name="editEmail">Email</string>
+    <string name="textMotDePasse">Mot de passe(*) :</string>
+    <string name="editMotDePasse">Mot de passe</string>
+    <string name="editMotDePasse2">Confirmer le mot de passe</string>
+    <string name="textTelephone">Téléphone :</string>
+    <string name="editTelephone">Téléphone</string>
 
     <!--    button    -->
     <string name="buttonRecherche">Rechercher</string>
     <string name="buttonValider">Valider</string>
     <string name="buttonConnecter">Connecter</string>
     <string name="buttonCreer">creer un compte</string>
+    <string name="buttonModifier">Modifier</string>
+    <string name="buttonRenvoyer">Renvoyer</string>
 
 
     <!--    accueil-->
@@ -21,7 +33,6 @@
 
 
     <!--    inscription-->
-    <string name="textInsTitre">INSCRIPTION</string>
     <string name="textInsPrenom">Prénom(*) :</string>
     <string name="editInsPrenom">Prénom</string>
     <string name="textInsNom">Nom(*) :</string>
@@ -30,12 +41,6 @@
     <string name="editInsNationalite">Nationalite</string>
     <string name="textInsDateNais">Date Naissance :</string>
     <string name="editInsDateNais">Date Naissance</string>
-    <string name="textInsEmail">Email :</string>
-    <string name="editInsEmail">Email</string>
-    <string name="textInsPassword">Password(*) :</string>
-    <string name="editInsPassword">Password</string>
-    <string name="textInsTelephone">Téléphone :</string>
-    <string name="editInsTelephone">Téléphone</string>
     <string name="textInsVille">Ville :</string>
     <string name="editInsVille">Ville</string>
     <string name="textInsCV">CV : </string>
@@ -48,17 +53,41 @@
     <string name="textInsCouleurFond">Changer la couleur de fond en cyan clair</string>
     <string name="textInsAffichage">Affichage des données</string>
 
+    <!--    Ins Validation-->
+    <string name="textInsValTitre">VALIDATION</string>
+    <string name="editInsValCode">Code</string>
 
     <!--    authentifiction-->
-    <string name="textAuthTitre">AUTHENTIFICATION</string>
-    <string name="textAuthIdentifiant">Identifiant :</string>
-    <string name="editAuthIdentifiant">Identifiant</string>
-    <string name="textAuthMotDePasse">Mot de passe :</string>
-    <string name="editAuthMotDePasse">Mot de passe</string>
+    <string name="textAuthRole">Se connecter en tant que : </string>
+    <string-array name="spinnerAuthRole">
+        <item>candidat</item>
+        <item>employeur</item>
+    </string-array>
+
+    <string name="textAuthIdentifiant">Identifiant(*) :</string>
+    <string name="editAuthIdentifiant">Adresse mail ou telephone</string>
     <string name="textAuthKao">KAO INTERIM</string>
 
-
-
-
+    <!--    inscription Employer-->
+    <string name="textIENomEntr">Nom Entreprise(*) :</string>
+    <string name="editIENomEntr">Nom de l\'entreprise</string>
+    <string name="textIENomSer">Nom Serv/dép (*) :</string>
+    <string name="editIESer">Nom d\'un service ou d\'un département</string>
+    <string name="textIENomSousSer">Nom Sous Serv/dép :</string>
+    <string name="editIESousSer">Nom d\'un sous service ou d\'un sous département</string>
+    <string name="textIENumeroNationale">Numéro nationale (*) :</string>
+    <string name="editIENumeroNationale">Numéro nationale</string>
+    <string name="textIENomC1">Nom contact1 :</string>
+    <string name="editIENomC1">Nom personne contact 1</string>
+    <string name="textIENomC2">Nom contact2 :</string>
+    <string name="editIENomC2">Nom personne contact 2</string>
+    <string name="textIEEmail1">Email1 (*) :</string>
+    <string name="editIEEmail1">Adresse mail 1</string>
+    <string name="textIEEmail2">Email2 :</string>
+    <string name="editIEEmail2">Adresse mail 2</string>
+    <string name="textIEAdresse">Adresse :</string>
+    <string name="editIEAdresse">Adresse</string>
+    <string name="textIELiens">Liens : </string>
+    <string name="editIELiens">Liens publics de l’employeur</string>
 
 </resources>

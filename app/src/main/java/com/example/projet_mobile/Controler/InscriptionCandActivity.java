@@ -24,15 +24,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class InscriptionActivity extends AppCompatActivity {
+public class InscriptionCandActivity extends AppCompatActivity {
 
     private static final int FILE_PICKER_REQUEST_CODE = 1;
-
     private CandidatInscrit candidat;
 
     private CheckBox checkAccepte;
     private boolean accepte;
     private Button bouttonValider;
+    private Button bouttonDeja;
 
     private String prenom;
     private String nom;
@@ -40,7 +40,8 @@ public class InscriptionActivity extends AppCompatActivity {
     private String dateNais;
     private String telephone;
     private String email;
-    private String password;
+    private String password1;
+    private String password2;
     private String ville;
     private File cv;
 
@@ -50,7 +51,8 @@ public class InscriptionActivity extends AppCompatActivity {
     private EditText editDateNais;
     private EditText editTelephone;
     private EditText editEmail;
-    private EditText editPassword;
+    private EditText editPassword1;
+    private EditText editPassword2;
     private EditText editVille;
     private Button editCV;
     private TextView textCV;
@@ -60,7 +62,7 @@ public class InscriptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inscription);
+        setContentView(R.layout.activity_inscription_cand);
 
         getID();
         click();
@@ -75,12 +77,14 @@ public class InscriptionActivity extends AppCompatActivity {
         editDateNais = (EditText) findViewById(R.id.editDateNais);
         editTelephone = (EditText) findViewById(R.id.editTéléphone);
         editEmail = (EditText) findViewById(R.id.editEmail);
-        editPassword = (EditText) findViewById(R.id.editPassword);
+        editPassword1 = (EditText) findViewById(R.id.editPassword1);
+        editPassword2 = (EditText) findViewById(R.id.editPassword2);
         editVille = (EditText) findViewById(R.id.editVille);
         editCV = (Button) findViewById(R.id.editCV);
         textCV = (TextView) findViewById(R.id.textCV);
 
         bouttonValider = (Button) findViewById(R.id.buttonValider);
+        bouttonDeja = (Button) findViewById(R.id.buttonConnecter);
         accepte = false;
     }
 
@@ -103,7 +107,8 @@ public class InscriptionActivity extends AppCompatActivity {
                 dateNais = editDateNais.getText().toString();
                 telephone = editTelephone.getText().toString();
                 email = editEmail.getText().toString();
-                password = editPassword.getText().toString();
+                password1 = editPassword1.getText().toString();
+                password2 = editPassword2.getText().toString();
                 ville = editVille.getText().toString();
 
                 if(checkAccepte.isChecked())
@@ -111,10 +116,21 @@ public class InscriptionActivity extends AppCompatActivity {
                 exec();
             }
         });
+        bouttonDeja.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( InscriptionCandActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void exec(){
-        if (prenom.isEmpty() || nom.isEmpty() || password.isEmpty()) {
+        if (!(password1.equals(password2))) {
+            Toast.makeText(this, "Les deux passwords ne sont pas identiques !!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (prenom.isEmpty() || nom.isEmpty() || password1.isEmpty()) {
             Toast.makeText(this, "Tous les champs obligatoire doivent etre remplis !!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -122,10 +138,25 @@ public class InscriptionActivity extends AppCompatActivity {
             Toast.makeText(this, "Il faut renseigne soit l'email, soit le telephne !!", Toast.LENGTH_SHORT).show();
             return;
         }
-        candidat = new CandidatInscrit(prenom, nom, nationalite, dateNais, telephone, email, password, ville, cv, accepte);
-        candidat.ajouter(this);
+        Intent intent = new Intent( InscriptionCandActivity.this, InsValidationActivity.class);
+        intent.putExtra("role", "candidat");
+        intent.putExtra("prenom", prenom);
+        intent.putExtra("nom", nom);
+        intent.putExtra("nationalite", nationalite);
+        intent.putExtra("dateNais", dateNais);
+        intent.putExtra("telephone", telephone);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password1);
+        intent.putExtra("ville", ville);
+        intent.putExtra("cv", cv);
+        intent.putExtra("accepte", accepte);
+        startActivity(intent);
     }
 
+//    public void enregistre(){
+//        candidat.ajouter(this);
+//    }
+// Pour le fichier a choisir
     @SuppressLint("Range")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

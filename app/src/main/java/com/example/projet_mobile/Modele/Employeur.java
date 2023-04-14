@@ -18,45 +18,50 @@ import com.example.projet_mobile.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 
-public class CandidatInscrit {
+public class Employeur {
 
     SharedPreferences sharedPreferences;
-    private static String URL = "candidat_inscrit";
+    private static String URL = "employeur";
     public static String succes = "Authentification reussie !!";
 
     private String identifiant;
     public int id;
     public String affiche;
 
-    private String prenom;
-    private String nom;
-    private String nationalite;
-    private String dateNais;
-    private String telephone;
-    private String email;
+    private String nomEntreprise;
+    private String nomService;
+    private String nomSousService;
+    private int numeroNationale;
+    private String nomContact1;
+    private String nomContact2;
+    private String email1;
+    private String email2;
+    private String telephone1;
+    private String telephone2;
     private String password;
-    private String ville;
-    private File cv;
-    private boolean accepte;
+    private String adresse;
+    private String liens;
 
-    public CandidatInscrit(String identifiant, String password){
+    public Employeur(String identifiant, String password){
         this.identifiant = identifiant;
         this.password = password;
     }
 
-    public CandidatInscrit(String prenom, String nom, String nationalite, String dateNais, String telephone, String email, String password, String ville, File cv, boolean accepte){
-        this.prenom = prenom;
-        this.nom = nom;
-        this.nationalite = nationalite;
-        this.dateNais = dateNais;
-        this.telephone = telephone;
-        this.email = email;
+    public Employeur(String nomEntreprise, String nomService, String nomSousService, int numeroNationale, String nomContact1, String nomContact2, String email1, String email2, String telephone1, String telephone2, String password, String adresse, String liens){
+        this.nomEntreprise = nomEntreprise;
+        this.nomService = nomService;
+        this.nomSousService = nomSousService;
+        this.numeroNationale = numeroNationale;
+        this.nomContact1 = nomContact1;
+        this.nomContact2 = nomContact2;
+        this.email1 = email1;
+        this.email2 = email2;
+        this.telephone1 = telephone1;
+        this.telephone2 = telephone2;
         this.password = password;
-        this.ville = ville;
-        this.cv = cv;
-        this.accepte = accepte;
+        this.adresse = adresse;
+        this.liens = liens;
     }
 
 
@@ -66,16 +71,19 @@ public class CandidatInscrit {
         JSONObject postData = new JSONObject();
         try {
             postData.put("choix", "insert");
-            postData.put("prenom", prenom);
-            postData.put("nom", nom);
-            postData.put("nationalite", nationalite);
-            postData.put("dateNais", dateNais);
-            postData.put("telephone", telephone);
-            postData.put("email", email);
+            postData.put("nomEntreprise", nomEntreprise);
+            postData.put("nomService", nomService);
+            postData.put("nomSousService", nomSousService);
+            postData.put("numeroNationale", numeroNationale);
+            postData.put("nomContact1", nomContact1);
+            postData.put("nomContact2", nomContact2);
+            postData.put("email1", email1);
+            postData.put("email2", email2);
+            postData.put("telephone1", telephone1);
+            postData.put("telephone2", telephone2);
             postData.put("password", password);
-            postData.put("ville", ville);
-            postData.put("cv", cv);
-            postData.put("accepte", accepte);
+            postData.put("adresse", adresse);
+            postData.put("liens", liens);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
             return;
@@ -88,7 +96,7 @@ public class CandidatInscrit {
                     sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt("id", id);
-                    editor.putString("role", "candidat");
+                    editor.putString("role", "employeur");
                     editor.commit();
                     Toast.makeText(context, "Votre compte est cree avec succes !", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
@@ -109,7 +117,7 @@ public class CandidatInscrit {
 
 
     // ----------------------------- select ------------------------------
-    public void verifier(Context context, VolleyCallback callback){
+    public void verifier(Context context, Employeur.VolleyCallback callback){
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {

@@ -43,7 +43,7 @@
                 android:textSize="18sp"
                 tools:ignore="MissingConstraints"
                 tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="211dp" />
+                tools:layout_editor_absoluteY="100dp" />
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/textAuthentification"
+                    android:text="@string/textInsValTitre"
                     android:textColor="@color/col2"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -82,76 +82,11 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/col2" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:orientation="horizontal"
-                    tools:ignore="UselessParent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/textAuthRole"
-                        android:textSize="20sp" />
-
-                    <Spinner
-                        android:id="@+id/editRole"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:entries="@array/spinnerAuthRole"
-                        android:textSize="25sp"
-                        tools:ignore="TouchTargetSizeCheck" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:orientation="horizontal"
-                    tools:ignore="UselessParent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/textAuthIdentifiant"
-                        android:textSize="20sp" />
-
-                    <EditText
-                        android:id="@+id/editIdentifiant"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:autofillHints=""
-                        android:ems="10"
-                        android:hint="@string/editAuthIdentifiant"
-                        android:inputType="textPersonName"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    tools:ignore="UselessParent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/textMotDePasse"
-                        android:textSize="20sp" />
-
-                    <EditText
-                        android:id="@+id/editPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints=""
-                        android:ems="10"
-                        android:hint="@string/editMotDePasse"
-                        android:inputType="textPassword"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
+                    android:text="Un code vous a ete envoye par mail / telepone. Veillez l'utiliser pour valider votre inscription."
+                    android:textSize="20sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -167,21 +102,61 @@
                     android:orientation="horizontal"
                     tools:ignore="UselessParent">
 
+                    <EditText
+                        android:id="@+id/editCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:ems="10"
+                        android:hint="@string/editInsValCode"
+                        android:inputType="textPersonName"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icone_envoyer"
+                        android:onClick="onImageValidationClick"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/col2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vous n'avez pas recu de code ?"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+
                     <Button
-                        android:id="@+id/buttonValider"
+                        android:id="@+id/buttonModifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/col"
-                        android:text="@string/buttonValider" />
+                        android:text="@string/buttonModifier" />
 
                     <Button
-                        android:id="@+id/buttoncreer"
+                        android:id="@+id/buttonRenvoyer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:backgroundTint="@color/white"
-                        android:text="@string/buttonCreer"
-                        android:textColor="@color/col2"/>
+                        android:backgroundTint="@color/col"
+                        android:text="@string/buttonRenvoyer" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

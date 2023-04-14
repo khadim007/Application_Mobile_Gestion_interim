@@ -1,13 +1,18 @@
 package com.example.projet_mobile.Modele;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 public class Annonyme {
+
+    SharedPreferences sharedPreferences;
 
     private String identifiant;
     private boolean accepte;
     private String lieu;
     private String recherche;
 
-    public Annonyme(boolean acc, String addr){
+    public Annonyme(boolean acc, String addr, Context context){
         accepte = acc;
         if(acc) {
             String adress[] = sep(addr);
@@ -15,38 +20,10 @@ public class Annonyme {
         }else {
             lieu = "";
         }
-    }
-
-    public void setIdentifiant(String identifiant) {
-        this.identifiant = identifiant;
-    }
-
-    public void setAccepte(boolean accepte) {
-        this.accepte = accepte;
-    }
-
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
-    }
-
-    public void setRecherche(String recherche) {
-        this.recherche = recherche;
-    }
-
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    public boolean isAccepte() {
-        return accepte;
-    }
-
-    public String getLieu() {
-        return lieu;
-    }
-
-    public String getRecherche() {
-        return recherche;
+        sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("AnnonymeLieu", lieu);
+        editor.commit();
     }
 
     private String[] sep(String s){
