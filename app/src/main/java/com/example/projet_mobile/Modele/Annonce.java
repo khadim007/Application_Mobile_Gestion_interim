@@ -15,6 +15,8 @@ import com.example.projet_mobile.R;
 import java.util.ArrayList;
 
 public class Annonce {
+    private int id;
+
     private String nom;
     private String description;
     private int employeur;
@@ -48,7 +50,6 @@ public class Annonce {
         private AccueilActivity accueil;
         private LayoutInflater inflater;
         public String donnes[][];
-        private ArrayList<Annonce> annonce;
 
         public AnnonceAdapter(Context context, AccueilActivity accueil,  String donnes[][]) {
             this.context = context;

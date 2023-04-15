@@ -4,6 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Controler.EspaceCandidatInscritActivity">
+    android:background="@color/back"
+    tools:context=".Controler.AuthentificationActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/accueil_toolbar"
+            layout="@layout/toolbar"/>
+
+        <TextView
+            android:id="@+id/textErreur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@color/rouge"
+            android:textSize="18sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="211dp"
+            android:layout_below="@id/accueil_toolbar"/>
+
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back"
+    tools:context=".Controler.AbonnementActivity">
+
+    <include
+        android:id="@+id/accueil_toolbar"
+        layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/back"
+        android:layout_marginTop="57dp">
+
+        <TextView
+            android:id="@+id/textTitre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Choisissez votre abonnement "
+            android:textColor="@color/col2"
+            android:textSize="30sp"
+            android:textStyle="bold|italic"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/affError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text=""
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
+
+        <ListView
+            android:id="@+id/idListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:divider="@color/back"
+            android:dividerHeight="20dp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

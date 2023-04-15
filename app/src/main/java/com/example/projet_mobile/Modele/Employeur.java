@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -42,6 +43,10 @@ public class Employeur {
     private String password;
     private String adresse;
     private String liens;
+
+    public Employeur(int id){
+        this.id = id;
+    }
 
     public Employeur(String identifiant, String password){
         this.identifiant = identifiant;
@@ -112,6 +117,7 @@ public class Employeur {
                     Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
                 }
             });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
 
@@ -157,8 +163,52 @@ public class Employeur {
                 Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
                 callback.onError();
             });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
+
+
+
+    // ----------------------------- update ------------------------------
+    public void changeAbonnement(Context context, int abon, Employeur.VolleyCallback callback) {
+        String url = context.getString(R.string.url) + "" + URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "update abonnement");
+            postData.put("id", id);
+            postData.put("abon", abon);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    } else {
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+
 
     public interface VolleyCallback {
         void onSuccess();

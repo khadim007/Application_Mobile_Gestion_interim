@@ -200,6 +200,7 @@ public class AccueilActivity extends AppCompatActivity {
                 startActivity(intent);
             }else{
                 Intent intent = new Intent( AccueilActivity.this, EspaceCandidatInscritActivity.class);
+                //Intent intent = new Intent( AccueilActivity.this, AbonnementActivity.class);
                 startActivity(intent);
             }
         }

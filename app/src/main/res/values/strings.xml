@@ -20,6 +20,7 @@
     <string name="buttonCreer">creer un compte</string>
     <string name="buttonModifier">Modifier</string>
     <string name="buttonRenvoyer">Renvoyer</string>
+    <string name="buttonSouscrire">Souscrire</string>
 
 
     <!--    accueil-->
@@ -85,9 +86,23 @@
     <string name="editIEEmail1">Adresse mail 1</string>
     <string name="textIEEmail2">Email2 :</string>
     <string name="editIEEmail2">Adresse mail 2</string>
-    <string name="textIEAdresse">Adresse :</string>
+    <string name="textIEAdresse">Adresse (*) :</string>
     <string name="editIEAdresse">Adresse</string>
     <string name="textIELiens">Liens : </string>
     <string name="editIELiens">Liens publics de l’employeur</string>
+
+    <!--    Abonnement -->
+    <string name="textAbon1">Abonnement ponctuel</string>
+    <string name="textAbon2">Abonnement un mois</string>
+    <string name="textAbon3">Abonnement un trimestre</string>
+    <string name="textAbon4">Abonnement un semestre</string>
+    <string name="textAbon5">Abonnement une année</string>
+    <string name="textAbon6">Abonnement indéterminé</string>
+    <string name="textAbonCond1">Conditions: \nAvantages: \nDésabonnement:</string>
+    <string name="textAbonCond2">Conditions: \nAvantages: \nDésabonnement:</string>
+    <string name="textAbonCond3">Conditions: \nAvantages: \nDésabonnement:</string>
+    <string name="textAbonCond4">Conditions: \nAvantages: \nDésabonnement:</string>
+    <string name="textAbonCond5">Conditions: \nAvantages: \nDésabonnement:</string>
+    <string name="textAbonCond6">Conditions: \nAvantages: \nDésabonnement:</string>
 
 </resources>

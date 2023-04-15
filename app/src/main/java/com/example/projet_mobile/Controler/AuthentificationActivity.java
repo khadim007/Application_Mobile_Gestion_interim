@@ -146,7 +146,7 @@ public class AuthentificationActivity extends AppCompatActivity {
     }
 
     private void affichageError(String s){
-        textErreur.setText(candidat.affiche);
+        textErreur.setText(s);
     }
 
     public void onImageCompteClick(View view) {} //laisse comme ca

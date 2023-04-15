@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -37,6 +38,7 @@ public class InsValidationActivity extends AppCompatActivity {
     SmsManager smsManager;
     private CandidatInscrit candidat;
     private Employeur employeur;
+    SharedPreferences sharedPreferences;
 
     String codeSaisi;
     String codeEnyoye;
@@ -78,6 +80,7 @@ public class InsValidationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ins_validation);
         smsManager = SmsManager.getDefault();
+        sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
 
         getID();
         click();
@@ -246,12 +249,14 @@ public class InsValidationActivity extends AppCompatActivity {
             if("employeur".equals(role)) {
                 employeur = new Employeur(nomEntreprise, nomService, nomSousService, numeroNationale, nomContact1, nomContact2, email1, email2, telephone1, telephone2, password, adresse, liens);
                 employeur.ajouter(this);
+                Intent intent = new Intent(InsValidationActivity.this, AbonnementActivity.class);
+                startActivity(intent);
             }else{
                 candidat = new CandidatInscrit(prenom, nom, nationalite, dateNais, telephone, email, password, ville, cv, accepte);
                 candidat.ajouter(this);
+                Intent intent = new Intent(InsValidationActivity.this, AccueilActivity.class);
+                startActivity(intent);
             }
-            Intent intent = new Intent(InsValidationActivity.this, AccueilActivity.class);
-            startActivity(intent);
         } else {
             textErreur.setText("Le code saisi ne correspond pas au code envoye !!");
         }

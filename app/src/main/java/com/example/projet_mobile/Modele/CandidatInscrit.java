@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projet_mobile.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +42,10 @@ public class CandidatInscrit {
     private String ville;
     private File cv;
     private boolean accepte;
+
+    public CandidatInscrit(int id){
+        this.id = id;
+    }
 
     public CandidatInscrit(String identifiant, String password){
         this.identifiant = identifiant;
@@ -104,16 +110,75 @@ public class CandidatInscrit {
                     Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
                 }
             });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
 
 
     // ----------------------------- select ------------------------------
+    public void getDonnes(Context context, VolleyCallback callback){
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select return line");
+            postData.put("id", id);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+            response -> {
+                try {
+                    if(response.getString("success").equals("true")) {
+                        this.affiche = "Authentification reussie !!";
+                        Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+
+                        JSONArray jsonArray = null;
+                        jsonArray = response.getJSONArray("donnes");
+                        JSONObject dataElement = jsonArray.getJSONObject(0);
+                        prenom = dataElement.getString("prenom");
+                        nom = dataElement.getString("nom");
+                        nationalite = dataElement.getString("nationalite");
+                        dateNais = dataElement.getString("dateNaissance");
+                        telephone = dataElement.getString("telephone");
+                        email = dataElement.getString("email");
+                        password = dataElement.getString("password");
+                        ville = dataElement.getString("ville");
+                        cv = new File(dataElement.getString("cv"));
+                        int acc = dataElement.getInt("accepte");
+                        accepte = acc == 0 ? false  : true;
+
+                        callback.onSuccess();
+                    } else {
+                        this.affiche = "Probleme lors de la recuperation. Veillez reessayer !!";
+                        Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                        callback.onError();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            },
+            error -> {
+                if (error instanceof NetworkError) {
+                    this.affiche = "Pas de connexion Internet !!";
+                } else if (error instanceof ParseError) {
+                    this.affiche = "Probleme lors de la verification !!";
+                }else{
+                    this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+
+                }
+                Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                callback.onError();
+            });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
     public void verifier(Context context, VolleyCallback callback){
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {
-            postData.put("choix", "select");
+            postData.put("choix", "select return id");
             postData.put("identifiant", identifiant);
             postData.put("password", password);
         } catch (JSONException e) {
@@ -149,8 +214,13 @@ public class CandidatInscrit {
                 Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
                 callback.onError();
             });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
+
+
+    // ----------------------------- update ------------------------------
+
 
     public interface VolleyCallback {
         void onSuccess();
