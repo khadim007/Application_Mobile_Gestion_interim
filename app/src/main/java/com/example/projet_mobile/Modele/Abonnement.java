@@ -29,18 +29,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Abonnement {
-    private int id;
-    String donnes[][];
-    SharedPreferences sharedPreferences;
+    int id;
+    String[][] donnes;
     private static String URL = "abonnement";
 
-    private String nom;
-    private double prix;
-    private String condition;
+    public String nom;
+    public String prix;
+    public String condition;
 
     public Abonnement(){}
 
-    public Abonnement(String nom, double prix, String condition){
+    public Abonnement(int id){
+        this.id = id;
+    }
+
+    public Abonnement(String nom, String prix, String condition){
         this.nom = nom;
         this.prix = prix;
         this.condition = condition;
@@ -91,6 +94,51 @@ public class Abonnement {
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
+
+
+
+    public void getDonnes(Context context, Abonnement.VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select return one");
+            postData.put("id", id);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+            response -> {
+                try {
+                    JSONArray jsonArray = null;
+                    jsonArray = response.getJSONArray("donnes");
+                    JSONObject dataElement = jsonArray.getJSONObject(0);
+                    nom = dataElement.getString("nom");
+                    prix = dataElement.getString("prix");
+                    condition = dataElement.getString("condition_");
+                    callback.onSuccess();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            },
+            error -> {
+                if (error instanceof NetworkError) {
+                    Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                }
+                callback.onError();
+            });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+
+
 
     public interface VolleyCallback {
         void onSuccess();

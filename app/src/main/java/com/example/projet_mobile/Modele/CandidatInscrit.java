@@ -32,16 +32,16 @@ public class CandidatInscrit {
     public int id;
     public String affiche;
 
-    private String prenom;
-    private String nom;
-    private String nationalite;
-    private String dateNais;
-    private String telephone;
-    private String email;
-    private String password;
-    private String ville;
-    private File cv;
-    private boolean accepte;
+    public String prenom;
+    public String nom;
+    public String nationalite;
+    public String dateNais;
+    public String telephone;
+    public String email;
+    public String password;
+    public String ville;
+    public File cv;
+    public boolean accepte;
 
     public CandidatInscrit(int id){
         this.id = id;
@@ -49,6 +49,16 @@ public class CandidatInscrit {
 
     public CandidatInscrit(String identifiant, String password){
         this.identifiant = identifiant;
+        this.password = password;
+    }
+
+    public CandidatInscrit(int id, String nationalite, String dateNais, String telephone, String email, String password, String ville){
+        this.id = id;
+        this.nationalite = nationalite;
+        this.dateNais = dateNais;
+        this.telephone = telephone;
+        this.email = email;
+        this.ville = ville;
         this.password = password;
     }
 
@@ -220,6 +230,48 @@ public class CandidatInscrit {
 
 
     // ----------------------------- update ------------------------------
+    public void modifierInfos(Context context,  CandidatInscrit.VolleyCallback callback) {
+        String url = context.getString(R.string.url) + "" + URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "update infos");
+            postData.put("id", id);
+            postData.put("nationalite", nationalite);
+            postData.put("dateNais", dateNais);
+            postData.put("telephone", telephone);
+            postData.put("email", email);
+            postData.put("password", password);
+            postData.put("ville", ville);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    } else {
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
 
 
     public interface VolleyCallback {

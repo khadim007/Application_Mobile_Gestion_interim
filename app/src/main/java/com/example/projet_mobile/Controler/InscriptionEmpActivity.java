@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.projet_mobile.R;
 
-public class InscriptionEmpActivity extends AppCompatActivity {
+public class InscriptionEmpActivity extends AppCompatActivity implements toolbar {
 
     private Button bouttonValider;
     private Button bouttonDeja;
@@ -19,7 +19,7 @@ public class InscriptionEmpActivity extends AppCompatActivity {
     private String nomEntreprise;
     private String nomService;
     private String nomSousService;
-    private int numeroNationale = 0;
+    private String numeroNationale;
     private String nomContact1;
     private String nomContact2;
     private String email1;
@@ -82,7 +82,7 @@ public class InscriptionEmpActivity extends AppCompatActivity {
                 nomEntreprise = editNomEntreprise.getText().toString();
                 nomService = editNomService.getText().toString();
                 nomSousService = editNomSousService.getText().toString();
-                numeroNationale = Integer.parseInt(editNumeroNationale.getText().toString());
+                numeroNationale = editNumeroNationale.getText().toString();
                 nomContact1 = editNomContact1.getText().toString();
                 nomContact2 = editNomContact2.getText().toString();
                 email1 = editEmail1.getText().toString();
@@ -111,7 +111,7 @@ public class InscriptionEmpActivity extends AppCompatActivity {
             Toast.makeText(this, "Les deux passwords ne sont pas identiques !!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (nomEntreprise.isEmpty() || numeroNationale == 0 || email1.isEmpty() || password1.isEmpty() || adresse.isEmpty()) {
+        if (nomEntreprise.isEmpty() || numeroNationale.isEmpty() || email1.isEmpty() || password1.isEmpty() || adresse.isEmpty()) {
             Toast.makeText(this, "Tous les champs obligatoire doivent etre remplis !!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -131,5 +131,9 @@ public class InscriptionEmpActivity extends AppCompatActivity {
         intent.putExtra("adresse", adresse);
         intent.putExtra("liens", liens);
         startActivity(intent);
+    }
+
+    public void onImageCompteClick(View view) {
+        onImageCompteClick(this);
     }
 }

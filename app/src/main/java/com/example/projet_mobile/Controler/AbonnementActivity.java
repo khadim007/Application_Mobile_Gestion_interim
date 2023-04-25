@@ -19,7 +19,7 @@ import com.example.projet_mobile.Modele.Annonce;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
 
-public class AbonnementActivity extends AppCompatActivity {
+public class AbonnementActivity extends AppCompatActivity implements toolbar {
 
     SharedPreferences sharedPreferences;
     Abonnement abonnement;
@@ -50,6 +50,7 @@ public class AbonnementActivity extends AppCompatActivity {
 
     public void click2(int i, String type) { // dans Abonnement pour le click du button dans listView
         if("souscrire".equals(type)){
+            sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
             int id = sharedPreferences.getInt("id", 0);
             if(id == 0){
                 System.out.println("Il faut qu'il se reconnecte. Code pas encore gerer.");
@@ -91,5 +92,9 @@ public class AbonnementActivity extends AppCompatActivity {
 
     private void affichageError(){
         affErreur.setText("Probleme de connexion. Veillez reesayez !!");
+    }
+
+    public void onImageCompteClick(View view) {
+        onImageCompteClick(this);
     }
 }

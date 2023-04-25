@@ -17,7 +17,7 @@ import com.example.projet_mobile.Modele.CandidatInscrit;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
 
-public class AuthentificationActivity extends AppCompatActivity {
+public class AuthentificationActivity extends AppCompatActivity implements toolbar {
 
     SharedPreferences sharedPreferences;
     private CandidatInscrit candidat;

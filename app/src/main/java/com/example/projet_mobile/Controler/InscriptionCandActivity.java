@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class InscriptionCandActivity extends AppCompatActivity {
+public class InscriptionCandActivity extends AppCompatActivity implements toolbar {
 
     private static final int FILE_PICKER_REQUEST_CODE = 1;
     private CandidatInscrit candidat;
@@ -199,5 +199,9 @@ public class InscriptionCandActivity extends AppCompatActivity {
         }else {
             Toast.makeText(this, "Veillez verifier si le fichier choisi est bien un pdf valide !!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void onImageCompteClick(View view) {
+        onImageCompteClick(this);
     }
 }

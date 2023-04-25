@@ -21,11 +21,12 @@ import org.json.JSONObject;
 
 public class Accueil {
 
-    public String donnes[][];
+    public String[][] donnes;
+    int nbrAttributs = 12; // table AnnonceS
 
-    private String type;
-    private String specialite;
-    private String lieu;
+    private final String type;
+    private final String specialite;
+    private final String lieu;
 
     public Accueil(String type, String specialite, String lieu){
         this.type = type;
@@ -50,9 +51,8 @@ public class Accueil {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
             response -> {
                 try {
-                    JSONArray jsonArray = null;
-                    jsonArray = response.getJSONArray("donnees");
-                    donnes = new String[jsonArray.length()][12];
+                    JSONArray jsonArray = response.getJSONArray("donnees");
+                    donnes = new String[jsonArray.length()][nbrAttributs];
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject dataElement = jsonArray.getJSONObject(i);
                         donnes[i][0] = dataElement.getString("id_");

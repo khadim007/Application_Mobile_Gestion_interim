@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projet_mobile.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,25 +25,26 @@ public class Employeur {
 
     SharedPreferences sharedPreferences;
     private static String URL = "employeur";
-    public static String succes = "Authentification reussie !!";
+    public static String succes = "good !!";
 
     private String identifiant;
     public int id;
     public String affiche;
 
-    private String nomEntreprise;
-    private String nomService;
-    private String nomSousService;
-    private int numeroNationale;
-    private String nomContact1;
-    private String nomContact2;
-    private String email1;
-    private String email2;
-    private String telephone1;
-    private String telephone2;
-    private String password;
-    private String adresse;
-    private String liens;
+    public String nomEntreprise;
+    public String nomService;
+    public String nomSousService;
+    public String numeroNationale;
+    public String nomContact1;
+    public String nomContact2;
+    public String email1;
+    public String email2;
+    public String telephone1;
+    public String telephone2;
+    public String password;
+    public String adresse;
+    public String liens;
+    public String abonnement;
 
     public Employeur(int id){
         this.id = id;
@@ -53,7 +55,21 @@ public class Employeur {
         this.password = password;
     }
 
-    public Employeur(String nomEntreprise, String nomService, String nomSousService, int numeroNationale, String nomContact1, String nomContact2, String email1, String email2, String telephone1, String telephone2, String password, String adresse, String liens){
+    public Employeur(int id, String nomEntreprise, String numeroNationale, String nomService, String nomSousService, String nomContact1, String nomContact2, String telephone1, String email1, String password, String adresse){
+        this.id = id;
+        this.nomEntreprise = nomEntreprise;
+        this.nomService = nomService;
+        this.nomSousService = nomSousService;
+        this.numeroNationale = numeroNationale;
+        this.nomContact1 = nomContact1;
+        this.nomContact2 = nomContact2;
+        this.email1 = email1;
+        this.telephone1 = telephone1;
+        this.password = password;
+        this.adresse = adresse;
+    }
+
+    public Employeur(String nomEntreprise, String nomService, String nomSousService, String numeroNationale, String nomContact1, String nomContact2, String email1, String email2, String telephone1, String telephone2, String password, String adresse, String liens){
         this.nomEntreprise = nomEntreprise;
         this.nomService = nomService;
         this.nomSousService = nomSousService;
@@ -168,6 +184,61 @@ public class Employeur {
     }
 
 
+    public void recupDonnes(Context context, Employeur.VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select");
+            postData.put("id", id);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+            response -> {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("donnees");
+                    JSONObject dataElement = jsonArray.getJSONObject(0);
+
+                    nomEntreprise = dataElement.getString("nomEntreprise");
+                    nomService = dataElement.getString("nomService");
+                    nomSousService = dataElement.getString("nomSousService");
+                    numeroNationale = dataElement.getString("numeroNationale");
+                    nomContact1 = dataElement.getString("nomContact1");
+                    nomContact2 = dataElement.getString("nomContact2");
+                    email1 = dataElement.getString("email1");
+                    email2 = dataElement.getString("email2");
+                    telephone1 = dataElement.getString("telephone1");
+                    telephone2 = dataElement.getString("telephone2");
+                    password = dataElement.getString("password");
+                    adresse = dataElement.getString("adresse");
+                    liens = dataElement.getString("liens");
+                    abonnement = dataElement.getString("abonnement");
+                    affiche = "good !!";
+
+                    callback.onSuccess();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            },
+            error -> {
+                if (error instanceof NetworkError) {
+                    Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                }
+                affiche = "Veillez recommencer !!";
+                callback.onError();
+            });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+
 
     // ----------------------------- update ------------------------------
     public void changeAbonnement(Context context, int abon, Employeur.VolleyCallback callback) {
@@ -201,6 +272,54 @@ public class Employeur {
                     } else {
                         this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
 
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+
+    public void modifierInfos(Context context,  Employeur.VolleyCallback callback) {
+        String url = context.getString(R.string.url) + "" + URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "update infos");
+            postData.put("id", id);
+            postData.put("nomEntreprise", nomEntreprise);
+            postData.put("numeroNationale", numeroNationale);
+            postData.put("nomService", nomService);
+            postData.put("nomSousService", nomSousService);
+            postData.put("nomContact1", nomContact1);
+            postData.put("nomContact2", nomContact2);
+            postData.put("password", password);
+            postData.put("telephone1", telephone1);
+            postData.put("email1", email1);
+            postData.put("password", password);
+            postData.put("adresse", adresse);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    } else {
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
                     }
                     callback.onError();
                 });

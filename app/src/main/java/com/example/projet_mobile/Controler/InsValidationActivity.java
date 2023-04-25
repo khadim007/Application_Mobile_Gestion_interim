@@ -1,20 +1,17 @@
 package com.example.projet_mobile.Controler;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -28,16 +25,24 @@ import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
 
 import java.io.File;
-import java.net.PasswordAuthentication;
 import java.util.Properties;
 import java.util.Random;
 
-public class InsValidationActivity extends AppCompatActivity {
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+
+public class InsValidationActivity extends AppCompatActivity implements toolbar {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     SmsManager smsManager;
-    private CandidatInscrit candidat;
-    private Employeur employeur;
+    CandidatInscrit candidat;
+    Employeur employeur;
     SharedPreferences sharedPreferences;
 
     String codeSaisi;
@@ -49,7 +54,7 @@ public class InsValidationActivity extends AppCompatActivity {
     private Button bouttonModifier;
     private Button bouttonRenvoyer;
 
-    // Candidat
+    //--------------------------------- Candidat
     private String prenom;
     private String nom;
     private String nationalite;
@@ -61,11 +66,11 @@ public class InsValidationActivity extends AppCompatActivity {
     private File cv;
     private boolean accepte;
 
-    //Employeur
+    //-----------------------------------Employeur
     private String nomEntreprise;
     private String nomService;
     private String nomSousService;
-    private int numeroNationale ;
+    private String numeroNationale ;
     private String nomContact1;
     private String nomContact2;
     private String email1;
@@ -91,7 +96,7 @@ public class InsValidationActivity extends AppCompatActivity {
             nomEntreprise = intent.getStringExtra("nomEntreprise");
             nomService = intent.getStringExtra("nomService");
             nomSousService = intent.getStringExtra("nomSousService");
-            numeroNationale = intent.getIntExtra("numeroNationale", 0);
+            numeroNationale = intent.getStringExtra("numeroNationale");
             nomContact1 = intent.getStringExtra("nomContact1");
             nomContact2 = intent.getStringExtra("nomContact2");
             email1 = intent.getStringExtra("email1");
@@ -117,6 +122,36 @@ public class InsValidationActivity extends AppCompatActivity {
         }
     }
 
+    private void getID(){
+        editCode = (EditText) findViewById(R.id.editCode);
+        textErreur = (TextView) findViewById(R.id.textErreur);
+
+        bouttonModifier = (Button) findViewById(R.id.buttonModifier);
+        bouttonRenvoyer = (Button) findViewById(R.id.buttonRenvoyer);
+    }
+
+    private void click(){
+        bouttonModifier.setOnClickListener(v -> {
+            if("employeur".equals(role)){
+                Intent intent = new Intent( InsValidationActivity.this, InscriptionEmpActivity.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent( InsValidationActivity.this, InscriptionCandActivity.class);
+                startActivity(intent);
+            }
+        });
+        bouttonRenvoyer.setOnClickListener(v -> {
+
+        });
+    }
+
+    public void onImageValidationClick(View view) {
+        codeSaisi = editCode.getText().toString();
+        verifyCode(codeSaisi);
+    }
+
+
+    //-----------------------------------Gestion du code et a qui-------------------
     private void envoyerCand() {
         codeEnyoye = String.valueOf(generateSixDigitNumber());
         if(!("".equals(telephone))) {
@@ -135,113 +170,7 @@ public class InsValidationActivity extends AppCompatActivity {
         int min = 100000;
         int max = 999999;
         Random random = new Random();
-        int sixDigitNumber = random.nextInt(max - min + 1) + min;
-        return sixDigitNumber;
-    }
-
-    private void envoyerCodeTel(String telephone) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
-                Log.d("permission", "permission denied to SEND_SMS - requesting it");
-                String[] permissions = {Manifest.permission.SEND_SMS};
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            } else {
-                System.out.println("Code :"+codeEnyoye+"-----------------------------------------------------");
-                Toast.makeText(this, "Le code vous a ete envoye avec succes !!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // La permission est accordée
-                    System.out.println("Code :"+codeEnyoye+"-----------------------------------------------------");
-                    Toast.makeText(this, "Le code vous a ete envoye avec succes !!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // La permission est refusée
-                    String t = "Le code n'est pas envoye a cause des permission refuses !!";
-                    textErreur.setText(t);
-                    Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-        }
-    }
-
-    private void envoyerCodeEmail(String email) {
-        System.out.println("Code :"+codeEnyoye+"-----------------------------------------------------");
-//        String senderEmail = "projet.mobile.kao@gmail.com";
-//        String password = "projetmobile";
-//
-//        Properties props = new Properties();
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.smtp.host", "smtp.gmail.com");
-//        props.put("mail.smtp.port", "587");
-//
-//        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-//            protected PasswordAuthentication getPasswordAuthentication() {
-//                char[] passwordArray = password.toCharArray();
-//                return new PasswordAuthentication(senderEmail, passwordArray);
-//            }
-//        });
-//
-//        try {
-//            Message message = new MimeMessage(session);
-//
-//            message.setFrom(new InternetAddress(senderEmail));
-//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-//            message.setSubject("Test email from JavaMail");
-//
-//            // Set the content of the email message
-//            String messageBody = "This is a test email from JavaMail.";
-//            message.setText(messageBody);
-//
-//            Transport.send(message);
-//            System.out.println("Email sent successfully.----------");
-//
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    private void getID(){
-        editCode = (EditText) findViewById(R.id.editCode);
-        textErreur = (TextView) findViewById(R.id.textErreur);
-
-        bouttonModifier = (Button) findViewById(R.id.buttonModifier);
-        bouttonRenvoyer = (Button) findViewById(R.id.buttonRenvoyer);
-    }
-
-    private void click(){
-        bouttonModifier.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if("employeur".equals(role)){
-                    Intent intent = new Intent( InsValidationActivity.this, InscriptionEmpActivity.class);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent( InsValidationActivity.this, InscriptionCandActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-        bouttonRenvoyer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-    }
-
-    public void onImageValidationClick(View view) {
-        codeSaisi = editCode.getText().toString();
-        verifyCode(codeSaisi);
+        return random.nextInt(max - min + 1) + min;
     }
 
     private void verifyCode(String code) {
@@ -259,6 +188,104 @@ public class InsValidationActivity extends AppCompatActivity {
             }
         } else {
             textErreur.setText("Le code saisi ne correspond pas au code envoye !!");
+        }
+    }
+
+
+    //-------------------------------- Envoie par SMS------------------------
+    private void envoyerCodeTel(String telephone) {
+        this.telephone = telephone;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
+                Log.d("permission", "permission denied to SEND_SMS - requesting it");
+                String[] permissions = {Manifest.permission.SEND_SMS};
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            } else {
+                String message = "Code : "+codeEnyoye+", envoye par KAO Interim.";
+                smsManager.sendTextMessage(telephone, null, message, null, null);
+                Toast.makeText(this, "Le code vous a ete envoye avec succes !!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                String message = "Code : "+codeEnyoye+", envoye par KAO Interim.";
+                smsManager.sendTextMessage(telephone, null, message, null, null);
+                Toast.makeText(this, "Le code vous a ete envoye avec succes !!", Toast.LENGTH_SHORT).show();
+            } else {
+                String t = "Le code n'est pas envoye a cause des permission refuses !!";
+                textErreur.setText(t);
+                Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    //-----------------------------------Envoie par Mail-----------------------------
+    private void envoyerCodeEmail(String email) {
+        String senderEmail = "projet.mobile.kao@gmail.com";
+        String password = "lacclrbagojmcupu";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+
+            message.setFrom(new InternetAddress(senderEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("Code de validation envoye par KAO Interim");
+
+            String messageBody = "Code : "+codeEnyoye;
+            System.out.println("=========="+codeEnyoye);
+            message.setText(messageBody);
+
+            SendMailTask sendMailTask = new SendMailTask();
+            sendMailTask.execute(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class SendMailTask extends AsyncTask<Message, Void, Void> {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(InsValidationActivity.this, "Please wait", "Sending mail", true, false);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected Void doInBackground(Message... messages) {
+            try {
+                Transport.send(messages[0]);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 }

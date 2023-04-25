@@ -22,6 +22,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Controler.VoirAnnonceActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Controler.AbonnementTypeActivity"
             android:exported="false">
             <meta-data
@@ -37,20 +44,6 @@
         </activity>
         <activity
             android:name=".Controler.EspaceEmployeurActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".Controler.GestionConnexionActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".Controler.AuthentificationEmpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

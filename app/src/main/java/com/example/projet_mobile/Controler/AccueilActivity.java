@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.projet_mobile.Modele.Accueil;
 import com.example.projet_mobile.Modele.Annonce;
@@ -32,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class AccueilActivity extends AppCompatActivity {
+public class AccueilActivity extends AppCompatActivity implements toolbar {
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -135,28 +134,30 @@ public class AccueilActivity extends AppCompatActivity {
 
     // ----------------------------------------------------------- Gerer l'affichage des annonces
     private void getID(){
-        editType = (Spinner) findViewById(R.id.editType);
-        editSpecialite = (EditText) findViewById(R.id.editSpecialite);
-        editLieu = (EditText) findViewById(R.id.editLieu);
-        affErreur = (TextView) findViewById(R.id.affError);
+        editType = findViewById(R.id.editType);
+        editSpecialite = findViewById(R.id.editSpecialite);
+        editLieu = findViewById(R.id.editLieu);
+        affErreur = findViewById(R.id.affError);
 
         listView = findViewById(R.id.idListView);
-        bouttonRecherche = (Button) findViewById(R.id.bouttonRecherche);
+        bouttonRecherche = findViewById(R.id.bouttonRecherche);
     }
 
     private void click() {
-        bouttonRecherche.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                type = editType.getSelectedItem().toString();
-                specialite = editSpecialite.getText().toString();
-                lieu = editLieu.getText().toString();
-                exec();
-            }
+        bouttonRecherche.setOnClickListener(v -> {
+            type = editType.getSelectedItem().toString();
+            specialite = editSpecialite.getText().toString();
+            lieu = editLieu.getText().toString();
+            exec();
         });
     }
 
     public void click2(String id, String nom) {
+        if("consulter".equals(nom)){
+            Intent intent = new Intent( AccueilActivity.this, VoirAnnonceActivity.class);
+            intent.putExtra("id", Integer.parseInt(id));
+            startActivity(intent);
+        }
     }
 
     private void exec(){
@@ -189,20 +190,6 @@ public class AccueilActivity extends AppCompatActivity {
     }
 
     public void onImageCompteClick(View view) {
-        int id = sharedPreferences.getInt("id", 0);
-        String role = sharedPreferences.getString("role", "");
-        if(id == 0){
-            Intent intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
-            startActivity(intent);
-        }else{
-            if("employeur".equals(role)){
-                Intent intent = new Intent( AccueilActivity.this, EspaceEmployeurActivity.class);
-                startActivity(intent);
-            }else{
-                Intent intent = new Intent( AccueilActivity.this, EspaceCandidatInscritActivity.class);
-                //Intent intent = new Intent( AccueilActivity.this, AbonnementActivity.class);
-                startActivity(intent);
-            }
-        }
+        onImageCompteClick(this);
     }
 }
