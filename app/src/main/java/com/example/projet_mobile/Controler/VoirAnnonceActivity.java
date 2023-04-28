@@ -1,10 +1,13 @@
 package com.example.projet_mobile.Controler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.projet_mobile.Modele.Accueil;
@@ -59,6 +62,9 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         textDetails = findViewById(R.id.textDetails);
         textDescription = findViewById(R.id.textDescription);
         textMotCles = findViewById(R.id.textMotCles);
+
+        ImageView im = findViewById(R.id.imRecherche);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void click() {
@@ -113,7 +119,13 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         affErreur.setText("Probleme de connexion. Veillez reesayez !!");
     }
 
-    public void onImageCompteClick(View view) {
-        onImageCompteClick(this);
+    public void onHomeClick(View view) {
+        onHomeClick(this);
+    }
+    public void onRechercheClick(View view) {
+        onRechercheClick(this);
+    }
+    public void onCompteClick(View view) {
+        onCompteClick(this);
     }
 }

@@ -1,15 +1,18 @@
 package com.example.projet_mobile.Controler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +20,7 @@ import com.example.projet_mobile.Modele.Abonnement;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
 
-public class EspaceEmployeurActivity extends AppCompatActivity {
+public class EspaceEmployeurActivity extends AppCompatActivity implements toolbar {
 
     SharedPreferences sharedPreferences;
     Employeur employeur;
@@ -75,38 +78,38 @@ public class EspaceEmployeurActivity extends AppCompatActivity {
 
         bouttonModifier = findViewById(R.id.buttonModifier);
         bouttonChanger = findViewById(R.id.buttonChager);
+
+        ImageView im = findViewById(R.id.imCompte);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void click(){
-        bouttonModifier.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String nomEntre = editNomEntre.getText().toString();
-                String numero = editNumero.getText().toString();
-                String serv1 = editServ1.getText().toString();
-                String serv2 = editServ2.getText().toString();
-                String cont1 = editCont1.getText().toString();
-                String cont2 = editCont2.getText().toString();
-                String telephone = editTelephone.getText().toString();
-                String email = editEmail.getText().toString();
-                String password = editPassword.getText().toString();
-                String adresse = editAdresse.getText().toString();
+        bouttonModifier.setOnClickListener(v -> {
+            String nomEntre = editNomEntre.getText().toString();
+            String numero = editNumero.getText().toString();
+            String serv1 = editServ1.getText().toString();
+            String serv2 = editServ2.getText().toString();
+            String cont1 = editCont1.getText().toString();
+            String cont2 = editCont2.getText().toString();
+            String telephone = editTelephone.getText().toString();
+            String email = editEmail.getText().toString();
+            String password = editPassword.getText().toString();
+            String adresse = editAdresse.getText().toString();
 
-                employeur = new Employeur(id, nomEntre, numero, serv1, serv2, cont1, cont2, telephone, email, password, adresse);
-                employeur.modifierInfos(EspaceEmployeurActivity.this,  new Employeur.VolleyCallback() {
-                    @Override
-                    public void onSuccess() {
-                        affichageError("");
-                        Toast.makeText(EspaceEmployeurActivity.this, "Les modifications sont bien enregistres !!", Toast.LENGTH_SHORT).show();
-                    }
-                    @Override
-                    public void onError() {
-                        String s = "Les modification ne sont pas enregistre. Veillez reesayer !!";
-                        affichageError(s);
-                    }
-                });
-            }
+            employeur = new Employeur(id, nomEntre, numero, serv1, serv2, cont1, cont2, telephone, email, password, adresse);
+            employeur.modifierInfos(EspaceEmployeurActivity.this,  new Employeur.VolleyCallback() {
+                @Override
+                public void onSuccess() {
+                    affichageError("");
+                    Toast.makeText(EspaceEmployeurActivity.this, "Les modifications sont bien enregistres !!", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onError() {
+                    String s = "Les modification ne sont pas enregistre. Veillez reesayer !!";
+                    affichageError(s);
+                }
+            });
         });
 
         bouttonChanger.setOnClickListener(v -> {
@@ -166,6 +169,14 @@ public class EspaceEmployeurActivity extends AppCompatActivity {
         textPrix.setText(abonnement.prix);
         textCondition.setText(abonnement.condition);
     }
+
+    public void onHomeClick(View view) {
+        onHomeClick(this);
+    }
+    public void onRechercheClick(View view) {
+        onRechercheClick(this);
+    }
+    public void onCompteClick(View view) {} // laisse comm ca
 
     private void affichageError(String s){
         textErreur.setText(s);

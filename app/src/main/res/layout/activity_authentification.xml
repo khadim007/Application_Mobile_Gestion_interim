@@ -11,10 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/accueil_toolbar"
-            layout="@layout/toolbar"/>
-
         <LinearLayout
             android:id="@+id/layout1"
             android:layout_width="match_parent"
@@ -23,8 +19,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp"
-            tools:ignore="MissingConstraints"
-            android:layout_below="@id/accueil_toolbar">
+            tools:ignore="MissingConstraints">
 
             <ImageView
                 android:layout_width="100dp"
@@ -178,12 +173,20 @@
                         android:id="@+id/buttoncreer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:backgroundTint="@color/white"
                         android:text="@string/buttonCreer"
                         android:textColor="@color/col2"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

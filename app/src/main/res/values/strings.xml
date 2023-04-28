@@ -1,7 +1,7 @@
 <resources>
     <!--    general    -->
     <string name="app_name">Projet_mobile</string>
-    <string name="url">http://172.20.10.3:3000/</string>
+    <string name="url">http://10.188.162.31:3000/</string>
 
     <string name="textInscription">INSCRIPTION</string>
     <string name="textAuthentification">AUTHENTIFICATION</string>

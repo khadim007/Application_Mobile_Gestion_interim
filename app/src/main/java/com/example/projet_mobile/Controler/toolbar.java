@@ -6,7 +6,17 @@ import android.content.SharedPreferences;
 
 interface toolbar {
 
-    default void onImageCompteClick(Context context) {
+    default void onHomeClick(Context context) {
+        Intent intent = new Intent( context, AccueilActivity.class);
+        context.startActivity(intent);
+    }
+
+    default void onRechercheClick(Context context) {
+        Intent intent = new Intent( context, RechercheActivity.class);
+        context.startActivity(intent);
+    }
+
+    default void onCompteClick(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
         int id = sharedPreferences.getInt("id", 0);
         String role = sharedPreferences.getString("role", "");

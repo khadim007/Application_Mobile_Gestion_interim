@@ -3,12 +3,17 @@ package com.example.projet_mobile.Controler;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -141,6 +147,9 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
 
         listView = findViewById(R.id.idListView);
         bouttonRecherche = findViewById(R.id.bouttonRecherche);
+
+        ImageView im = findViewById(R.id.imHome);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void click() {
@@ -189,7 +198,11 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
         affErreur.setText("Probleme de connexion. Veillez reesayez !!");
     }
 
-    public void onImageCompteClick(View view) {
-        onImageCompteClick(this);
+    public void onHomeClick(View view) {}
+    public void onRechercheClick(View view) {
+        onRechercheClick(this);
+    }
+    public void onCompteClick(View view) {
+        onCompteClick(this);
     }
 }

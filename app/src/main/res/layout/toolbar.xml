@@ -1,41 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@color/col"
-    app:titleTextColor="@android:color/white"
+    app:layout_scrollFlags="scroll|enterAlways"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:layout_scrollFlags="scroll|enterAlways">
+    app:titleTextColor="@android:color/white">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:src="@drawable/logo_menu"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="16dp" />
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="4"
+        android:rowCount="1">
 
-    <TextView
-        android:id="@+id/app_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="KAO INTERIM"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
+        <ImageView
+            android:id="@+id/imHome"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_columnWeight="1"
+            android:onClick="onHomeClick"
+            android:src="@drawable/icone_home"
+            app:tint="@color/back" />
 
-    <ImageView
-        android:id="@+id/image_compte"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:src="@drawable/logo_compte"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="8dp"
-        android:onClick="onImageCompteClick"/>
+        <ImageView
+            android:id="@+id/imRecherche"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_columnWeight="1"
+            android:onClick="onRechercheClick"
+            android:src="@drawable/icone_search"
+            app:tint="@color/back" />
+
+        <ImageView
+            android:id="@+id/imAutre"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_columnWeight="1"
+            android:onClick="onHomeClick"
+            android:src="@drawable/icone_home"
+            app:tint="@color/back" />
+
+        <ImageView
+            android:id="@+id/imCompte"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_columnWeight="1"
+            android:onClick="onCompteClick"
+            android:src="@drawable/logo_compte"
+            app:tint="@color/back" />
+
+    </GridLayout>
 </androidx.appcompat.widget.Toolbar>

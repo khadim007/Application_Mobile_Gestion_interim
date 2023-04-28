@@ -1,14 +1,17 @@
 package com.example.projet_mobile.Controler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +58,9 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
 
         bouttonValider = (Button) findViewById(R.id.buttonValider);
         bouttonCreer = (Button) findViewById(R.id.buttoncreer);
+
+        ImageView im = findViewById(R.id.imCompte);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void click(){
@@ -149,5 +155,11 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
         textErreur.setText(s);
     }
 
-    public void onImageCompteClick(View view) {} //laisse comme ca
+    public void onHomeClick(View view) {
+        onHomeClick(this);
+    }
+    public void onRechercheClick(View view) {
+        onRechercheClick(this);
+    }
+    public void onCompteClick(View view) {} //laisse comme ca
 }

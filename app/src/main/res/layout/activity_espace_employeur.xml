@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,15 +9,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="57dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                android:id="@+id/accueil_toolbar"
-                layout="@layout/toolbar"/>
+            android:layout_height="match_parent"
+            android:layout_above="@id/toolbar"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textErreur"
@@ -25,8 +24,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textColor="@color/rouge"
-                android:textSize="18sp"
-                android:layout_below="@id/accueil_toolbar"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/textNomEntre"
@@ -267,7 +265,8 @@
                             android:layout_weight="1"
                             android:inputType="text"
                             android:text=""
-                            android:autofillHints="" />
+                            android:autofillHints=""
+                            tools:ignore="TextFields" />
                     </LinearLayout>
 
                     <View
@@ -322,7 +321,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="5dp">
@@ -330,7 +329,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="0"
                             android:src="@drawable/icone_argent" />
 
@@ -338,14 +337,14 @@
                             android:id="@+id/textprix"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginStart="30dp"
                             android:text="10 € par annonce" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="5dp">
@@ -361,7 +360,7 @@
                             android:id="@+id/textCondition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:text="@string/textAbon1" />
                     </LinearLayout>
 
@@ -539,6 +538,13 @@
                         android:src="@drawable/icone_deconnect" />
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

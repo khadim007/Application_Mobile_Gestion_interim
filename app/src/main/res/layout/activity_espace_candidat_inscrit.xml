@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,15 +9,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="57dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                android:id="@+id/accueil_toolbar"
-                layout="@layout/toolbar"/>
+            android:layout_height="match_parent"
+            android:layout_above="@id/toolbar"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textErreur"
@@ -25,14 +24,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textColor="@color/rouge"
-                android:textSize="18sp"
-                android:layout_below="@id/accueil_toolbar"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textNom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textErreur"
                 android:gravity="center_horizontal"
                 android:textSize="40sp"
                 android:textStyle="bold" />
@@ -41,7 +38,6 @@
                 android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textNom"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@color/back"
@@ -85,9 +81,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autofillHints=""
                             android:inputType="phone"
                             android:text=""
-                            android:autofillHints=""
                             tools:ignore="LabelFor" />
 
                         <ImageView
@@ -101,9 +97,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autofillHints=""
                             android:inputType="text"
                             android:text=""
-                            android:autofillHints=""
                             tools:ignore="LabelFor" />
                     </LinearLayout>
 
@@ -126,9 +122,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autofillHints=""
                             android:inputType="date"
                             android:text=""
-                            android:autofillHints=""
                             tools:ignore="LabelFor" />
 
                         <ImageView
@@ -142,9 +138,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autofillHints=""
                             android:inputType="text"
                             android:text=""
-                            android:autofillHints=""
                             tools:ignore="LabelFor" />
                     </LinearLayout>
 
@@ -167,9 +163,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autofillHints=""
                             android:inputType="textWebEmailAddress"
                             android:text=""
-                            android:autofillHints=""
                             tools:ignore="LabelFor" />
 
                         <ImageView
@@ -183,9 +179,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autofillHints=""
                             android:inputType="text"
-                            android:text=""
-                            android:autofillHints="" />
+                            android:text="" />
                     </LinearLayout>
 
                     <View
@@ -211,7 +207,6 @@
                 android:id="@+id/card2"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                android:layout_below="@id/card1"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -222,17 +217,17 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/col"
+                    android:onClick="onCardCV"
                     android:orientation="horizontal"
+                    app:cardBackgroundColor="@color/col"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="15dp"
-                    android:onClick="onCardCV">
+                    app:cardElevation="15dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:gravity="center"
+                        android:orientation="vertical"
                         tools:ignore="UseCompoundDrawables">
 
                         <TextView
@@ -248,8 +243,8 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/icone_cv"
-                            android:layout_gravity="center_horizontal"/>
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/icone_cv" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -260,17 +255,17 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/col"
+                    android:onClick="onCardLettre"
                     android:orientation="vertical"
+                    app:cardBackgroundColor="@color/col"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="15dp"
-                    android:onClick="onCardLettre">
+                    app:cardElevation="15dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:gravity="center"
+                        android:orientation="vertical"
                         tools:ignore="UseCompoundDrawables">
 
                         <TextView
@@ -285,8 +280,8 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/icone_lettre"
-                            android:layout_gravity="center_horizontal"/>
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/icone_lettre" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -296,7 +291,6 @@
                 android:id="@+id/card3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/card2"
                 android:orientation="horizontal"
                 android:paddingBottom="10sp">
 
@@ -410,7 +404,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/card3"
                 android:gravity="center"
                 android:orientation="vertical"
                 tools:ignore="UseCompoundDrawables">
@@ -418,7 +411,6 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="100dp"
-                    android:layout_below="@id/card3"
                     android:layout_marginEnd="20dp"
                     android:onClick="onCardDeconnexion"
                     app:cardBackgroundColor="@color/rouge"
@@ -445,6 +437,13 @@
                         android:src="@drawable/icone_deconnect" />
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

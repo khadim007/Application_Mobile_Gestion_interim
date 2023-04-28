@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/back"
     tools:context=".Controler.AccueilActivity">
 
-    <include
-        android:id="@+id/accueil_toolbar"
-        layout="@layout/toolbar"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/back"
-        android:layout_marginTop="57dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_above="@id/toolbar" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/back"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:orientation="horizontal"
-                android:background="#FFFFFF">
+                android:background="@drawable/border">
 
                 <ImageView
                     android:layout_marginTop="5dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="3dp"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/icone_job"/>
@@ -57,44 +53,47 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_height="32dp"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF">
+                android:background="@drawable/border"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="20dp"
                     android:layout_width="20dp"
-                    android:layout_marginLeft="3dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icone_search"/>
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/icone_search" />
 
                 <EditText
                     android:id="@+id/editSpecialite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="10dp"
+                    android:autofillHints=""
                     android:background="#FFFFFF"
                     android:ems="10"
                     android:hint="@string/editAccSpecialite"
                     android:inputType="text"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
+                android:background="@drawable/border"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="20dp"
                     android:src="@drawable/icone_loc" />
 
                 <EditText
@@ -104,9 +103,11 @@
                     android:autofillHints=""
                     android:background="#FFFFFF"
                     android:ems="10"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="10dp"
                     android:hint="@string/editAccLieu"
                     android:inputType="text"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
         </LinearLayout>
@@ -116,6 +117,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@color/back"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -124,11 +127,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text=""
                 android:textSize="27sp"
                 android:textStyle="bold"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints,RtlSymmetry" />
 
             <Button
                 android:id="@+id/bouttonRecherche"
@@ -144,9 +147,13 @@
             android:id="@+id/idListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/back"
-            android:dividerHeight="20dp"
-            android:visibility="gone"/>
+            android:divider="@color/back"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

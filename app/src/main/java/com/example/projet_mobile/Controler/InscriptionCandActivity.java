@@ -1,17 +1,20 @@
 package com.example.projet_mobile.Controler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.provider.OpenableColumns;
@@ -86,6 +89,9 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
         bouttonValider = (Button) findViewById(R.id.buttonValider);
         bouttonDeja = (Button) findViewById(R.id.buttonConnecter);
         accepte = false;
+
+        ImageView im = findViewById(R.id.imCompte);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void click(){
@@ -201,7 +207,11 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
         }
     }
 
-    public void onImageCompteClick(View view) {
-        onImageCompteClick(this);
+    public void onHomeClick(View view) {
+        onHomeClick(this);
     }
+    public void onRechercheClick(View view) {
+        onRechercheClick(this);
+    }
+    public void onCompteClick(View view) {}
 }
