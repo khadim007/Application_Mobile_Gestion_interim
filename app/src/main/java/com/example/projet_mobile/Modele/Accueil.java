@@ -51,24 +51,28 @@ public class Accueil {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
             response -> {
                 try {
-                    JSONArray jsonArray = response.getJSONArray("donnees");
-                    donnes = new String[jsonArray.length()][nbrAttributs];
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject dataElement = jsonArray.getJSONObject(i);
-                        donnes[i][0] = dataElement.getString("id_");
-                        donnes[i][1] = dataElement.getString("nom");
-                        donnes[i][2] = dataElement.getString("description");
-                        donnes[i][3] = dataElement.getString("employeur");
-                        donnes[i][4] = dataElement.getString("remuneration");
-                        donnes[i][5] = dataElement.getString("date_debut");
-                        donnes[i][6] = dataElement.getString("date_fin");
-                        donnes[i][7] = dataElement.getString("metier");
-                        donnes[i][8] = dataElement.getString("ville");
-                        donnes[i][9] = dataElement.getString("duree");
-                        donnes[i][10] = dataElement.getString("mot_cles");
-                        donnes[i][11] = dataElement.getString("type");
+                    if(response.getString("donnees").equals("false")){
+                        callback.onEmpty();
+                    }else {
+                        JSONArray jsonArray = response.getJSONArray("donnees");
+                        donnes = new String[jsonArray.length()][nbrAttributs];
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject dataElement = jsonArray.getJSONObject(i);
+                            donnes[i][0] = dataElement.getString("id_");
+                            donnes[i][1] = dataElement.getString("nom");
+                            donnes[i][2] = dataElement.getString("description");
+                            donnes[i][3] = dataElement.getString("employeur");
+                            donnes[i][4] = dataElement.getString("remuneration");
+                            donnes[i][5] = dataElement.getString("date_debut");
+                            donnes[i][6] = dataElement.getString("date_fin");
+                            donnes[i][7] = dataElement.getString("metier");
+                            donnes[i][8] = dataElement.getString("ville");
+                            donnes[i][9] = dataElement.getString("duree");
+                            donnes[i][10] = dataElement.getString("mot_cles");
+                            donnes[i][11] = dataElement.getString("type");
+                        }
+                        callback.onSuccess();
                     }
-                    callback.onSuccess();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -90,5 +94,6 @@ public class Accueil {
     public interface VolleyCallback {
         void onSuccess();
         void onError();
+        void onEmpty();
     }
 }

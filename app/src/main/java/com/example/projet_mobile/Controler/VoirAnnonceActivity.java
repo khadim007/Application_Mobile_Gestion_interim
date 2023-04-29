@@ -3,14 +3,16 @@ package com.example.projet_mobile.Controler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.projet_mobile.Modele.Accueil;
 import com.example.projet_mobile.Modele.Annonce;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
@@ -20,6 +22,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
     Annonce annonce;
     Employeur employeur;
     int id;
+    SharedPreferences sharedPreferences;
 
     TextView affErreur;
     TextView textNom;
@@ -31,18 +34,17 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
     TextView textDescription;
     TextView textMotCles;
 
-//    String nom;
-//    String ren;
-//    String dat;
-//    String met;
-//    String vil;
-//    String details;
-//    String description;
+    public Button bouttonPartager;
+    public Button bouttonCandidater;
+    public Button bouttonTraduire;
+    public Button bouttonEnregistrer;
+    public Button bouttonSimilaires;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voir_annonce);
+        sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
 
         Intent intent = getIntent();
         id = intent.getIntExtra("id", 0);
@@ -65,9 +67,44 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
 
         ImageView im = findViewById(R.id.imRecherche);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+
+        bouttonPartager = findViewById(R.id.buttonPartager);
+        bouttonCandidater = findViewById(R.id.buttonCandidater);
+        bouttonTraduire = findViewById(R.id.buttonTraduire);
+        bouttonEnregistrer = findViewById(R.id.buttonEnregistrer);
+        bouttonSimilaires = findViewById(R.id.buttonSimilaires);
     }
 
     private void click() {
+        int ident = sharedPreferences.getInt("id", 0);
+        bouttonPartager.setOnClickListener(v -> {
+            if(ident == 0){
+                Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }
+        });
+        bouttonCandidater.setOnClickListener(v -> {
+            if(ident == 0){
+                Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }
+        });
+        bouttonTraduire.setOnClickListener(v -> {
+            textDescription.setText(annonce.donnes[12]);
+        });
+        bouttonEnregistrer.setOnClickListener(v -> {
+            if(ident == 0){
+                Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }
+        });
+        bouttonSimilaires.setOnClickListener(v -> {
+            Intent intent = new Intent( VoirAnnonceActivity.this, RechercheActivity.class);
+            intent.putExtra("type", annonce.donnes[11]);
+            intent.putExtra("specialite", annonce.donnes[7]);
+            intent.putExtra("lieu", annonce.donnes[8]);
+            startActivity(intent);
+        });
     }
 
     private void affichageDonnes() {
@@ -111,13 +148,11 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
     }
 
     private void affichage2(){
-        String s = "Nom : "+employeur.nomContact1+"\nEmail : "+employeur.email1+"\nTelephone : "+employeur.telephone1+"\nNom Entreprise : "+employeur.nomEntreprise+"\nReseaux Sociaux : "+employeur.liens+"\n" ;
+        String s = "Nom : "+employeur.nomContact1+"\nEmail : "+employeur.email1+"\nTelephone : "+employeur.telephone1+"\nNom Entreprise : "+employeur.nomEntreprise+"\nReseaux Sociaux : "+employeur.liens;
         textDetails.setText(s);
     }
 
-    private void affichageError(){
-        affErreur.setText("Probleme de connexion. Veillez reesayez !!");
-    }
+    private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
 
     public void onHomeClick(View view) {
         onHomeClick(this);
@@ -125,6 +160,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
     public void onRechercheClick(View view) {
         onRechercheClick(this);
     }
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {
         onCompteClick(this);
     }

@@ -1,9 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Controler.RechercheActivity">
+    android:background="@color/back"
+    tools:context=".Controler.AccueilActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/back"
+        android:layout_above="@id/toolbar" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/back">
+
+            <LinearLayout
+                android:background="@color/col"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:paddingTop="10dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_weight="3"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/border"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="3dp"
+                        android:src="@drawable/icone_vocal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:background="@drawable/border">
+
+                    <ImageView
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/icone_search"/>
+
+                    <EditText
+                        android:id="@+id/editRecherche"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="10dp"
+                        android:autofillHints=""
+                        android:background="#FFFFFF"
+                        android:ems="10"
+                        android:hint="Saisissez votre recherche..."
+                        android:inputType="text"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/icone_envoyer"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/border">
+
+                <ImageView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icone_job"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/textAccType"
+                    android:textSize="23sp" />
+
+                <Spinner
+                    android:id="@+id/editType"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:entries="@array/spinnerAccType"
+                    android:textSize="25sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:src="@drawable/icone_search" />
+
+                    <EditText
+                        android:id="@+id/editSpecialite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="10dp"
+                        android:autofillHints=""
+                        android:background="#FFFFFF"
+                        android:ems="10"
+                        android:hint="@string/editAccSpecialite"
+                        android:inputType="text"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/border"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="20dp"
+                        android:src="@drawable/icone_loc" />
+
+                    <EditText
+                        android:id="@+id/editLieu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints=""
+                        android:background="#FFFFFF"
+                        android:ems="10"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="10dp"
+                        android:hint="@string/editAccLieu"
+                        android:inputType="text"
+                        android:textSize="20sp"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/back"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/affError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:paddingStart="10dp"
+                android:text=""
+                android:textSize="26sp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints,RtlSymmetry" />
+
+            <Button
+                android:id="@+id/bouttonRecherche"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_weight="0"
+                android:backgroundTint="@color/col2"
+                android:text="@string/buttonRecherche" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/idListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/back"/>
+    </LinearLayout>
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

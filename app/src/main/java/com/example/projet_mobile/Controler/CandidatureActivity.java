@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.projet_mobile.R;
 
-public class AccueilAnnonceActivity extends AppCompatActivity {
+public class CandidatureActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accueil_annonce);
+        setContentView(R.layout.activity_candidature);
     }
 }

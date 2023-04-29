@@ -35,12 +35,12 @@
             app:tint="@color/back" />
 
         <ImageView
-            android:id="@+id/imAutre"
+            android:id="@+id/imCandidature"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_columnWeight="1"
-            android:onClick="onHomeClick"
-            android:src="@drawable/icone_home"
+            android:onClick="onCandidatureClick"
+            android:src="@drawable/icone_candidature"
             app:tint="@color/back" />
 
         <ImageView

@@ -16,6 +16,11 @@ interface toolbar {
         context.startActivity(intent);
     }
 
+    default void onCandidatureClick(Context context) {
+        Intent intent = new Intent( context, CandidatureActivity.class);
+        context.startActivity(intent);
+    }
+
     default void onCompteClick(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
         int id = sharedPreferences.getInt("id", 0);
