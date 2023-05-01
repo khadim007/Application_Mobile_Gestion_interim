@@ -90,7 +90,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
             }
         });
         bouttonTraduire.setOnClickListener(v -> {
-            textDescription.setText(annonce.donnes[12]);
+            textDescription.setText(annonce.description);
         });
         bouttonEnregistrer.setOnClickListener(v -> {
             if(ident == 0){
@@ -100,9 +100,9 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         });
         bouttonSimilaires.setOnClickListener(v -> {
             Intent intent = new Intent( VoirAnnonceActivity.this, RechercheActivity.class);
-            intent.putExtra("type", annonce.donnes[11]);
-            intent.putExtra("specialite", annonce.donnes[7]);
-            intent.putExtra("lieu", annonce.donnes[8]);
+            intent.putExtra("type", annonce.type);
+            intent.putExtra("specialite", annonce.metier);
+            intent.putExtra("lieu", annonce.ville);
             startActivity(intent);
         });
     }
@@ -118,33 +118,33 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
             public void onError() {
                 affichageError();
             }
+            @Override
+            public void onEmpty() {
+                affichageEmpty();
+            }
         });
     }
 
     private void affichage(){
-        if(annonce.donnes.length != 0) {
-            textNom.setText(annonce.donnes[1]+" (H/F)");
-            textRen.setText(annonce.donnes[4]+" € par heure");
-            textDat.setText(annonce.donnes[5]+" - "+annonce.donnes[9]);
-            textMet.setText(annonce.donnes[7]);
-            textVil.setText(annonce.donnes[8]);
-            textDescription.setText(annonce.donnes[2]);
-            textMotCles.setText(annonce.donnes[10]);
+        textNom.setText(annonce.nom+" (H/F)");
+        textRen.setText(annonce.remuneration+" € par heure");
+        textDat.setText(annonce.date_debut+" - "+annonce.duree);
+        textMet.setText(annonce.metier);
+        textVil.setText(annonce.ville);
+        textDescription.setText(annonce.description);
+        textMotCles.setText(annonce.mot_cles);
 
-            employeur = new Employeur(Integer.parseInt(annonce.donnes[3]));
-            employeur.recupDonnes(this, new Employeur.VolleyCallback() {
-                @Override
-                public void onSuccess() {
-                    affichage2();
-                }
-                @Override
-                public void onError() {
-                    affichageError();
-                }
-            });
-        }else{
-            affErreur.setText("Aucun resultat trouve !!");
-        }
+        employeur = new Employeur(Integer.parseInt(annonce.employeur));
+        employeur.recupDonnes(this, new Employeur.VolleyCallback() {
+            @Override
+            public void onSuccess() {
+                affichage2();
+            }
+            @Override
+            public void onError() {
+                affichageError();
+            }
+        });
     }
 
     private void affichage2(){
@@ -153,6 +153,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
     }
 
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
+    private void affichageEmpty(){affErreur.setText("Aucune annonce est trouvée !!");}
 
     public void onHomeClick(View view) {
         onHomeClick(this);

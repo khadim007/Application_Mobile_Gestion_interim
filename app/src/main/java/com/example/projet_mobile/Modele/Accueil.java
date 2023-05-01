@@ -22,11 +22,16 @@ import org.json.JSONObject;
 public class Accueil {
 
     public String[][] donnes;
-    int nbrAttributs = 12; // table AnnonceS
+    int nbrAttributs = 13; // table AnnonceS
 
-    private final String type;
-    private final String specialite;
-    private final String lieu;
+    private String recherche;
+    private String type;
+    private String specialite;
+    private String lieu;
+
+    public Accueil(String recherche){
+        this.recherche = recherche;
+    }
 
     public Accueil(String type, String specialite, String lieu){
         this.type = type;
@@ -34,17 +39,27 @@ public class Accueil {
         this.lieu = lieu;
     }
 
-    public void recupDonnes(Context context, VolleyCallback callback) {
+    public void recupDonnes(Context context, int part, VolleyCallback callback) {
         String url = context.getString(R.string.url);
         JSONObject postData = new JSONObject();
-        try {
-            postData.put("choix", "select");
-            postData.put("type", type);
-            postData.put("specialite", specialite);
-            postData.put("lieu", lieu);
-        } catch (JSONException e) {
-            Log.e(TAG, "Failed to create JSON object", e);
-            return;
+        if(part == 1){
+            try {
+                postData.put("choix", "select");
+                postData.put("type", type);
+                postData.put("specialite", specialite);
+                postData.put("lieu", lieu);
+            } catch (JSONException e) {
+                Log.e(TAG, "Failed to create JSON object", e);
+                return;
+            }
+        }else{
+            try {
+                postData.put("choix", "select recherche");
+                postData.put("recherche", recherche);
+            } catch (JSONException e) {
+                Log.e(TAG, "Failed to create JSON object", e);
+                return;
+            }
         }
 
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -70,6 +85,7 @@ public class Accueil {
                             donnes[i][9] = dataElement.getString("duree");
                             donnes[i][10] = dataElement.getString("mot_cles");
                             donnes[i][11] = dataElement.getString("type");
+                            donnes[i][12] = dataElement.getString("descriptionEn");
                         }
                         callback.onSuccess();
                     }

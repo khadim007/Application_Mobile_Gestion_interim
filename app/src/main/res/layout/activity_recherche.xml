@@ -33,7 +33,10 @@
                     android:layout_marginStart="20dp"
                     android:background="@drawable/border"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:clickable="true"
+                    android:onClick="onVocaleClick"
+                    android:orientation="horizontal"
+                    android:focusable="true">
 
                     <ImageView
                         android:layout_width="30dp"
@@ -79,7 +82,10 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="20dp"
-                    android:src="@drawable/icone_envoyer"/>
+                    android:clickable="true"
+                    android:onClick="onEnvoyer1Click"
+                    android:src="@drawable/icone_envoyer"
+                    android:focusable="true" />
             </LinearLayout>
 
             <LinearLayout

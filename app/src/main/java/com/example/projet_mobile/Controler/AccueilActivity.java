@@ -170,7 +170,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
             textTitre.setText("Affichage d'annonces interressantes");
         }
         accueil = new Accueil("job", specialite, lieu);
-        accueil.recupDonnes(this, new Accueil.VolleyCallback() {
+        accueil.recupDonnes(this, 1, new Accueil.VolleyCallback() {
             @Override
             public void onSuccess() {
                 affichage();
@@ -195,7 +195,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
 
     public void exec2(String s1, String s2, String s3){
         accueil = new Accueil(s1, s2, s3);
-        accueil.recupDonnes(this, new Accueil.VolleyCallback() {
+        accueil.recupDonnes(this, 1, new Accueil.VolleyCallback() {
             @Override
             public void onSuccess() {
                 affichage();
@@ -219,10 +219,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
     }
 
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
-    private void affichageEmpty(){
-
-        affErreur.setText("Aucune annonce est trouvée pres de vous !!");
-    }
+    private void affichageEmpty(){affErreur.setText("Aucune annonce est trouvée pres de vous !!");}
 
     public void onHomeClick(View view) {}
     public void onRechercheClick(View view) {onRechercheClick(this);}

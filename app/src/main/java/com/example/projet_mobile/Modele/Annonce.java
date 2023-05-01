@@ -29,22 +29,22 @@ import org.json.JSONObject;
 
 public class Annonce {
     private static String URL = "annonce";
-
     private int id;
-    public String[] donnes;
 
-    private String nom;
-    private String description;
-    private int employeur;
-    private double remuneration;
-    private String date_debut;
-    private String date_fin;
-    private String metier;
-    private String ville;
-    private String duree;
-    private String mot_cles;
+    public String nom;
+    public String description;
+    public String employeur;
+    public String remuneration;
+    public String date_debut;
+    public String date_fin;
+    public String metier;
+    public String ville;
+    public String duree;
+    public String mot_cles;
+    public String type;
+    public String descriptionEn;
 
-    public Annonce(String nom, String description, int employeur, double remuneration, String date_debut, String date_fin, String metier, String ville, String duree, String mot_cles){
+    public Annonce(String nom, String description, String employeur, String remuneration, String date_debut, String date_fin, String metier, String ville, String duree, String mot_cles){
         this.nom = nom;
         this.description = description;
         this.employeur = employeur;
@@ -178,25 +178,27 @@ public class Annonce {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
                 response -> {
                     try {
-                        JSONArray jsonArray = response.getJSONArray("donnees");
-                        JSONObject dataElement = jsonArray.getJSONObject(0);
-                        donnes = new String[dataElement.length()];
+                        if(response.getString("donnees").equals("false")){
+                            callback.onEmpty();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnees");
+                            JSONObject dataElement = jsonArray.getJSONObject(0);
 
-                        donnes[0] = dataElement.getString("id_");
-                        donnes[1] = dataElement.getString("nom");
-                        donnes[2] = dataElement.getString("description");
-                        donnes[3] = dataElement.getString("employeur");
-                        donnes[4] = dataElement.getString("remuneration");
-                        donnes[5] = dataElement.getString("date_debut");
-                        donnes[6] = dataElement.getString("date_fin");
-                        donnes[7] = dataElement.getString("metier");
-                        donnes[8] = dataElement.getString("ville");
-                        donnes[9] = dataElement.getString("duree");
-                        donnes[10] = dataElement.getString("mot_cles");
-                        donnes[11] = dataElement.getString("type");
-                        donnes[12] = dataElement.getString("descriptionEn");
+                            nom = dataElement.getString("nom");
+                            description = dataElement.getString("description");
+                            employeur = dataElement.getString("employeur");
+                            remuneration = dataElement.getString("remuneration");
+                            date_debut = dataElement.getString("date_debut");
+                            date_fin = dataElement.getString("date_fin");
+                            metier = dataElement.getString("metier");
+                            ville = dataElement.getString("ville");
+                            duree = dataElement.getString("duree");
+                            mot_cles = dataElement.getString("mot_cles");
+                            type = dataElement.getString("type");
+                            descriptionEn = dataElement.getString("descriptionEn");
 
-                        callback.onSuccess();
+                            callback.onSuccess();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -218,5 +220,6 @@ public class Annonce {
     public interface VolleyCallback {
         void onSuccess();
         void onError();
+        void onEmpty();
     }
 }
