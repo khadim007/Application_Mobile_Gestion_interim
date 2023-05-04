@@ -46,7 +46,7 @@
         <ImageView
             android:id="@+id/imCompte"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_columnWeight="1"
             android:onClick="onCompteClick"
             android:src="@drawable/logo_compte"

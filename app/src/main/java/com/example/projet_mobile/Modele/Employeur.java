@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public class Employeur {
 
     SharedPreferences sharedPreferences;
-    private static String URL = "employeur";
+    private static final String URL = "employeur";
     public static String succes = "good !!";
 
     private String identifiant;

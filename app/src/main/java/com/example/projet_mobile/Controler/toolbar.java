@@ -17,8 +17,21 @@ interface toolbar {
     }
 
     default void onCandidatureClick(Context context) {
-        Intent intent = new Intent( context, CandidatureActivity.class);
-        context.startActivity(intent);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+        int id = sharedPreferences.getInt("id", 0);
+        String role = sharedPreferences.getString("role", "");
+        if(id == 0){
+            Intent intent = new Intent( context, AuthentificationActivity.class);
+            context.startActivity(intent);
+        }else{
+            if("employeur".equals(role)){
+                Intent intent = new Intent( context, CreerAnnonceActivity.class);
+                context.startActivity(intent);
+            }else{
+                Intent intent = new Intent( context, CandidatureSpontaneActivity.class);
+                context.startActivity(intent);
+            }
+        }
     }
 
     default void onCompteClick(Context context) {

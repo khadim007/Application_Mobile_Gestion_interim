@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/back"
-    tools:context=".Controler.CandidatureOffreActivity">
+    tools:context=".Controler.CandidatureSpontaneActivity">
 
     <TextView
         android:id="@+id/affError"
@@ -54,21 +54,6 @@
                 android:layout_marginBottom="5dp"
                 android:background="@color/col2" />
 
-            <TextView
-                android:id="@+id/textAnnonce"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textStyle="bold"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/col2" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,18 +64,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/textInsPrenom"
+                    android:text="Metier : "
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/editPrenom"
+                    android:id="@+id/editMetier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/editInsPrenom"
-                    android:inputType="textPersonName"
+                    android:hint="les metiers cibles .."
+                    android:inputType="text"
                     android:textSize="16sp"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
@@ -104,17 +89,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/textInsNom"
+                    android:text="Employeur : "
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/editNom"
+                    android:id="@+id/editEmployeur"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/editInsNom"
-                    android:inputType="textPersonName"
+                    android:hint="les employeurs cible .."
+                    android:inputType="text"
                     android:textSize="16sp"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
@@ -128,19 +113,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nationalite(*)"
+                    android:text="Date debut : "
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/editNationalite"
+                    android:id="@+id/editDateDebut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/editInsNationalite"
-                    android:inputType="textPersonName"
+                    android:hint="la date de debut"
+                    android:inputType="text"
                     android:textSize="16dp"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    tools:ignore="TextFields,TouchTargetSizeCheck" />
             </LinearLayout>
 
             <LinearLayout
@@ -152,71 +137,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date Naissance(*)"
+                    android:text="Ville"
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/editDateNais"
+                    android:id="@+id/editVille"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/editInsDateNais"
+                    android:hint="les villes .."
                     android:inputType="date"
                     android:textSize="16sp"
                     tools:ignore="TouchTargetSizeCheck" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                tools:ignore="UselessParent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CV(*)"
-                    android:textSize="20sp" />
-
-                <Button
-                    android:id="@+id/editCV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/cyan_clair"
-                    android:text="@string/editInsCV" />
-
-                <TextView
-                    android:id="@+id/textCV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                tools:ignore="UselessParent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lettre Mt: "
-                    android:textSize="20sp" />
-
-                <Button
-                    android:id="@+id/editLettre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/cyan_clair"
-                    android:text="@string/editInsCV" />
-
-                <TextView
-                    android:id="@+id/textLettre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp" />
             </LinearLayout>
 
             <View

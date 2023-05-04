@@ -21,19 +21,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projet_mobile.Modele.CandidatInscrit;
+import com.example.projet_mobile.Modele.Candidature;
 import com.example.projet_mobile.R;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CandidatureActivity extends AppCompatActivity implements toolbar {
+public class CandidatureOffreActivity extends AppCompatActivity implements toolbar {
 
     private static final int FILE_PICKER_REQUEST_CODE = 1;
     SharedPreferences sharedPreferences;
     CandidatInscrit candidat;
-    int partie;
+    Candidature candidature;
+    String partie;
     int id;
 
     int idAnnonce;
@@ -43,8 +44,8 @@ public class CandidatureActivity extends AppCompatActivity implements toolbar {
     private String nom;
     private String nationalite;
     private String dateNais;
-    private File cv;
-    private File lettre;
+    private byte[] cv;
+    private byte[] lettre;
 
     private EditText editPrenom;
     private EditText editNom;
@@ -63,7 +64,7 @@ public class CandidatureActivity extends AppCompatActivity implements toolbar {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_candidature);
+        setContentView(R.layout.activity_candidature_offre);
         sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
         id = sharedPreferences.getInt("id", 0);
 
@@ -93,14 +94,14 @@ public class CandidatureActivity extends AppCompatActivity implements toolbar {
 
     private void click(){
         editCV.setOnClickListener(v -> {
-            partie = 1;
+            partie = "cv";
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("application/pdf");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, "Select PDF"), FILE_PICKER_REQUEST_CODE);
         });
         editLettre.setOnClickListener(v -> {
-            partie = 2;
+            partie = "lettre";
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("application/pdf");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -111,24 +112,27 @@ public class CandidatureActivity extends AppCompatActivity implements toolbar {
             nom = editNom.getText().toString();
             nationalite = editNationalite.getText().toString();
             dateNais = editDateNais.getText().toString();
-
             exec();
         });
     }
 
     private void exec(){
-        if (prenom.isEmpty() || nom.isEmpty() || nationalite.isEmpty() || dateNais.isEmpty() || cv.length() ==0) {
+        if (prenom.isEmpty() || nom.isEmpty() || nationalite.isEmpty() || dateNais.isEmpty() || cv == null) {
             Toast.makeText(this, "Tous les champs obligatoire doivent etre remplis !!", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Intent intent = new Intent( CandidatureActivity.this, AccueilActivity.class);
-        startActivity(intent);
+        candidature = new Candidature(id, idAnnonce, prenom, nom, nationalite, dateNais, cv, lettre);
+        candidature.ajouterOffre(this, new Candidature.VolleyCallback() {
+            @Override
+            public void onSuccess() {Intent intent = new Intent( CandidatureOffreActivity.this, RechercheActivity.class);startActivity(intent);}
+            @Override
+            public void onError() {}
+        });
     }
 
     private void getDonnes(){
         candidat = new CandidatInscrit(id);
-        candidat.getDonnes(this, new CandidatInscrit.VolleyCallback() {
+        candidat.getDonnesCand(this, new CandidatInscrit.VolleyCallback() {
             @Override
             public void onSuccess() {affichage(candidat.affiche);}
             @Override
@@ -138,35 +142,31 @@ public class CandidatureActivity extends AppCompatActivity implements toolbar {
 
     @SuppressLint("SetTextI18n")
     private void affichage(String s){
-        if(CandidatInscrit.succes.equals(s)){
-            Intent intent = getIntent();
-            idAnnonce = intent.getIntExtra("id", 0);
-            nomAnnonce = intent.getStringExtra("nom");
+        Intent intent = getIntent();
+        idAnnonce = intent.getIntExtra("id", 0);
+        nomAnnonce = intent.getStringExtra("nom");
 
-            textAnnonce.setText(nomAnnonce);
-            editPrenom.setText(candidat.prenom);
-            editNom.setText(candidat.nom);
-            editNationalite.setText(candidat.nationalite);
-            editDateNais.setText(candidat.dateNais);
-        }else{
-            affichageError(s);
-        }
+        textAnnonce.setText(nomAnnonce);
+        editPrenom.setText(candidat.prenom);
+        editNom.setText(candidat.nom);
+        editNationalite.setText(candidat.nationalite);
+        editDateNais.setText(candidat.dateNais);
+        if(candidat.cv != null) textCV.setText("Deja un CV !!");
+        if(candidat.lettre != null) textLettre.setText("Deja une Lettre !!");
+        cv = candidat.cv;
+        lettre = candidat.lettre;
     }
 
     private void affichageError(String s){affErreur.setText(s);}
-
 
     // -------------------------------------------------------------------------Pour le fichier a choisir
     @SuppressLint("Range")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == FILE_PICKER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 Uri selectedFileUri = data.getData();
-
-                // recuperer le nom du fichier
                 String fileName = null;
                 if (selectedFileUri != null) {
                     Cursor cursor = getContentResolver().query(selectedFileUri, null, null, null, null);
@@ -178,34 +178,27 @@ public class CandidatureActivity extends AppCompatActivity implements toolbar {
                         cursor.close();
                     }
                 }
-                if(partie == 1)
-                    textCV.setText(fileName);
-                else
-                    textLettre.setText(fileName);
-
-                // recuperer les donnes du fichier
+                if(partie.equals("cv")) textCV.setText(fileName);
+                else textLettre.setText(fileName);
                 try {
                     InputStream inputStream = getContentResolver().openInputStream(selectedFileUri);
-                    byte[] fileContent = new byte[inputStream.available()];
-                    inputStream.read(fileContent);
-                    inputStream.close();
-                    FileOutputStream outputStream;
-                    if(partie == 1) {
-                        cv = new File(getCacheDir(), fileName);
-                        outputStream = new FileOutputStream(cv);
-                    }else {
-                        lettre = new File(getCacheDir(), fileName);
-                        outputStream = new FileOutputStream(lettre);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) != -1) {
+                        byteArrayOutputStream.write(buffer, 0, length);
                     }
-                    outputStream.write(fileContent);
-                    outputStream.close();
+                    byteArrayOutputStream.close();
+                    inputStream.close();
+                    if(partie.equals("cv")) cv = byteArrayOutputStream.toByteArray();
+                    else lettre = byteArrayOutputStream.toByteArray();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else {
+            } else {
                 Toast.makeText(this, "Veillez verifier si le fichier choisi est bien un pdf valide !!", Toast.LENGTH_SHORT).show();
             }
-        }else {
+        } else {
             Toast.makeText(this, "Veillez verifier si le fichier choisi est bien un pdf valide !!", Toast.LENGTH_SHORT).show();
         }
     }

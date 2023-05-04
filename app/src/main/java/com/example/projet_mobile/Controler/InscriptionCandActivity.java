@@ -46,7 +46,7 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
     private String password1;
     private String password2;
     private String ville;
-    private File cv;
+    private File cv = null;
 
     private EditText editPrenom;
     private EditText editNom;
@@ -72,22 +72,22 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
     }
 
     private void getID(){
-        checkAccepte = (CheckBox) findViewById(R.id.checkAccepte);
+        checkAccepte = findViewById(R.id.checkAccepte);
 
-        editPrenom = (EditText) findViewById(R.id.editPrenom);
-        editNom = (EditText) findViewById(R.id.editNom);
-        editNationalite = (EditText) findViewById(R.id.editNationalite);
-        editDateNais = (EditText) findViewById(R.id.editDateNais);
-        editTelephone = (EditText) findViewById(R.id.editTéléphone);
-        editEmail = (EditText) findViewById(R.id.editEmail);
-        editPassword1 = (EditText) findViewById(R.id.editPassword1);
-        editPassword2 = (EditText) findViewById(R.id.editPassword2);
-        editVille = (EditText) findViewById(R.id.editVille);
-        editCV = (Button) findViewById(R.id.editCV);
-        textCV = (TextView) findViewById(R.id.textCV);
+        editPrenom = findViewById(R.id.editPrenom);
+        editNom = findViewById(R.id.editNom);
+        editNationalite = findViewById(R.id.editNationalite);
+        editDateNais = findViewById(R.id.editDateNais);
+        editTelephone = findViewById(R.id.editTéléphone);
+        editEmail = findViewById(R.id.editEmail);
+        editPassword1 = findViewById(R.id.editPassword1);
+        editPassword2 = findViewById(R.id.editPassword2);
+        editVille = findViewById(R.id.editVille);
+        editCV = findViewById(R.id.editCV);
+        textCV = findViewById(R.id.textCV);
 
-        bouttonValider = (Button) findViewById(R.id.buttonValider);
-        bouttonDeja = (Button) findViewById(R.id.buttonConnecter);
+        bouttonValider = findViewById(R.id.buttonValider);
+        bouttonDeja = findViewById(R.id.buttonConnecter);
         accepte = false;
 
         ImageView im = findViewById(R.id.imCompte);
@@ -95,39 +95,30 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
     }
 
     private void click(){
-        editCV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("application/pdf");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(intent, "Select PDF"), FILE_PICKER_REQUEST_CODE);
-            }
+        editCV.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("application/pdf");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select PDF"), FILE_PICKER_REQUEST_CODE);
         });
-        bouttonValider.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prenom = editPrenom.getText().toString();
-                nom = editNom.getText().toString();
-                nationalite = editNationalite.getText().toString();
-                dateNais = editDateNais.getText().toString();
-                telephone = editTelephone.getText().toString();
-                email = editEmail.getText().toString();
-                password1 = editPassword1.getText().toString();
-                password2 = editPassword2.getText().toString();
-                ville = editVille.getText().toString();
+        bouttonValider.setOnClickListener(v -> {
+            prenom = editPrenom.getText().toString();
+            nom = editNom.getText().toString();
+            nationalite = editNationalite.getText().toString();
+            dateNais = editDateNais.getText().toString();
+            telephone = editTelephone.getText().toString();
+            email = editEmail.getText().toString();
+            password1 = editPassword1.getText().toString();
+            password2 = editPassword2.getText().toString();
+            ville = editVille.getText().toString();
 
-                if(checkAccepte.isChecked())
-                    accepte = true;
-                exec();
-            }
+            if(checkAccepte.isChecked())
+                accepte = true;
+            exec();
         });
-        bouttonDeja.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent( InscriptionCandActivity.this, AuthentificationActivity.class);
-                startActivity(intent);
-            }
+        bouttonDeja.setOnClickListener(v -> {
+            Intent intent = new Intent( InscriptionCandActivity.this, AuthentificationActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -159,9 +150,7 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
         startActivity(intent);
     }
 
-//    public void enregistre(){
-//        candidat.ajouter(this);
-//    }
+
 // Pour le fichier a choisir
     @SuppressLint("Range")
     @Override
@@ -207,11 +196,8 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
         }
     }
 
-    public void onHomeClick(View view) {
-        onHomeClick(this);
-    }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {}
 }

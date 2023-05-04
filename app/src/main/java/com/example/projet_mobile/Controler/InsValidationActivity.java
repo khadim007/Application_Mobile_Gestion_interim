@@ -66,7 +66,7 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
     private String email;
     private String password;
     private String ville;
-    private File cv;
+    private byte[] cv;
     private boolean accepte;
 
     //-----------------------------------Employeur
@@ -119,7 +119,7 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
             email = intent.getStringExtra("email");
             password = intent.getStringExtra("password");
             ville = intent.getStringExtra("ville");
-            cv = (File) getIntent().getSerializableExtra("cv");
+            cv = intent.getByteArrayExtra("cv");
             accepte = getIntent().getBooleanExtra("accepte", false);
             envoyerCand();
         }
@@ -295,11 +295,8 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
         }
     }
 
-    public void onHomeClick(View view) {
-        onHomeClick(this);
-    }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {}
 }

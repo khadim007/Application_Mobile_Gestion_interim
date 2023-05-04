@@ -140,23 +140,27 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
-    public void click2(String id, String nom) {
+    public void click2(String id, String nom, String annonce) {
         int ident = sharedPreferences.getInt("id", 0);
+        String role = sharedPreferences.getString("role", "");
+        Intent intent = null;
         if("partager".equals(nom)){
             if(ident == 0){
-                Intent intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
-                startActivity(intent);
+                intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
             }
         }else if("consulter".equals(nom)){
-            Intent intent = new Intent( AccueilActivity.this, VoirAnnonceActivity.class);
+            intent = new Intent( AccueilActivity.this, VoirAnnonceActivity.class);
             intent.putExtra("id", Integer.parseInt(id));
-            startActivity(intent);
         }else if("candidater".equals(nom)){
-            if(ident == 0){
-                Intent intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
-                startActivity(intent);
+            if(role.equals("candidat")){
+                intent = new Intent( AccueilActivity.this, CandidatureOffreActivity.class);
+                intent.putExtra("id", Integer.parseInt(id));
+                intent.putExtra("nom", annonce);
+            }else {
+                intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
             }
         }
+        startActivity(intent);
     }
 
     public void exec(){

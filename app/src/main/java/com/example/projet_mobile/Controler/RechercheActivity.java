@@ -106,23 +106,27 @@ public class RechercheActivity extends AppCompatActivity implements toolbar {
             exec();
     }
 
-    public void click2(String id, String nom) {
+    public void click2(String id, String nom, String annonce) {
         int ident = sharedPreferences.getInt("id", 0);
+        String role = sharedPreferences.getString("role", "");
+        Intent intent = null;
         if("partager".equals(nom)){
             if(ident == 0){
-                Intent intent = new Intent( RechercheActivity.this, AuthentificationActivity.class);
-                startActivity(intent);
+                intent = new Intent( RechercheActivity.this, AuthentificationActivity.class);
             }
         }else if("consulter".equals(nom)){
-            Intent intent = new Intent( RechercheActivity.this, VoirAnnonceActivity.class);
+            intent = new Intent( RechercheActivity.this, VoirAnnonceActivity.class);
             intent.putExtra("id", Integer.parseInt(id));
-            startActivity(intent);
         }else if("candidater".equals(nom)){
-            if(ident == 0){
-                Intent intent = new Intent( RechercheActivity.this, AuthentificationActivity.class);
-                startActivity(intent);
+            if(role.equals("candidat")){
+                intent = new Intent( RechercheActivity.this, CandidatureOffreActivity.class);
+                intent.putExtra("id", Integer.parseInt(id));
+                intent.putExtra("nom", annonce);
+            }else {
+                intent = new Intent( RechercheActivity.this, AuthentificationActivity.class);
             }
         }
+        startActivity(intent);
     }
 
     private void exec(){

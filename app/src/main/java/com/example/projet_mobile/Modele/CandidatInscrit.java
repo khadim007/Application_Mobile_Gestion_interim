@@ -20,12 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.util.Arrays;
 
 public class CandidatInscrit {
 
     SharedPreferences sharedPreferences;
-    private static String URL = "candidat_inscrit";
+    private static final String URL = "candidat_inscrit";
     public static String succes = "Authentification reussie !!";
 
     private String identifiant;
@@ -40,7 +40,8 @@ public class CandidatInscrit {
     public String email;
     public String password;
     public String ville;
-    public File cv;
+    public byte[] cv;
+    public byte[] lettre;
     public boolean accepte;
 
     public CandidatInscrit(int id){
@@ -62,7 +63,7 @@ public class CandidatInscrit {
         this.password = password;
     }
 
-    public CandidatInscrit(String prenom, String nom, String nationalite, String dateNais, String telephone, String email, String password, String ville, File cv, boolean accepte){
+    public CandidatInscrit(String prenom, String nom, String nationalite, String dateNais, String telephone, String email, String password, String ville, byte[] cv, boolean accepte){
         this.prenom = prenom;
         this.nom = nom;
         this.nationalite = nationalite;
@@ -141,10 +142,8 @@ public class CandidatInscrit {
                 try {
                     if(response.getString("success").equals("true")) {
                         this.affiche = "Authentification reussie !!";
-                        Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
 
-                        JSONArray jsonArray = null;
-                        jsonArray = response.getJSONArray("donnes");
+                        JSONArray jsonArray = response.getJSONArray("donnes");
                         JSONObject dataElement = jsonArray.getJSONObject(0);
                         prenom = dataElement.getString("prenom");
                         nom = dataElement.getString("nom");
@@ -154,7 +153,6 @@ public class CandidatInscrit {
                         email = dataElement.getString("email");
                         password = dataElement.getString("password");
                         ville = dataElement.getString("ville");
-                        cv = new File(dataElement.getString("cv"));
                         int acc = dataElement.getInt("accepte");
                         accepte = acc == 0 ? false  : true;
 
@@ -180,6 +178,144 @@ public class CandidatInscrit {
                 Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
                 callback.onError();
             });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void getDonnesCand(Context context, VolleyCallback callback){
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select return line for cand");
+            postData.put("id", id);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("success").equals("true")) {
+                            this.affiche = "Authentification reussie !!";
+
+                            JSONArray jsonArray = response.getJSONArray("donnes");
+                            JSONObject dataElement = jsonArray.getJSONObject(0);
+                            prenom = dataElement.getString("prenom");
+                            nom = dataElement.getString("nom");
+                            nationalite = dataElement.getString("nationalite");
+                            dateNais = dataElement.getString("dateNaissance");
+                            if(dataElement.getString("cv").equals("null")){
+                                cv = null;
+                            }else{
+                                String s = dataElement.getString("cv").replace("[", "").replace("]", "");
+                                String[] cvStrArr = s.split(", ");
+                                cv = new byte[cvStrArr.length];
+                                for (int i = 0; i < cvStrArr.length; i++) {
+                                    cv[i] = Byte.parseByte(cvStrArr[i]);
+                                }
+                            }
+                            if(dataElement.getString("lettre").equals("null")){
+                                lettre = null;
+                            }else {
+                                String s = dataElement.getString("lettre").replace("[", "").replace("]", "");
+                                String[] cvStrArr = s.split(", ");
+                                lettre = new byte[cvStrArr.length];
+                                for (int i = 0; i < cvStrArr.length; i++) {
+                                    lettre[i] = Byte.parseByte(cvStrArr[i]);
+                                }
+                            }
+
+                            callback.onSuccess();
+                        } else {
+                            this.affiche = "Probleme lors de la recuperation. Veillez reessayer !!";
+                            Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    }else{
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+
+                    }
+                    Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void getDonnesCVouLettre(Context context, String m, VolleyCallback callback){
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select return cv ou lettre");
+            postData.put("id", id);
+            postData.put("partie", m);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("success").equals("true")) {
+                            this.affiche = "Authentification reussie !!";
+
+                            JSONArray jsonArray = response.getJSONArray("donnes");
+                            JSONObject dataElement = jsonArray.getJSONObject(0);
+                            if(m.equals("cv")){
+                                if(dataElement.getString("cv").equals("null")){
+                                    cv = null;
+                                }else{
+                                    String s = dataElement.getString("cv").replace("[", "").replace("]", "");
+                                    String[] cvStrArr = s.split(", ");
+                                    cv = new byte[cvStrArr.length];
+                                    for (int i = 0; i < cvStrArr.length; i++) {
+                                        cv[i] = Byte.parseByte(cvStrArr[i]);
+                                    }
+                                }
+                            }else {
+                                if(dataElement.getString("lettre").equals("null")){
+                                    lettre = null;
+                                }else {
+                                    String s = dataElement.getString("lettre").replace("[", "").replace("]", "");
+                                    String[] cvStrArr = s.split(", ");
+                                    lettre = new byte[cvStrArr.length];
+                                    for (int i = 0; i < cvStrArr.length; i++) {
+                                        lettre[i] = Byte.parseByte(cvStrArr[i]);
+                                    }
+                                }
+                            }
+
+                            callback.onSuccess();
+                        } else {
+                            this.affiche = "Probleme lors de la recuperation. Veillez reessayer !!";
+                            Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    }else{
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+
+                    }
+                    Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                    callback.onError();
+                });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
@@ -242,6 +378,45 @@ public class CandidatInscrit {
             postData.put("email", email);
             postData.put("password", password);
             postData.put("ville", ville);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    } else {
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void modifierCVouLettre(Context context, String m, CandidatInscrit.VolleyCallback callback) {
+        String url = context.getString(R.string.url) + "" + URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "update cv ou lettre");
+            postData.put("id", id);
+            postData.put("partie", m);
+            if(m.equals("cv"))postData.put("donnes", Arrays.toString(cv));
+            else postData.put("donnes", Arrays.toString(lettre));
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
         }
