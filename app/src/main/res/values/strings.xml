@@ -106,4 +106,13 @@
     <string name="textAbonCond5">Conditions: \nAvantages: \nDésabonnement:</string>
     <string name="textAbonCond6">Conditions: \nAvantages: \nDésabonnement:</string>
 
+
+    <string-array name="spinnerCandidature">
+        <item>Cand. en cours et sans reponse</item>
+        <item>Cand. en cours acceptees</item>
+        <item>Cand. en cours non acceptees</item>
+        <item>Cand. passees</item>
+        <item>Cand. potentielles</item>
+    </string-array>
+
 </resources>

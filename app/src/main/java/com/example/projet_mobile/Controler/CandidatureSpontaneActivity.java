@@ -87,6 +87,8 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
             public void onSuccess() {Intent intent = new Intent( CandidatureSpontaneActivity.this, RechercheActivity.class);startActivity(intent);}
             @Override
             public void onError() {}
+            @Override
+            public void onEmpty() {}
         });
     }
 

@@ -121,40 +121,83 @@ public class CandidatureOffreActivity extends AppCompatActivity implements toolb
             Toast.makeText(this, "Tous les champs obligatoire doivent etre remplis !!", Toast.LENGTH_SHORT).show();
             return;
         }
-        candidature = new Candidature(id, idAnnonce, prenom, nom, nationalite, dateNais, cv, lettre);
-        candidature.ajouterOffre(this, new Candidature.VolleyCallback() {
-            @Override
-            public void onSuccess() {Intent intent = new Intent( CandidatureOffreActivity.this, RechercheActivity.class);startActivity(intent);}
-            @Override
-            public void onError() {}
-        });
+        Intent intent = getIntent();
+        int id_candidature = intent.getIntExtra("id_candidature", 0);
+        if(id_candidature != 0){
+            candidature = new Candidature(id, idAnnonce, nomAnnonce, prenom, nom, nationalite, dateNais, cv, lettre);
+            candidature.id = id_candidature;
+            candidature.modifierOffre(this, new Candidature.VolleyCallback() {
+                @Override
+                public void onSuccess() {Intent intent = new Intent( CandidatureOffreActivity.this, RechercheActivity.class);startActivity(intent);}
+                @Override
+                public void onError() {}
+                @Override
+                public void onEmpty() {}
+            });
+        }else {
+            candidature = new Candidature(id, idAnnonce, nomAnnonce, prenom, nom, nationalite, dateNais, cv, lettre);
+            candidature.ajouterOffre(this, new Candidature.VolleyCallback() {
+                @Override
+                public void onSuccess() {Intent intent = new Intent( CandidatureOffreActivity.this, RechercheActivity.class);startActivity(intent);}
+                @Override
+                public void onError() {}
+                @Override
+                public void onEmpty() {}
+            });
+        }
     }
 
     private void getDonnes(){
-        candidat = new CandidatInscrit(id);
-        candidat.getDonnesCand(this, new CandidatInscrit.VolleyCallback() {
-            @Override
-            public void onSuccess() {affichage(candidat.affiche);}
-            @Override
-            public void onError() {affichageError(candidat.affiche);}
-        });
+        Intent intent = getIntent();
+        int id_candidature = intent.getIntExtra("id_candidature", 0);
+        if(id_candidature != 0){
+            candidature = new Candidature(id_candidature);
+            candidature.recupDonnesPrecis(this, new Candidature.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichage();}
+                @Override
+                public void onError() {affichageError(candidat.affiche);}
+                @Override
+                public void onEmpty() {}
+            });
+        }else{
+            candidat = new CandidatInscrit(id);
+            candidat.getDonnesCand(this, new CandidatInscrit.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichage();}
+                @Override
+                public void onError() {affichageError("Error");}
+            });
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    private void affichage(String s){
+    private void affichage(){
         Intent intent = getIntent();
         idAnnonce = intent.getIntExtra("id", 0);
         nomAnnonce = intent.getStringExtra("nom");
-
-        textAnnonce.setText(nomAnnonce);
-        editPrenom.setText(candidat.prenom);
-        editNom.setText(candidat.nom);
-        editNationalite.setText(candidat.nationalite);
-        editDateNais.setText(candidat.dateNais);
-        if(candidat.cv != null) textCV.setText("Deja un CV !!");
-        if(candidat.lettre != null) textLettre.setText("Deja une Lettre !!");
-        cv = candidat.cv;
-        lettre = candidat.lettre;
+        int id_candidature = intent.getIntExtra("id_candidature", 0);
+        if(id_candidature != 0){
+            textAnnonce.setText(nomAnnonce);
+            editPrenom.setText(candidature.prenom);
+            editNom.setText(candidature.nom);
+            editNationalite.setText(candidature.nationalite);
+            editDateNais.setText(candidature.dateNais);
+            if(candidature.cv != null) textCV.setText("Deja un CV !!");
+            if(candidature.lettre != null) textLettre.setText("Deja une Lettre !!");
+            cv = candidature.cv;
+            lettre = candidature.lettre;
+        }else{
+            textAnnonce.setText(nomAnnonce);
+            editPrenom.setText(candidat.prenom);
+            editNom.setText(candidat.nom);
+            editNationalite.setText(candidat.nationalite);
+            editDateNais.setText(candidat.dateNais);
+            if(candidat.cv != null) textCV.setText("Deja un CV !!");
+            if(candidat.lettre != null) textLettre.setText("Deja une Lettre !!");
+            cv = candidat.cv;
+            lettre = candidat.lettre;
+        }
     }
 
     private void affichageError(String s){affErreur.setText(s);}

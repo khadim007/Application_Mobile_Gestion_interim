@@ -73,13 +73,10 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
                 annonyme = new Annonyme(accepte, getAddress(latitude, longitude), c);
                 exec();
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {}
-
             @Override
             public void onProviderEnabled(String provider) {}
-
             @Override
             public void onProviderDisabled(String provider) {}
         };

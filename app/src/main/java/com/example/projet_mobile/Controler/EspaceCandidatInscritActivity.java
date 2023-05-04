@@ -189,9 +189,9 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
         startActivity(intent);
     }
     public void onCardCandidatures(View view) {
-        System.out.println("==========================C");
+        Intent intent = new Intent( EspaceCandidatInscritActivity.this, GestionCandidatureActivity.class);
+        startActivity(intent);
     }
-
     public void onCardOffres(View view) {
         Intent intent = new Intent( EspaceCandidatInscritActivity.this, OffreActivity.class);
         startActivity(intent);
