@@ -115,4 +115,31 @@
         <item>Cand. potentielles</item>
     </string-array>
 
+
+    <string name="textNon">Nous n\'avons pas encore ces horaires !!</string>
+    <string name="textMois">Fevrier 20-16</string>
+    <string name="textAjouter">Ajouter</string>
+    <string name="textTitre">Ajouter un evenement</string>
+    <string name="text1">Titre : </string>
+    <string name="text2">Heure debut : </string>
+    <string name="text3">Heure fin : </string>
+    <string name="text4">Jour : </string>
+    <string name="j1">Lun</string>
+    <string name="j2">Mar</string>
+    <string name="j3">Mer</string>
+    <string name="j4">Jeu</string>
+    <string name="j5">Ven</string>
+    <string name="j6">Sam</string>
+    <string name="j7">Dim</string>
+    <string name="textFormImcomplet">Tous les champs sont pas remplis !!</string>
+    <string-array name="jours">
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+    </string-array>
+
 </resources>

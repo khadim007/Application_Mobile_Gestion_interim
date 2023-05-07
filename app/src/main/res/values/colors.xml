@@ -14,4 +14,10 @@
     <color name="gris">#919191</color>
     <color name="back">#F0F0F0</color>
     <color name="rouge">#FF0000</color>
+    <color name="col1">#A0B5CF</color>
+    <color name="col22">#C7C087</color>
+    <color name="col3">#9FBF80</color>
+    <color name="col4">#CA9393</color>
+    <color name="col5">#C8E1E1</color>
+    <color name="vert">#376F00</color>
 </resources>

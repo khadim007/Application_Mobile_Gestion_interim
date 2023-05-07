@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.projet_mobile.Modele.Candidature;
+import com.example.projet_mobile.Modele.Emplois;
 import com.example.projet_mobile.R;
 
 public class GestionCandidatureActivity extends AppCompatActivity implements toolbar {
@@ -93,8 +94,19 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
                 @Override
                 public void onEmpty() {}
             });
-        }else if("agenda".equals(nom)){
 
+            int idd = sharedPreferences.getInt("id", 0);
+            if("accepter".equals(nom)){
+                Emplois emplois = new Emplois(Integer.parseInt(id), idd, Integer.parseInt(annonce), nomAnnonce);
+                emplois.ajouter(this, new Emplois.VolleyCallback() {
+                    @Override
+                    public void onSuccess() {}
+                    @Override
+                    public void onError() {}
+                    @Override
+                    public void onEmpty() {}
+                });
+            }
         }
     }
 

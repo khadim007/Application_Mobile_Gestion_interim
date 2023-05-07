@@ -196,13 +196,17 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
         Intent intent = new Intent( EspaceCandidatInscritActivity.this, OffreActivity.class);
         startActivity(intent);
     }
-
     public void onCardEmplois(View view) {
-        System.out.println("==========================E");
+        Intent intent = new Intent( EspaceCandidatInscritActivity.this, GestionEmploisActivity.class);
+        startActivity(intent);
     }
-
     public void onCardDeconnexion(View view) {
-        System.out.println("==========================E");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("id", 0);
+        editor.putString("role", "");
+        editor.commit();
+        Intent intent = new Intent( EspaceCandidatInscritActivity.this, AccueilActivity.class);
+        startActivity(intent);
     }
 
     public void onHomeClick(View view) {onHomeClick(this);}
