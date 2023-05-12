@@ -106,7 +106,6 @@
     <string name="textAbonCond5">Conditions: \nAvantages: \nDésabonnement:</string>
     <string name="textAbonCond6">Conditions: \nAvantages: \nDésabonnement:</string>
 
-
     <string-array name="spinnerCandidature">
         <item>Cand. en cours et sans reponse</item>
         <item>Cand. en cours acceptees</item>
@@ -114,7 +113,6 @@
         <item>Cand. passees</item>
         <item>Cand. potentielles</item>
     </string-array>
-
 
     <string name="textNon">Nous n\'avons pas encore ces horaires !!</string>
     <string name="textMois">Fevrier 20-16</string>
@@ -140,6 +138,25 @@
         <item>24</item>
         <item>25</item>
         <item>26</item>
+    </string-array>
+
+    <string-array name="spinnerPartage">
+        <item>Par SMS</item>
+        <item>Partager avec une personne</item>
+        <item>Partager avec un groupe</item>
+    </string-array>
+
+    <string-array name="spinnerGroupe">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 
 </resources>

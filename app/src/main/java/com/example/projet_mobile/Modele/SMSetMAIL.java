@@ -1,9 +1,18 @@
 package com.example.projet_mobile.Modele;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.telephony.SmsManager;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.example.projet_mobile.Controler.AccueilActivity;
+import com.example.projet_mobile.Controler.PartageActivity;
 
 import java.util.Properties;
 
@@ -16,17 +25,49 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class SMSetMAIL {
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    SmsManager smsManager;
+    PartageActivity partage;
     Context context;
-    String email;
+    String contact;
     String text;
 
-    public SMSetMAIL(Context context, String email, String text){
+    public SMSetMAIL(Context context, String contact, String text, PartageActivity partage){
         this.context = context;
-        this.email = email;
+        this.contact = contact;
         this.text = text;
+        this.partage = partage;
     }
 
 
+    //--------------------------------------------SMS--------------------------------------
+    public void envoyerSMS() {
+        smsManager = SmsManager.getDefault();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (context.checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
+                Log.d("permission", "permission denied to SEND_SMS - requesting it");
+                String[] permissions = {Manifest.permission.SEND_SMS};
+                partage.requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            } else {
+                go();
+            }
+        }
+    }
+
+    public void go(){
+        String message = text;
+        smsManager.sendTextMessage(contact, null, message, null, null);
+
+        if(partage.aller.equals("true")) {
+            Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, AccueilActivity.class);
+            context.startActivity(intent);
+        }
+    }
+
+
+
+    //--------------------------------------------EMAIL--------------------------------------
     public void envoyerEmail() {
         String senderEmail = "projet.mobile.kao@gmail.com";
         String password = "lacclrbagojmcupu";
@@ -49,7 +90,7 @@ public class SMSetMAIL {
             MimeMessage message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress(senderEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(contact));
             message.setSubject("Message envoye par KAO Interim");
 
             String messageBody = text;
@@ -76,6 +117,12 @@ public class SMSetMAIL {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
+
+            if(partage.aller.equals("true")) {
+                Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, AccueilActivity.class);
+                context.startActivity(intent);
+            }
         }
 
         @Override

@@ -90,7 +90,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
             }
         });
         bouttonTraduire.setOnClickListener(v -> {
-            textDescription.setText(annonce.description);
+            textDescription.setText(annonce.descriptionEn);
         });
         bouttonEnregistrer.setOnClickListener(v -> {
             if(ident == 0){

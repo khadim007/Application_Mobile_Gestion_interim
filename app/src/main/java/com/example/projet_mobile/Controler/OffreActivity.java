@@ -60,7 +60,10 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
     public void click2(String ident, String nom, String annonce) {
         Intent intent = null;
         if("partager".equals(nom)){
-            if(id == 0){
+            if(role.equals("candidat")) {
+                intent = new Intent( OffreActivity.this, PartageActivity.class);
+                intent.putExtra("id", Integer.parseInt(ident));
+            }else{
                 intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
             }
         }else if("consulter".equals(nom)){

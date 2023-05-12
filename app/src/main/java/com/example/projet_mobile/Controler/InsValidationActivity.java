@@ -27,7 +27,6 @@ import com.example.projet_mobile.Modele.CandidatInscrit;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
 
-import java.io.File;
 import java.util.Properties;
 import java.util.Random;
 
@@ -298,5 +297,5 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
     public void onHomeClick(View view) {onHomeClick(this);}
     public void onRechercheClick(View view) {onRechercheClick(this);}
     public void onCandidatureClick(View view) {onCandidatureClick(this);}
-    public void onCompteClick(View view) {}
+    public void onCompteClick(View view) {onCompteClick(this);}
 }

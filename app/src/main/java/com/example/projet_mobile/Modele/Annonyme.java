@@ -57,7 +57,7 @@ public class Annonyme {
         e[1] = s;
         e[2] = e1[1];
         e[3] = e1[2];
-        e[4] = e1[3];
+        //e[4] = e1[3];
         return e;
     }
 }

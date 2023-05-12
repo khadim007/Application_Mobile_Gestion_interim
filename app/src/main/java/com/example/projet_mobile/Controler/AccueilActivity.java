@@ -138,11 +138,13 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
     }
 
     public void click2(String id, String nom, String annonce) {
-        int ident = sharedPreferences.getInt("id", 0);
         String role = sharedPreferences.getString("role", "");
         Intent intent = null;
         if("partager".equals(nom)){
-            if(ident == 0){
+            if(role.equals("candidat")) {
+                intent = new Intent( AccueilActivity.this, PartageActivity.class);
+                intent.putExtra("id", Integer.parseInt(id));
+            }else{
                 intent = new Intent( AccueilActivity.this, AuthentificationActivity.class);
             }
         }else if("consulter".equals(nom)){
