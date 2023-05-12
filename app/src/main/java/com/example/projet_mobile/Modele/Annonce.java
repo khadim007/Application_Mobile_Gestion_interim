@@ -51,13 +51,13 @@ public class Annonce {
 
     public Annonce(int id){this.id = id;}
 
-    public Annonce(String nom, String description, String employeur, String remuneration, String date_debut, String date_fin, String metier, String ville, String duree, String mot_cles){
+    public Annonce(String nom, String description, String descriptionEn, String employeur, String remuneration, String date_debut, String metier, String ville, String duree, String mot_cles){
         this.nom = nom;
         this.description = description;
+        this.descriptionEn = descriptionEn;
         this.employeur = employeur;
         this.remuneration = remuneration;
         this.date_debut = date_debut;
-        this.date_fin = date_fin;
         this.metier = metier;
         this.ville = ville;
         this.duree = duree;
@@ -165,6 +165,52 @@ public class Annonce {
     }
 
 
+    // ----------------------------- insert ------------------------------
+    public void ajouter(Context context, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "insert");
+            postData.put("nom", nom);
+            postData.put("description", description);
+            postData.put("descriptionEn", descriptionEn);
+            postData.put("employeur", employeur);
+            postData.put("remuneration", remuneration);
+            postData.put("date_debut", date_debut);
+            postData.put("metier", metier);
+            postData.put("ville", ville);
+            postData.put("duree", duree);
+            postData.put("mot_cles", mot_cles);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            Toast.makeText(context, "succes !!", Toast.LENGTH_SHORT).show();
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
 
     // ----------------------------- select ------------------------------
     public void recupDonnes(Context context, Annonce.VolleyCallback callback) {

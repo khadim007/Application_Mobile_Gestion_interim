@@ -169,16 +169,22 @@ public class EspaceEmployeurActivity extends AppCompatActivity implements toolba
         textPrix.setText(abonnement.prix);
         textCondition.setText(abonnement.condition);
     }
+    private void affichageError(String s){textErreur.setText(s);}
 
-    public void onHomeClick(View view) {
-        onHomeClick(this);
+
+    public void onCardDeconnexion(View view) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("id", 0);
+        editor.putString("role", "");
+        editor.commit();
+        Intent intent = new Intent( EspaceEmployeurActivity.this, AccueilActivity.class);
+        startActivity(intent);
     }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {} // laisse comm ca
 
-    private void affichageError(String s){
-        textErreur.setText(s);
-    }
+
 }

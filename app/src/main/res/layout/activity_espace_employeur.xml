@@ -14,8 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/toolbar"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -30,7 +29,6 @@
                 android:id="@+id/textNomEntre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textErreur"
                 android:gravity="center_horizontal"
                 android:textSize="40sp"
                 android:textStyle="bold" />
@@ -39,7 +37,6 @@
                 android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textNomEntre"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@color/back"
@@ -293,12 +290,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@color/back"
                 android:orientation="vertical"
                 app:cardCornerRadius="25dp"
-                android:layout_below="@id/card1"
                 app:cardElevation="15dp">
 
                 <LinearLayout
@@ -386,11 +382,9 @@
             <LinearLayout
                 android:id="@+id/card3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/card2"
-                android:layout_marginBottom="10dp"
+                android:layout_height="130dp"
                 android:orientation="horizontal"
-                android:paddingTop="10dp">
+                android:paddingTop="15dp">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -401,7 +395,7 @@
                     android:orientation="vertical"
                     app:cardBackgroundColor="@color/col"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="15dp">
+                    app:cardElevation="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -438,7 +432,7 @@
                     android:orientation="vertical"
                     app:cardBackgroundColor="@color/col"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="15dp">
+                    app:cardElevation="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -473,7 +467,7 @@
                     android:orientation="vertical"
                     app:cardBackgroundColor="@color/col"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="15dp">
+                    app:cardElevation="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
