@@ -3,6 +3,7 @@ package com.example.projet_mobile.Controler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +30,6 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
     private ListView listView;
 
     private TextView affErreur;
-    private TextView textTitre;
 
     public Button bouttonPartager;
     public Button bouttonConsulter;
@@ -44,12 +44,14 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
         role = sharedPreferences.getString("role", "");
 
         getID();
-        getDonnes();
+        //aff();
+        //click();
+        if("candidat".equals(role)) getDonnes();
+        else getDonnesE();
     }
 
     private void getID(){
         affErreur = findViewById(R.id.affError);
-        textTitre = findViewById(R.id.textTitre);
 
         listView = findViewById(R.id.idListView);
 
@@ -57,28 +59,60 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
-    public void click2(String ident, String nom, String annonce) {
-        Intent intent = null;
+//    private void aff(){
+//        if("employeur".equals(role)) card.setVisibility(View.GONE);
+//        else cardE.setVisibility(View.GONE);
+//    }
+
+    public void click2(String ident, String nom, String nomAnnonce) {
         if("partager".equals(nom)){
             if(role.equals("candidat")) {
-                intent = new Intent( OffreActivity.this, PartageActivity.class);
+                Intent intent = new Intent( OffreActivity.this, PartageActivity.class);
                 intent.putExtra("id", Integer.parseInt(ident));
+                startActivity(intent);
             }else{
-                intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
             }
         }else if("consulter".equals(nom)){
-            intent = new Intent( OffreActivity.this, VoirAnnonceActivity.class);
+            Intent intent = new Intent( OffreActivity.this, VoirAnnonceActivity.class);
             intent.putExtra("id", Integer.parseInt(ident));
+            startActivity(intent);
         }else if("candidater".equals(nom)){
             if(role.equals("candidat")){
-                intent = new Intent( OffreActivity.this, CandidatureOffreActivity.class);
+                Intent intent = new Intent( OffreActivity.this, CandidatureOffreActivity.class);
                 intent.putExtra("id", Integer.parseInt(ident));
-                intent.putExtra("nom", annonce);
+                intent.putExtra("nom", nomAnnonce);
+                startActivity(intent);
             }else {
-                intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }
+        }else if("supprimer".equals(nom)){
+            if(role.equals("employeur")){
+                annonce.id = Integer.parseInt(ident);
+                annonce.supp(this, new Annonce.VolleyCallback() {
+                    @Override
+                    public void onSuccess() {getDonnesE();}
+                    @Override
+                    public void onError() {affichageError();}
+                    @Override
+                    public void onEmpty() {}
+                });
+            }else {
+                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }
+        }else if("modifier".equals(nom)){
+            if(role.equals("employeur")){
+                Intent intent = new Intent( OffreActivity.this, CandidatureSpontaneActivity.class);
+                intent.putExtra("idE", Integer.parseInt(ident));
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
             }
         }
-        startActivity(intent);
     }
 
     public void getDonnes(){
@@ -105,14 +139,37 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
         });
     }
 
-    private void affichage(){
-        affErreur.setText(notification.id_donnes.length + " resultats");
-        listView.setVisibility(View.VISIBLE);
-        Annonce.AnnonceAdapter annonces = new Annonce.AnnonceAdapter(this, this, annonce.donnes);
-        listView.setAdapter(annonces);
+    public void getDonnesE(){
+        annonce = new Annonce();
+        annonce.employeur = String.valueOf(id);
+        annonce.recupDonnesEmp(this, new Annonce.VolleyCallback() {
+            @Override
+            public void onSuccess() {affichage();}
+            @Override
+            public void onError() {affichageError();}
+            @Override
+            public void onEmpty() {affichageEmpty();}
+        });
     }
 
+    @SuppressLint("SetTextI18n")
+    private void affichage(){
+        if("candidat".equals(role)){
+            affErreur.setText(notification.id_donnes.length + " resultats");
+            listView.setVisibility(View.VISIBLE);
+            Annonce.AnnonceAdapter annonces = new Annonce.AnnonceAdapter(this, this, annonce.donnes);
+            listView.setAdapter(annonces);
+        }else {
+            affErreur.setText(annonce.donnes.length + " resultats");
+            listView.setVisibility(View.VISIBLE);
+            Annonce.AnnonceAdapter annonces = new Annonce.AnnonceAdapter(this, this, annonce.donnes);
+            listView.setAdapter(annonces);
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
+    @SuppressLint("SetTextI18n")
     private void affichageEmpty(){affErreur.setText("Aucun notification est trouvée pour vous !!");}
 
     public void onHomeClick(View view) {onHomeClick(this);}

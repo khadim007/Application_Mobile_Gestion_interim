@@ -3,6 +3,7 @@ package com.example.projet_mobile.Controler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -89,9 +90,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
                 startActivity(intent);
             }
         });
-        bouttonTraduire.setOnClickListener(v -> {
-            textDescription.setText(annonce.descriptionEn);
-        });
+        bouttonTraduire.setOnClickListener(v -> textDescription.setText(annonce.descriptionEn));
         bouttonEnregistrer.setOnClickListener(v -> {
             if(ident == 0){
                 Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
@@ -100,7 +99,6 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         });
         bouttonSimilaires.setOnClickListener(v -> {
             Intent intent = new Intent( VoirAnnonceActivity.this, RechercheActivity.class);
-            intent.putExtra("type", annonce.type);
             intent.putExtra("specialite", annonce.metier);
             intent.putExtra("lieu", annonce.ville);
             startActivity(intent);
@@ -111,20 +109,15 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         annonce = new Annonce(id);
         annonce.recupDonnes(this, new Annonce.VolleyCallback() {
             @Override
-            public void onSuccess() {
-                affichage();
-            }
+            public void onSuccess() {affichage();}
             @Override
-            public void onError() {
-                affichageError();
-            }
+            public void onError() {affichageError();}
             @Override
-            public void onEmpty() {
-                affichageEmpty();
-            }
+            public void onEmpty() {affichageEmpty();}
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void affichage(){
         textNom.setText(annonce.nom+" (H/F)");
         textRen.setText(annonce.remuneration+" € par heure");
@@ -137,13 +130,9 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         employeur = new Employeur(Integer.parseInt(annonce.employeur));
         employeur.recupDonnes(this, new Employeur.VolleyCallback() {
             @Override
-            public void onSuccess() {
-                affichage2();
-            }
+            public void onSuccess() {affichage2();}
             @Override
-            public void onError() {
-                affichageError();
-            }
+            public void onError() {affichageError();}
         });
     }
 
@@ -152,17 +141,13 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         textDetails.setText(s);
     }
 
+    @SuppressLint("SetTextI18n")
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
+    @SuppressLint("SetTextI18n")
     private void affichageEmpty(){affErreur.setText("Aucune annonce est trouvée !!");}
 
-    public void onHomeClick(View view) {
-        onHomeClick(this);
-    }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
     public void onCandidatureClick(View view) {onCandidatureClick(this);}
-    public void onCompteClick(View view) {
-        onCompteClick(this);
-    }
+    public void onCompteClick(View view) {onCompteClick(this);}
 }

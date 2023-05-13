@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,6 +50,7 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
     private EditText editVilleE;
     private EditText editDureeE;
     private EditText editMots_clesE;
+    private EditText editCategorieE;
     private Button bouttonEnvoyerE;
 
     @Override
@@ -62,9 +64,7 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
         getID();
         aff();
         click();
-        if("candidat".equals(role)){
-            getDonnes();
-        }
+        getDonnes();
     }
 
     private void getID(){
@@ -80,13 +80,14 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
         cardE = findViewById(R.id.cardE);
         editNomE = findViewById(R.id.editNomE);
         editDescriptionE = findViewById(R.id.editDescriptionE);
-        editDescriptionE = findViewById(R.id.editDescriptionEEn);
+        editDescriptionEEn = findViewById(R.id.editDescriptionEEn);
         editRenumerationE = findViewById(R.id.editRenumerationE);
         editDateDebutE = findViewById(R.id.editDateDebutE);
         editMetierE = findViewById(R.id.editMetierE);
         editVilleE = findViewById(R.id.editVilleE);
         editDureeE = findViewById(R.id.editDureeE);
         editMots_clesE = findViewById(R.id.editMot_clesE);
+        editCategorieE = findViewById(R.id.editCategorieE);
         bouttonEnvoyerE = findViewById(R.id.buttonValiderE);
 
         ImageView im = findViewById(R.id.imCandidature);
@@ -94,13 +95,8 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
     }
 
     private void aff(){
-        if("employeur".equals(role)){
-            // cardE.setVisibility(View.VISIBLE);
-            card.setVisibility(View.GONE);
-        }else{
-            // card.setVisibility(View.VISIBLE);
-            cardE.setVisibility(View.GONE);
-        }
+        if("employeur".equals(role)) card.setVisibility(View.GONE);
+        else cardE.setVisibility(View.GONE);
     }
 
     private void click(){
@@ -138,30 +134,78 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
         String villeE = editVilleE.getText().toString();
         String dureeE = editDureeE.getText().toString();
         String mots_clesE = editMots_clesE.getText().toString();
+        String categorieE = editCategorieE.getText().toString();
 
         if (nomE.isEmpty() || descriptionE.isEmpty() || descriptionEEn.isEmpty() || renumerationE.isEmpty() || dateDebutE.isEmpty() || metierE.isEmpty() || villeE.isEmpty() || dureeE.isEmpty() || mots_clesE.isEmpty()) {
-            Toast.makeText(this, "Tous les champs doivent etre remplis !!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tous les champs doivent obligatoirement etre remplis sauf categorie !!", Toast.LENGTH_SHORT).show();
             return;
         }
-        annonce = new Annonce(nomE, descriptionE, descriptionEEn, String.valueOf(id), renumerationE, dateDebutE, metierE, villeE, dureeE, mots_clesE);
-        annonce.ajouter(this, new Annonce.VolleyCallback() {
-            @Override
-            public void onSuccess() {Intent intent = new Intent( CandidatureSpontaneActivity.this, AccueilActivity.class);startActivity(intent);}
-            @Override
-            public void onError() {}
-            @Override
-            public void onEmpty() {}
-        });
+
+        Intent intent = getIntent();
+        int ident = intent.getIntExtra("idE", 0);
+        if(ident != 0){
+            annonce = new Annonce(nomE, descriptionE, descriptionEEn, String.valueOf(id), renumerationE, dateDebutE, metierE, villeE, dureeE, mots_clesE, categorieE);
+            annonce.id = ident;
+            annonce.modifier(this, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {Intent intent = new Intent( CandidatureSpontaneActivity.this, OffreActivity.class); startActivity(intent);}
+                @Override
+                public void onError() {}
+                @Override
+                public void onEmpty() {}
+            });
+        }else {
+            annonce = new Annonce(nomE, descriptionE, descriptionEEn, String.valueOf(id), renumerationE, dateDebutE, metierE, villeE, dureeE, mots_clesE, categorieE);
+            annonce.ajouter(this, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {
+                    Intent intent = new Intent(CandidatureSpontaneActivity.this, AccueilActivity.class);
+                    startActivity(intent);
+                }
+                @Override
+                public void onError() {}
+                @Override
+                public void onEmpty() {}
+            });
+        }
     }
 
     private void getDonnes(){
-        candidat = new CandidatInscrit(id);
-        candidat.getDonnesCand(this, new CandidatInscrit.VolleyCallback() {
-            @Override
-            public void onSuccess() {}
-            @Override
-            public void onError() {affichageError(candidat.affiche);}
-        });
+        Intent intent = getIntent();
+        int ident = intent.getIntExtra("idE", 0);
+        if(ident != 0){
+            annonce = new Annonce(ident);
+            annonce.recupDonnes(this, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichage();}
+                @Override
+                public void onError() {affichageError(candidat.affiche);}
+                @Override
+                public void onEmpty() {}
+            });
+        }
+        if("candidat".equals(role)){
+            candidat = new CandidatInscrit(id);
+            candidat.getDonnesCand(this, new CandidatInscrit.VolleyCallback() {
+                @Override
+                public void onSuccess() {}
+                @Override
+                public void onError() {affichageError(candidat.affiche);}
+            });
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void affichage(){
+        editNomE.setText(annonce.nom);
+        editDescriptionE.setText(annonce.description);
+        editDescriptionEEn.setText(annonce.descriptionEn);
+        editRenumerationE.setText(annonce.remuneration);
+        editDateDebutE.setText(annonce.date_debut);
+        editMetierE.setText(annonce.metier);
+        editVilleE.setText(annonce.ville);
+        editDureeE.setText(annonce.duree);
+        editMots_clesE.setText(annonce.mot_cles);
     }
     private void affichageError(String s){affErreur.setText(s);}
 

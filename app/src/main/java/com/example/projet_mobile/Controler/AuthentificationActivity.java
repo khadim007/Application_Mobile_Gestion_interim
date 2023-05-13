@@ -50,45 +50,38 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
     }
 
     private void getID(){
-        editRole = (Spinner) findViewById(R.id.editRole);
-        editIdentifiant = (EditText) findViewById(R.id.editIdentifiant);
-        editPassword = (EditText) findViewById(R.id.editPassword);
+        editRole = findViewById(R.id.editRole);
+        editIdentifiant = findViewById(R.id.editIdentifiant);
+        editPassword = findViewById(R.id.editPassword);
 
-        textErreur = (TextView) findViewById(R.id.textErreur);
+        textErreur = findViewById(R.id.textErreur);
 
-        bouttonValider = (Button) findViewById(R.id.buttonValider);
-        bouttonCreer = (Button) findViewById(R.id.buttoncreer);
+        bouttonValider = findViewById(R.id.buttonValider);
+        bouttonCreer = findViewById(R.id.buttoncreer);
 
         ImageView im = findViewById(R.id.imCompte);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void click(){
-        bouttonValider.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                role = editRole.getSelectedItem().toString();
-                identifiant = editIdentifiant.getText().toString();
-                password = editPassword.getText().toString();
-                if(role.equals("employeur")) {
-                    execEmp();
-                }else{
-                    execCand();
-                }
+        bouttonValider.setOnClickListener(v -> {
+            role = editRole.getSelectedItem().toString();
+            identifiant = editIdentifiant.getText().toString();
+            password = editPassword.getText().toString();
+            if(role.equals("employeur")) {
+                execEmp();
+            }else{
+                execCand();
             }
         });
-
-        bouttonCreer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                role = editRole.getSelectedItem().toString();
-                if(role.equals("employeur")) {
-                    Intent intent = new Intent(AuthentificationActivity.this, InscriptionEmpActivity.class);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(AuthentificationActivity.this, InscriptionCandActivity.class);
-                    startActivity(intent);
-                }
+        bouttonCreer.setOnClickListener(v -> {
+            role = editRole.getSelectedItem().toString();
+            if(role.equals("employeur")) {
+                Intent intent = new Intent(AuthentificationActivity.this, InscriptionEmpActivity.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(AuthentificationActivity.this, InscriptionCandActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -150,16 +143,10 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
             affichageError(s);
         }
     }
+    private void affichageError(String s){textErreur.setText(s);}
 
-    private void affichageError(String s){
-        textErreur.setText(s);
-    }
-
-    public void onHomeClick(View view) {
-        onHomeClick(this);
-    }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {} //laisse comme ca
 }

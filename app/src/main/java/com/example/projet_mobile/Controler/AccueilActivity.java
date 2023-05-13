@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -162,6 +163,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
         startActivity(intent);
     }
 
+    @SuppressLint("SetTextI18n")
     public void exec(){
         String specialite = "";
         String lieu = "";
@@ -172,7 +174,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
         }else{
             textTitre.setText("Affichage d'annonces interressantes");
         }
-        accueil = new Accueil("job", specialite, lieu);
+        accueil = new Accueil(specialite, lieu);
         accueil.recupDonnes(this, 1, new Accueil.VolleyCallback() {
             @Override
             public void onSuccess() {
@@ -184,36 +186,30 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
             }
             @Override
             public void onEmpty() {
-                String s1 = sharedPreferences.getString("AnnonymeRecherche1", "");
                 String s2 = sharedPreferences.getString("AnnonymeRecherche2", "");
                 String s3 = sharedPreferences.getString("AnnonymeRecherche3", "");
                 if(s2.equals("") && s3.equals("")){
                     affichageEmpty();
                 }else{
-                    exec2(s1, s2, s3);
+                    exec2(s2, s3);
                 }
             }
         });
     }
 
-    public void exec2(String s1, String s2, String s3){
-        accueil = new Accueil(s1, s2, s3);
+    public void exec2(String s2, String s3){
+        accueil = new Accueil(s2, s3);
         accueil.recupDonnes(this, 1, new Accueil.VolleyCallback() {
             @Override
-            public void onSuccess() {
-                affichage();
-            }
+            public void onSuccess() {affichage();}
             @Override
-            public void onError() {
-                affichageError();
-            }
+            public void onError() {affichageError();}
             @Override
-            public void onEmpty() {
-                affichageEmpty();
-            }
+            public void onEmpty() {affichageEmpty();}
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void affichage(){
         affErreur.setText(accueil.donnes.length + " resultats");
         listView.setVisibility(View.VISIBLE);
@@ -221,7 +217,9 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
         listView.setAdapter(annonces);
     }
 
+    @SuppressLint("SetTextI18n")
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
+    @SuppressLint("SetTextI18n")
     private void affichageEmpty(){affErreur.setText("Aucune annonce est trouvée pres de vous !!");}
 
     public void onHomeClick(View view) {}

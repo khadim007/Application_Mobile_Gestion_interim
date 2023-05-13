@@ -171,7 +171,18 @@ public class EspaceEmployeurActivity extends AppCompatActivity implements toolba
     }
     private void affichageError(String s){textErreur.setText(s);}
 
-
+    public void onCardCandidatures(View view) {
+        Intent intent = new Intent( EspaceEmployeurActivity.this, GestionCandidatureActivity.class);
+        startActivity(intent);
+    }
+    public void onCardOffres(View view) {
+        Intent intent = new Intent( EspaceEmployeurActivity.this, OffreActivity.class);
+        startActivity(intent);
+    }
+    public void onCardEmplois(View view) {
+        Intent intent = new Intent( EspaceEmployeurActivity.this, GestionEmploisActivity.class);
+        startActivity(intent);
+    }
     public void onCardDeconnexion(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("id", 0);
@@ -185,6 +196,4 @@ public class EspaceEmployeurActivity extends AppCompatActivity implements toolba
     public void onRechercheClick(View view) {onRechercheClick(this);}
     public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {} // laisse comm ca
-
-
 }

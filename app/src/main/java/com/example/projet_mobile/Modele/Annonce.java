@@ -4,6 +4,7 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class Annonce {
     public String[][] donnes;
     int nbrAttributs = 13; // table AnnonceS
 
-    private int id;
+    public int id;
     public String nom;
     public String description;
     public String employeur;
@@ -44,14 +45,14 @@ public class Annonce {
     public String ville;
     public String duree;
     public String mot_cles;
-    public String type;
+    public String categorie;
     public String descriptionEn;
 
     public Annonce(){}
 
     public Annonce(int id){this.id = id;}
 
-    public Annonce(String nom, String description, String descriptionEn, String employeur, String remuneration, String date_debut, String metier, String ville, String duree, String mot_cles){
+    public Annonce(String nom, String description, String descriptionEn, String employeur, String remuneration, String date_debut, String metier, String ville, String duree, String mot_cles, String categorie){
         this.nom = nom;
         this.description = description;
         this.descriptionEn = descriptionEn;
@@ -62,6 +63,7 @@ public class Annonce {
         this.ville = ville;
         this.duree = duree;
         this.mot_cles = mot_cles;
+        this.categorie = categorie;
     }
 
     // -------------------------------------ADAPTER--------------------------------------------
@@ -106,21 +108,13 @@ public class Annonce {
         }
 
         @Override
-        public int getCount() {
-            return this.donnes.length;
-        }
-
+        public int getCount() {return this.donnes.length;}
         @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
+        public Object getItem(int i) {return null;}
         @Override
-        public long getItemId(int i) {
-            return 0;
-        }
+        public long getItemId(int i) {return 0;}
 
-        @SuppressLint({"ViewHolder", "InflateParams"})
+        @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = inflater.inflate(R.layout.activity_affiche_annonce, null);
@@ -146,12 +140,20 @@ public class Annonce {
                 accueil.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
                 accueil.bouttonCandidater.setOnClickListener(v -> accueil.click2(id, "candidater", this.donnes[i][1]));
             }else if(offre != null) {
+                SharedPreferences sharedPreferences = offre.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+                String role = sharedPreferences.getString("role", "");
                 offre.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 offre.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 offre.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
-                offre.bouttonPartager.setOnClickListener(v -> accueil.click2(id, "partager", ""));
-                offre.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
-                offre.bouttonCandidater.setOnClickListener(v -> accueil.click2(id, "candidater", this.donnes[i][1]));
+                if("employeur".equals(role)){
+                    offre.bouttonPartager.setText("Supprimer"); offre.bouttonPartager.setOnClickListener(v -> offre.click2(id, "supprimer", ""));
+                    offre.bouttonConsulter.setOnClickListener(v -> offre.click2(id, "consulter", ""));
+                    offre.bouttonCandidater.setText("Modifier"); offre.bouttonCandidater.setOnClickListener(v -> offre.click2(id, "modifier", this.donnes[i][1]));
+                }else{
+                    offre.bouttonPartager.setOnClickListener(v -> accueil.click2(id, "partager", ""));
+                    offre.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
+                    offre.bouttonCandidater.setOnClickListener(v -> accueil.click2(id, "candidater", this.donnes[i][1]));
+                }
             }else{
                 recherche.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 recherche.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
@@ -181,6 +183,7 @@ public class Annonce {
             postData.put("ville", ville);
             postData.put("duree", duree);
             postData.put("mot_cles", mot_cles);
+            postData.put("categorie", categorie);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
             return;
@@ -244,7 +247,7 @@ public class Annonce {
                             ville = dataElement.getString("ville");
                             duree = dataElement.getString("duree");
                             mot_cles = dataElement.getString("mot_cles");
-                            type = dataElement.getString("type");
+                            categorie = dataElement.getString("categorie");
                             descriptionEn = dataElement.getString("descriptionEn");
 
                             callback.onSuccess();
@@ -267,6 +270,61 @@ public class Annonce {
         queue.add(request);
     }
 
+    public void recupDonnesEmp(Context context, Annonce.VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select emp");
+            postData.put("employeur", employeur);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("donnees").equals("false")){
+                            callback.onEmpty();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnees");
+                            donnes = new String[jsonArray.length()][nbrAttributs];
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject dataElement = jsonArray.getJSONObject(i);
+                                donnes[i][0] = dataElement.getString("id_");
+                                donnes[i][1] = dataElement.getString("nom");
+                                donnes[i][2] = dataElement.getString("description");
+                                donnes[i][3] = dataElement.getString("employeur");
+                                donnes[i][4] = dataElement.getString("remuneration");
+                                donnes[i][5] = dataElement.getString("date_debut");
+                                donnes[i][6] = dataElement.getString("date_fin");
+                                donnes[i][7] = dataElement.getString("metier");
+                                donnes[i][8] = dataElement.getString("ville");
+                                donnes[i][9] = dataElement.getString("duree");
+                                donnes[i][10] = dataElement.getString("mot_cles");
+                                donnes[i][11] = dataElement.getString("categorie");
+                                donnes[i][12] = dataElement.getString("descriptionEn");
+                            }
+                            callback.onSuccess();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
 
     public void recupDonnesTab(Context context, int[] tab, Annonce.VolleyCallback callback) {
         String url = context.getString(R.string.url)+""+URL;
@@ -304,7 +362,7 @@ public class Annonce {
                                 donnes[i][8] = dataElement.getString("ville");
                                 donnes[i][9] = dataElement.getString("duree");
                                 donnes[i][10] = dataElement.getString("mot_cles");
-                                donnes[i][11] = dataElement.getString("type");
+                                donnes[i][11] = dataElement.getString("categorie");
                                 donnes[i][12] = dataElement.getString("descriptionEn");
                             }
                             callback.onSuccess();
@@ -326,6 +384,99 @@ public class Annonce {
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
+
+
+    // ----------------------------- update ------------------------------
+    public void modifier(Context context, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "update");
+            postData.put("id", id);
+            postData.put("nom", nom);
+            postData.put("description", description);
+            postData.put("descriptionEn", descriptionEn);
+            postData.put("employeur", employeur);
+            postData.put("remuneration", remuneration);
+            postData.put("date_debut", date_debut);
+            postData.put("metier", metier);
+            postData.put("ville", ville);
+            postData.put("duree", duree);
+            postData.put("mot_cles", mot_cles);
+            postData.put("categorie", categorie);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+                            callback.onSuccess();
+                        } else {
+                            Toast.makeText(context, "Un probleme est survenu. Veillez reessayer !!", Toast.LENGTH_SHORT).show();
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+
+
+    // ----------------------------- delete ------------------------------
+    public void supp(Context context, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "supprimer line");
+            postData.put("id", id);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            Toast.makeText(context, "Suppression reussie !!", Toast.LENGTH_SHORT).show();
+                            callback.onSuccess();
+                        } else {
+                            Toast.makeText(context, "Un probleme est survenu. Veillez reessayer !!", Toast.LENGTH_SHORT).show();
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
 
     public interface VolleyCallback {
         void onSuccess();

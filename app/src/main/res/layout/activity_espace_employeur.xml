@@ -497,7 +497,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/card3"
                 android:gravity="center"
                 android:orientation="vertical"
                 tools:ignore="UseCompoundDrawables">
@@ -505,8 +504,6 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="100dp"
-                    android:layout_below="@id/card3"
-                    android:layout_marginEnd="20dp"
                     android:onClick="onCardDeconnexion"
                     app:cardBackgroundColor="@color/rouge"
                     app:cardCornerRadius="25dp"

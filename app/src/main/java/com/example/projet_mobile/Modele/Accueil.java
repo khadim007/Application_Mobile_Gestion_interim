@@ -25,7 +25,6 @@ public class Accueil {
     int nbrAttributs = 13; // table AnnonceS
 
     private String recherche;
-    private String type;
     private String specialite;
     private String lieu;
 
@@ -33,8 +32,7 @@ public class Accueil {
         this.recherche = recherche;
     }
 
-    public Accueil(String type, String specialite, String lieu){
-        this.type = type;
+    public Accueil(String specialite, String lieu){
         this.specialite = specialite;
         this.lieu = lieu;
     }
@@ -45,7 +43,6 @@ public class Accueil {
         if(part == 1){
             try {
                 postData.put("choix", "select");
-                postData.put("type", type);
                 postData.put("specialite", specialite);
                 postData.put("lieu", lieu);
             } catch (JSONException e) {
@@ -84,7 +81,7 @@ public class Accueil {
                             donnes[i][8] = dataElement.getString("ville");
                             donnes[i][9] = dataElement.getString("duree");
                             donnes[i][10] = dataElement.getString("mot_cles");
-                            donnes[i][11] = dataElement.getString("type");
+                            donnes[i][11] = dataElement.getString("categorie");
                             donnes[i][12] = dataElement.getString("descriptionEn");
                         }
                         callback.onSuccess();

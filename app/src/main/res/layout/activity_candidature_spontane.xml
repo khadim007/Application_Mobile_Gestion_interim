@@ -441,6 +441,30 @@
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categorie : "
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/editCategorieE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="Categorie .."
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"

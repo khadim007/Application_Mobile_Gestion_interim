@@ -128,7 +128,7 @@ public class CandidatureOffreActivity extends AppCompatActivity implements toolb
             candidature.id = id_candidature;
             candidature.modifierOffre(this, new Candidature.VolleyCallback() {
                 @Override
-                public void onSuccess() {Intent intent = new Intent( CandidatureOffreActivity.this, RechercheActivity.class);startActivity(intent);}
+                public void onSuccess() {Intent intent = new Intent( CandidatureOffreActivity.this, GestionCandidatureActivity.class);startActivity(intent);}
                 @Override
                 public void onError() {}
                 @Override

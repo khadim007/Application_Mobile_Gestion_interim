@@ -1,6 +1,7 @@
 package com.example.projet_mobile.Controler;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -99,10 +100,9 @@ public class RechercheActivity extends AppCompatActivity implements toolbar {
 
     private void recherche() {
         Intent intent = getIntent();
-        type = intent.getStringExtra("type");
         specialite = intent.getStringExtra("specialite");
         lieu = intent.getStringExtra("lieu");
-        if(type != null && specialite != null && lieu != null)
+        if(specialite != null && lieu != null)
             exec();
     }
 
@@ -132,23 +132,18 @@ public class RechercheActivity extends AppCompatActivity implements toolbar {
     }
 
     private void exec(){
-        accueil = new Accueil(type, specialite, lieu);
+        accueil = new Accueil(specialite, lieu);
         accueil.recupDonnes(this, 1, new Accueil.VolleyCallback() {
             @Override
-            public void onSuccess() {
-                affichage();
-            }
+            public void onSuccess() {affichage();}
             @Override
-            public void onError() {
-                affichageError();
-            }
+            public void onError() {affichageError();}
             @Override
-            public void onEmpty() {
-                affichageEmpty();
-            }
+            public void onEmpty() {affichageEmpty();}
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void affichage(){
         affErreur.setTextSize(26);
         affErreur.setText(accueil.donnes.length + " resultats");
@@ -163,7 +158,9 @@ public class RechercheActivity extends AppCompatActivity implements toolbar {
         editor.commit();
     }
 
+    @SuppressLint("SetTextI18n")
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
+    @SuppressLint("SetTextI18n")
     private void affichageEmpty(){affErreur.setText("Aucune annonce est trouvée !!"); affErreur.setTextSize(16);}
 
     public void onEnvoyer1Click(View view) {
@@ -299,6 +296,7 @@ public class RechercheActivity extends AppCompatActivity implements toolbar {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
     }
 
+    @SuppressLint("SetTextI18n")
     private void startSpeechRecognition() {
         if (speechRecognizer != null) {
             speechRecognizer.startListening(recognizerIntent);
