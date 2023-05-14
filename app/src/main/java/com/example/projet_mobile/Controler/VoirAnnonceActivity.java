@@ -20,10 +20,10 @@ import com.example.projet_mobile.R;
 
 public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
 
-    Annonce annonce;
-    Employeur employeur;
-    int id;
     SharedPreferences sharedPreferences;
+    Employeur employeur;
+    Annonce annonce;
+    int id;
 
     TextView affErreur;
     TextView textNom;

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -138,6 +139,7 @@ public class PartageActivity extends AppCompatActivity implements toolbar {
             amis.ajouter(this, new Amis.VolleyCallback() {
                 @Override
                 public void onSuccess() {Intent intent = new Intent( PartageActivity.this, AccueilActivity.class); startActivity(intent);}
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onError() {affErreur.setText("Error. Veillez reesayer !!");}
                 @Override
@@ -145,7 +147,6 @@ public class PartageActivity extends AppCompatActivity implements toolbar {
             });
         });
     }
-    public void onEnvoyerClick(View view) {changer();}
     public void onEnvoyerClickSMS(View view) {envoyerSMS(editTelephoneSMS.getText().toString());}
     public void onEnvoyerClickGroupe(View view) {
         String nom = editNomGroupe.getText().toString();
@@ -153,8 +154,10 @@ public class PartageActivity extends AppCompatActivity implements toolbar {
         amis.recupDonnes(this, new Amis.VolleyCallback() {
             @Override
             public void onSuccess() throws JsonProcessingException {traiterGroupe();}
+            @SuppressLint("SetTextI18n")
             @Override
             public void onError() {affErreur.setText("Le groupe n'existe pas !!");}
+            @SuppressLint("SetTextI18n")
             @Override
             public void onEmpty() {affErreur.setText("Le groupe n'existe pas !!");}
         });

@@ -21,6 +21,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projet_mobile.Controler.AccueilActivity;
+import com.example.projet_mobile.Controler.GestionCandidatureActivity;
 import com.example.projet_mobile.Controler.OffreActivity;
 import com.example.projet_mobile.Controler.RechercheActivity;
 import com.example.projet_mobile.R;
@@ -32,7 +33,7 @@ import org.json.JSONObject;
 public class Annonce {
     private static final String URL = "annonce";
     public String[][] donnes;
-    int nbrAttributs = 13; // table AnnonceS
+    int nbrAttributs = 13;
 
     public int id;
     public String nom;
@@ -49,9 +50,7 @@ public class Annonce {
     public String descriptionEn;
 
     public Annonce(){}
-
     public Annonce(int id){this.id = id;}
-
     public Annonce(String nom, String description, String descriptionEn, String employeur, String remuneration, String date_debut, String metier, String ville, String duree, String mot_cles, String categorie){
         this.nom = nom;
         this.description = description;
@@ -71,6 +70,7 @@ public class Annonce {
         private AccueilActivity accueil;
         private RechercheActivity recherche;
         private OffreActivity offre;
+        private GestionCandidatureActivity candidature;
         private final LayoutInflater inflater;
         public String[][] donnes;
 
@@ -79,9 +79,7 @@ public class Annonce {
             this.inflater = LayoutInflater.from(context);
             this.donnes = new String[donnes.length][donnes[0].length];
             for(int i = 0; i < donnes.length; i++){
-                for(int j = 0; j < donnes[i].length; j++){
-                    this.donnes[i][j] = donnes[i][j];
-                }
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
             }
         }
 
@@ -90,9 +88,7 @@ public class Annonce {
             this.inflater = LayoutInflater.from(context);
             this.donnes = new String[donnes.length][donnes[0].length];
             for(int i = 0; i < donnes.length; i++){
-                for(int j = 0; j < donnes[i].length; j++){
-                    this.donnes[i][j] = donnes[i][j];
-                }
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
             }
         }
 
@@ -101,9 +97,16 @@ public class Annonce {
             this.inflater = LayoutInflater.from(context);
             this.donnes = new String[donnes.length][donnes[0].length];
             for(int i = 0; i < donnes.length; i++){
-                for(int j = 0; j < donnes[i].length; j++){
-                    this.donnes[i][j] = donnes[i][j];
-                }
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
+            }
+        }
+
+        public AnnonceAdapter(Context context, GestionCandidatureActivity candidature, String[][] donnes) {
+            this.candidature = candidature;
+            this.inflater = LayoutInflater.from(context);
+            this.donnes = new String[donnes.length][donnes[0].length];
+            for(int i = 0; i < donnes.length; i++){
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
             }
         }
 
@@ -154,6 +157,13 @@ public class Annonce {
                     offre.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
                     offre.bouttonCandidater.setOnClickListener(v -> accueil.click2(id, "candidater", this.donnes[i][1]));
                 }
+            }else if(candidature != null) {
+                candidature.bouttonPartager = view.findViewById(R.id.buttonPartage);
+                candidature.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
+                candidature.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
+                candidature.bouttonPartager.setVisibility(View.GONE);
+                candidature.bouttonConsulter.setOnClickListener(v -> candidature.click2("", id, "consulter emp", this.donnes[i][1]));
+                candidature.bouttonCandidater.setVisibility(View.GONE);
             }else{
                 recherche.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 recherche.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
@@ -276,6 +286,64 @@ public class Annonce {
         try {
             postData.put("choix", "select emp");
             postData.put("employeur", employeur);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("donnees").equals("false")){
+                            callback.onEmpty();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnees");
+                            donnes = new String[jsonArray.length()][nbrAttributs];
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject dataElement = jsonArray.getJSONObject(i);
+                                donnes[i][0] = dataElement.getString("id_");
+                                donnes[i][1] = dataElement.getString("nom");
+                                donnes[i][2] = dataElement.getString("description");
+                                donnes[i][3] = dataElement.getString("employeur");
+                                donnes[i][4] = dataElement.getString("remuneration");
+                                donnes[i][5] = dataElement.getString("date_debut");
+                                donnes[i][6] = dataElement.getString("date_fin");
+                                donnes[i][7] = dataElement.getString("metier");
+                                donnes[i][8] = dataElement.getString("ville");
+                                donnes[i][9] = dataElement.getString("duree");
+                                donnes[i][10] = dataElement.getString("mot_cles");
+                                donnes[i][11] = dataElement.getString("categorie");
+                                donnes[i][12] = dataElement.getString("descriptionEn");
+                            }
+                            callback.onSuccess();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void recupDonnesEmpRech(Context context, Annonce.VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select emp rech");
+            postData.put("employeur", employeur);
+            postData.put("nom", nom);
+            postData.put("date_debut", date_debut);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
             return;

@@ -21,6 +21,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projet_mobile.Controler.GestionCandidatureActivity;
+import com.example.projet_mobile.Controler.VoirCandidatureActivity;
 import com.example.projet_mobile.R;
 
 import org.json.JSONArray;
@@ -48,6 +49,8 @@ public class Candidature {
     public String metier;
     public String ville;
     public String etat;
+
+    public Candidature(){}
 
     public Candidature(int id){this.id = id;}
 
@@ -84,6 +87,7 @@ public class Candidature {
     // -------------------------------------ADAPTER--------------------------------------------
     public static class CandidatureAdapter extends BaseAdapter {
         GestionCandidatureActivity candidature;
+        VoirCandidatureActivity voir;
         private final LayoutInflater inflater;
         public String[][] donnes;
 
@@ -92,36 +96,38 @@ public class Candidature {
             this.inflater = LayoutInflater.from(context);
             this.donnes = new String[donnes.length][donnes[0].length];
             for(int i = 0; i < donnes.length; i++){
-                for(int j = 0; j < donnes[i].length; j++){
-                    this.donnes[i][j] = donnes[i][j];
-                }
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
+            }
+        }
+
+        public CandidatureAdapter(Context context, VoirCandidatureActivity voir, String[][] donnes) {
+            this.voir = voir;
+            this.inflater = LayoutInflater.from(context);
+            this.donnes = new String[donnes.length][donnes[0].length];
+            for(int i = 0; i < donnes.length; i++){
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
             }
         }
 
         @Override
-        public int getCount() {
-            return this.donnes.length;
-        }
+        public int getCount() {return this.donnes.length;}
         @Override
-        public Object getItem(int i) {
-            return null;
-        }
+        public Object getItem(int i) {return null;}
         @Override
-        public long getItemId(int i) {
-            return 0;
-        }
+        public long getItemId(int i) {return 0;}
 
-        @SuppressLint({"ViewHolder", "InflateParams"})
+        @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = inflater.inflate(R.layout.activity_affiche_candidaturectivity, null);
 
-            String id = this.donnes[i][0];
-            String annonce = this.donnes[i][1];
-            TextView nom = view.findViewById(R.id.textNom);
-            nom.setText(this.donnes[i][2] + " (H/F)");
-
             if(candidature != null) {
+                String id = this.donnes[i][0];
+                String annonce = this.donnes[i][1];
+                TextView nom = view.findViewById(R.id.textNom);
+                nom.setText(this.donnes[i][2] + " (H/F)");
+
+                view.findViewById(R.id.buttonConsulerLet).setVisibility(View.GONE);
                 candidature.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 candidature.bouttonModifier = view.findViewById(R.id.buttonModifier);
                 candidature.bouttonSupprimer = view.findViewById(R.id.buttonSupprimer);
@@ -146,6 +152,48 @@ public class Candidature {
                     candidature.bouttonModifier.setOnClickListener(v -> candidature.click2(id, annonce, "modifier", this.donnes[i][2]));
                     candidature.bouttonSupprimer.setOnClickListener(v -> candidature.click2(id, annonce, "supprimer", this.donnes[i][2]));
                     candidature.bouttonContacter.setOnClickListener(v -> candidature.click2(id, annonce, "contacter", this.donnes[i][2]));
+                }
+            }else if(voir != null) {
+                String id = this.donnes[i][0];
+                String candidat = this.donnes[i][1];
+                TextView nom = view.findViewById(R.id.textNom);
+                nom.setText("Nom : "+this.donnes[i][3]+" "+this.donnes[i][4]+"\nNationalite : "+this.donnes[i][5]+"\nDate Naiss : "+this.donnes[i][6]); nom.setTextColor(Color.BLACK);
+
+                voir.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
+                voir.bouttonConsulterLet = view.findViewById(R.id.buttonConsulerLet);
+                voir.bouttonModifier = view.findViewById(R.id.buttonModifier);
+                voir.bouttonSupprimer = view.findViewById(R.id.buttonSupprimer);
+                voir.bouttonContacter = view.findViewById(R.id.buttonContacter);
+                if(this.donnes[i][7].equals("en cours acceptees")){
+                    voir.bouttonConsulter.setText("CV"); voir.bouttonConsulter.setOnClickListener(v -> voir.click2(id, candidat, "consulter"));
+                    voir.bouttonConsulterLet.setText("Lettre"); voir.bouttonConsulterLet.setOnClickListener(v -> voir.click2(id, candidat, "consulter let"));
+                    voir.bouttonModifier.setVisibility(View.GONE);
+                    voir.bouttonSupprimer.setText("Vous avez deja acceptée"); voir.bouttonSupprimer.setBackgroundColor(Color.parseColor("#FFFFFF")); voir.bouttonSupprimer.setTextColor(Color.BLACK);
+                    voir.bouttonContacter.setText("Contact"); voir.bouttonContacter.setOnClickListener(v -> voir.click2(id, candidat, "repondre"));
+                }else if(this.donnes[i][7].equals("en cours non acceptees")){
+                    voir.bouttonConsulter.setText("CV"); voir.bouttonConsulter.setOnClickListener(v -> voir.click2(id, candidat, "consulter"));
+                    voir.bouttonConsulterLet.setText("Lettre"); voir.bouttonConsulterLet.setOnClickListener(v -> voir.click2(id, candidat, "consulter let"));
+                    voir.bouttonModifier.setVisibility(View.GONE);
+                    voir.bouttonSupprimer.setText("Vous avez deja refusée"); voir.bouttonSupprimer.setBackgroundColor(Color.parseColor("#FFFFFF")); voir.bouttonSupprimer.setTextColor(Color.BLACK);
+                    voir.bouttonContacter.setVisibility(View.GONE);
+                }else if(this.donnes[i][7].equals("accepter")){
+                    voir.bouttonConsulter.setText("CV"); voir.bouttonConsulter.setOnClickListener(v -> voir.click2(id, candidat, "consulter"));
+                    voir.bouttonConsulterLet.setText("Lettre"); voir.bouttonConsulterLet.setOnClickListener(v -> voir.click2(id, candidat, "consulter let"));
+                    voir.bouttonModifier.setVisibility(View.GONE);
+                    voir.bouttonSupprimer.setText("Le candidat a accepté l'offre"); candidature.bouttonSupprimer.setBackgroundColor(Color.parseColor("#FFFFFF")); candidature.bouttonSupprimer.setTextColor(Color.BLACK);
+                    voir.bouttonContacter.setText("Contact"); voir.bouttonContacter.setOnClickListener(v -> voir.click2(id, candidat, "repondre"));
+                }else if(this.donnes[i][7].equals("refuser")){
+                    voir.bouttonConsulter.setText("CV"); voir.bouttonConsulter.setOnClickListener(v -> voir.click2(id, candidat, "consulter"));
+                    voir.bouttonConsulterLet.setText("Lettre"); voir.bouttonConsulterLet.setOnClickListener(v -> voir.click2(id, candidat, "consulter let"));
+                    voir.bouttonModifier.setVisibility(View.GONE);
+                    voir.bouttonSupprimer.setText("Le candidat a refusé l'offre"); candidature.bouttonSupprimer.setBackgroundColor(Color.parseColor("#FFFFFF")); candidature.bouttonSupprimer.setTextColor(Color.BLACK);
+                    voir.bouttonContacter.setVisibility(View.GONE);
+                }else{
+                    voir.bouttonConsulter.setText("CV"); voir.bouttonConsulter.setOnClickListener(v -> voir.click2(id, candidat, "consulter"));
+                    voir.bouttonConsulterLet.setText("Lettre"); voir.bouttonConsulterLet.setOnClickListener(v -> voir.click2(id, candidat, "consulter let"));
+                    voir.bouttonModifier.setText("Accept"); voir.bouttonModifier.setOnClickListener(v -> voir.click2(id, candidat, "en cours acceptees"));
+                    voir.bouttonSupprimer.setText("Refus"); voir.bouttonSupprimer.setOnClickListener(v -> voir.click2(id, candidat, "en cours non acceptees"));
+                    voir.bouttonContacter.setText("Repondre"); voir.bouttonContacter.setOnClickListener(v -> voir.click2(id, candidat, "repondre"));
                 }
             }
             return view;
@@ -344,6 +392,122 @@ public class Candidature {
                                 donnes[i][1] = dataElement.getString("annonce");
                                 donnes[i][2] = dataElement.getString("nomAnnonce");
                                 donnes[i][3] = dataElement.getString("etat");
+                            }
+                            callback.onSuccess();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void recupDonnesCand(Context context, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select cand");
+            postData.put("annonce", annonce);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("donnees").equals("false")){
+                            callback.onEmpty();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnees");
+                            donnes = new String[jsonArray.length()][9];
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject dataElement = jsonArray.getJSONObject(i);
+                                donnes[i][0] = dataElement.getString("id_");
+                                donnes[i][1] = dataElement.getString("candidat_inscrit");
+                                donnes[i][2] = dataElement.getString("nomAnnonce");
+                                donnes[i][3] = dataElement.getString("prenom");
+                                donnes[i][4] = dataElement.getString("nom");
+                                donnes[i][5] = dataElement.getString("nationalite");
+                                donnes[i][6] = dataElement.getString("dateNaissance");
+                                donnes[i][7] = dataElement.getString("etat");
+                            }
+                            callback.onSuccess();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void recupDonnesCVouLet(Context context, String fic, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select cv ou lettre");
+            postData.put("id", id);
+            postData.put("fic", fic);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("donnees").equals("false")){
+                            callback.onEmpty();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnees");
+                            JSONObject dataElement = jsonArray.getJSONObject(0);
+
+                            if(fic.equals("cv")) {
+                                if (dataElement.getString("cv").equals("null")) {
+                                    cv = null;
+                                } else {
+                                    String s = dataElement.getString("cv").replace("[", "").replace("]", "");
+                                    String[] cvStrArr = s.split(", ");
+                                    cv = new byte[cvStrArr.length];
+                                    for (int i = 0; i < cvStrArr.length; i++) {
+                                        cv[i] = Byte.parseByte(cvStrArr[i]);
+                                    }
+                                }
+                            }else {
+                                if (dataElement.getString("lettre").equals("null")) {
+                                    lettre = null;
+                                } else {
+                                    String s = dataElement.getString("lettre").replace("[", "").replace("]", "");
+                                    String[] cvStrArr = s.split(", ");
+                                    lettre = new byte[cvStrArr.length];
+                                    for (int i = 0; i < cvStrArr.length; i++) {
+                                        lettre[i] = Byte.parseByte(cvStrArr[i]);
+                                    }
+                                }
                             }
                             callback.onSuccess();
                         }

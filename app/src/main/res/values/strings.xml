@@ -114,6 +114,11 @@
         <item>Cand. potentielles</item>
     </string-array>
 
+    <string-array name="spinnerCandidatureEmp">
+        <item>Consulter les candidatures</item>
+        <item>Chercher une candidature</item>
+    </string-array>
+
     <string name="textNon">Nous n\'avons pas encore ces horaires !!</string>
     <string name="textMois">Fevrier 20-16</string>
     <string name="textAjouter">Ajouter</string>

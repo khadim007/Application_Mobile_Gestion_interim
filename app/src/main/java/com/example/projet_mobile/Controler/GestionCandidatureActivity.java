@@ -1,28 +1,39 @@
 package com.example.projet_mobile.Controler;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.projet_mobile.Modele.Annonce;
 import com.example.projet_mobile.Modele.Candidature;
 import com.example.projet_mobile.Modele.Emplois;
 import com.example.projet_mobile.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GestionCandidatureActivity extends AppCompatActivity implements toolbar {
 
     SharedPreferences sharedPreferences;
     Candidature candidature;
+    Annonce annonce;
     String role;
     int id;
 
@@ -30,12 +41,21 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
     public Button bouttonModifier;
     public Button bouttonSupprimer;
     public Button bouttonContacter;
+    public Button bouttonPartager;
+    public Button bouttonCandidater;
+
+    private Spinner spinnerType;
+    private TextView textTitre;
+    private TextView affErreur;
+
+    private LinearLayout layoutRecherche;
+    private EditText editOffre;
+    private EditText editDate;
 
     private ListView listView;
-    private TextView affErreur;
-    private TextView textTitre;
-    private String type;
-    private Spinner spinnerType;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +66,40 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
         role = sharedPreferences.getString("role", "");
 
         getID();
-        click();
-        getDonnes();
+        aff();
     }
 
     private void getID(){
         spinnerType = findViewById(R.id.spinnerType);
-        affErreur = findViewById(R.id.affError);
         textTitre = findViewById(R.id.textTitre);
+        affErreur = findViewById(R.id.affError);
+
+        layoutRecherche = findViewById(R.id.layoutRecherche);
+        editOffre = findViewById(R.id.editOffre);
+        editDate = findViewById(R.id.editDate);
+
         listView = findViewById(R.id.idListView);
 
         ImageView im = findViewById(R.id.imCompte);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
-    private void click() {}
+    private void aff() {
+        if("employeur".equals(role)){
+            List<String> listeValeurs = new ArrayList<>();
+            listeValeurs.add("Consulter les candidatures");
+            listeValeurs.add("Chercher une candidature");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listeValeurs);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerType.setAdapter(adapter);
+            spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {getDonnesE();}
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }else getDonnes();
+    }
 
     public void click2(String id, String annonce, String nom, String nomAnnonce) {
         Intent intent;
@@ -107,13 +146,36 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
                     public void onEmpty() {}
                 });
             }
+        }else if("consulter emp".equals(nom)){
+            intent = new Intent( GestionCandidatureActivity.this, VoirCandidatureActivity.class);
+            intent.putExtra("annonce", Integer.parseInt(annonce));
+            intent.putExtra("nomAnnonce", nomAnnonce);
+            startActivity(intent);
         }
     }
 
-    public void onEnvoyerClick(View view) {getDonnes();}
+    public void onEnvoyerClick(View view) {
+        String offre = editOffre.getText().toString();
+        String date = editDate.getText().toString();
+        if(offre.isEmpty() && date.isEmpty()){Toast.makeText(this, "Au moins un des champs doit etre remplis !!", Toast.LENGTH_SHORT).show(); return; }
+        if(offre.isEmpty()) offre = "--------"; if(date.isEmpty()) date = "--------";
 
+        annonce = new Annonce();
+        annonce.employeur = String.valueOf(id); annonce.nom = offre; annonce.date_debut = date;
+        annonce.recupDonnesEmpRech(this, new Annonce.VolleyCallback() {
+            @Override
+            public void onSuccess() {affichageE();}
+            @Override
+            public void onError() {affichageError();}
+            @Override
+            public void onEmpty() {affichageEmpty();}
+        });
+    }
+
+
+    @SuppressLint("SetTextI18n")
     private void getDonnes(){
-        type = spinnerType.getSelectedItem().toString();
+        String type = spinnerType.getSelectedItem().toString();
         switch (type) {
             case "Cand. en cours acceptees":
                 textTitre.setText("Vos Cand. en cours acceptees");
@@ -146,14 +208,47 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
         });
     }
 
+    @SuppressLint("SetTextI18n")
+    private void getDonnesE(){
+        String type = spinnerType.getSelectedItem().toString();
+        if("Chercher une candidature".equals(type)){
+            layoutRecherche.setVisibility(View.VISIBLE);
+            textTitre.setText("Chercher une candidature");
+            listView.setVisibility(View.GONE);
+        }else{
+            layoutRecherche.setVisibility(View.GONE);
+            textTitre.setText("Consulter les candidatures");
+            annonce = new Annonce();
+            annonce.employeur = String.valueOf(id);
+            annonce.recupDonnesEmp(this, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichageE();}
+                @Override
+                public void onError() {affichageError();}
+                @Override
+                public void onEmpty() {affichageEmpty();}
+            });
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private void affichage(){
         affErreur.setText(candidature.donnes.length + " resultats");
         listView.setVisibility(View.VISIBLE);
         Candidature.CandidatureAdapter candidatures = new Candidature.CandidatureAdapter(this, this, candidature.donnes);
         listView.setAdapter(candidatures);
     }
+    @SuppressLint("SetTextI18n")
+    private void affichageE(){
+        affErreur.setText(annonce.donnes.length + " resultats");
+        listView.setVisibility(View.VISIBLE);
+        Annonce.AnnonceAdapter annonces = new Annonce.AnnonceAdapter(this, this, annonce.donnes);
+        listView.setAdapter(annonces);
+    }
 
+    @SuppressLint("SetTextI18n")
     private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
+    @SuppressLint("SetTextI18n")
     private void affichageEmpty(){affErreur.setText("Aucune candidature est trouvée !!"); affErreur.setTextSize(16); listView.setVisibility(View.GONE);}
 
     public void onHomeClick(View view) {onHomeClick(this);}

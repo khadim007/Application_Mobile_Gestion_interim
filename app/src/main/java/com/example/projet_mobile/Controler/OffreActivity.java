@@ -44,8 +44,6 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
         role = sharedPreferences.getString("role", "");
 
         getID();
-        //aff();
-        //click();
         if("candidat".equals(role)) getDonnes();
         else getDonnesE();
     }
@@ -58,11 +56,6 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
         ImageView im = findViewById(R.id.imCompte);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
-
-//    private void aff(){
-//        if("employeur".equals(role)) card.setVisibility(View.GONE);
-//        else cardE.setVisibility(View.GONE);
-//    }
 
     public void click2(String ident, String nom, String nomAnnonce) {
         if("partager".equals(nom)){

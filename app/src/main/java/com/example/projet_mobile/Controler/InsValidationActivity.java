@@ -125,11 +125,11 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
     }
 
     private void getID(){
-        editCode = (EditText) findViewById(R.id.editCode);
-        textErreur = (TextView) findViewById(R.id.textErreur);
+        editCode = findViewById(R.id.editCode);
+        textErreur = findViewById(R.id.textErreur);
 
-        bouttonModifier = (Button) findViewById(R.id.buttonModifier);
-        bouttonRenvoyer = (Button) findViewById(R.id.buttonRenvoyer);
+        bouttonModifier = findViewById(R.id.buttonModifier);
+        bouttonRenvoyer = findViewById(R.id.buttonRenvoyer);
 
         ImageView im = findViewById(R.id.imCompte);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
@@ -178,6 +178,7 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
         return random.nextInt(max - min + 1) + min;
     }
 
+    @SuppressLint("SetTextI18n")
     private void verifyCode(String code) {
         if (codeEnyoye.equals(codeSaisi)) {
             if("employeur".equals(role)) {
@@ -232,8 +233,8 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
 
     //-----------------------------------Envoie par Mail-----------------------------
     private void envoyerCodeEmail(String email) {
-        String senderEmail = "projet.mobile.kao@gmail.com";
-        String password = "lacclrbagojmcupu";
+        String senderEmail = "kao.projet.mobile@gmail.com";
+        String password = "pjhlyxteosgzricv";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

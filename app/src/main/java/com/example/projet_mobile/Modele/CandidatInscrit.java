@@ -44,9 +44,7 @@ public class CandidatInscrit {
     public byte[] lettre;
     public boolean accepte;
 
-    public CandidatInscrit(int id){
-        this.id = id;
-    }
+    public CandidatInscrit(int id){this.id = id;}
 
     public CandidatInscrit(String identifiant, String password){
         this.identifiant = identifiant;

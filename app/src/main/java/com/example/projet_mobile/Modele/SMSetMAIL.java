@@ -12,6 +12,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.projet_mobile.Controler.AccueilActivity;
+import com.example.projet_mobile.Controler.ContactActivity;
+import com.example.projet_mobile.Controler.GestionCandidatureActivity;
 import com.example.projet_mobile.Controler.PartageActivity;
 
 import java.util.Properties;
@@ -28,6 +30,7 @@ public class SMSetMAIL {
     private static final int PERMISSION_REQUEST_CODE = 1;
     SmsManager smsManager;
     PartageActivity partage;
+    ContactActivity contactAc;
     Context context;
     String contact;
     String text;
@@ -38,6 +41,12 @@ public class SMSetMAIL {
         this.text = text;
         this.partage = partage;
     }
+    public SMSetMAIL(Context context, String contact, String text, ContactActivity contactAc){
+        this.context = context;
+        this.contact = contact;
+        this.text = text;
+        this.contactAc = contactAc;
+    }
 
 
     //--------------------------------------------SMS--------------------------------------
@@ -47,7 +56,8 @@ public class SMSetMAIL {
             if (context.checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
                 Log.d("permission", "permission denied to SEND_SMS - requesting it");
                 String[] permissions = {Manifest.permission.SEND_SMS};
-                partage.requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                if(partage != null) partage.requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                else if(contactAc != null) contactAc.requestPermissions(permissions, PERMISSION_REQUEST_CODE);
             } else {
                 go();
             }
@@ -58,9 +68,15 @@ public class SMSetMAIL {
         String message = text;
         smsManager.sendTextMessage(contact, null, message, null, null);
 
-        if(partage.aller.equals("true")) {
+        if(partage != null) {
+            if (partage.aller.equals("true")) {
+                Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, AccueilActivity.class);
+                context.startActivity(intent);
+            }
+        }else if(contactAc != null){
             Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(context, AccueilActivity.class);
+            Intent intent = new Intent(context, GestionCandidatureActivity.class);
             context.startActivity(intent);
         }
     }
@@ -69,8 +85,8 @@ public class SMSetMAIL {
 
     //--------------------------------------------EMAIL--------------------------------------
     public void envoyerEmail() {
-        String senderEmail = "projet.mobile.kao@gmail.com";
-        String password = "lacclrbagojmcupu";
+        String senderEmail = "kao.projet.mobile@gmail.com";
+        String password = "pjhlyxteosgzricv";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -118,9 +134,15 @@ public class SMSetMAIL {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
 
-            if(partage.aller.equals("true")) {
+            if(partage != null) {
+                if (partage.aller.equals("true")) {
+                    Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, AccueilActivity.class);
+                    context.startActivity(intent);
+                }
+            }else if(contactAc != null){
                 Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, AccueilActivity.class);
+                Intent intent = new Intent(context, GestionCandidatureActivity.class);
                 context.startActivity(intent);
             }
         }

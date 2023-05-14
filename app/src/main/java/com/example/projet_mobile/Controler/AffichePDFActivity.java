@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projet_mobile.Modele.CandidatInscrit;
+import com.example.projet_mobile.Modele.Candidature;
 import com.example.projet_mobile.R;
 
 import java.io.ByteArrayOutputStream;
@@ -40,8 +41,9 @@ public class AffichePDFActivity extends AppCompatActivity implements toolbar {
     private static final int FILE_PICKER_REQUEST_CODE = 1;
     SharedPreferences sharedPreferences;
     CandidatInscrit candidat;
+    Candidature candidature;
     PdfRenderer pdfRenderer = null;
-    PdfRenderer.Page page;
+    PdfRenderer.Page page = null;
     String partie;
     String avoir;
     int id;
@@ -54,6 +56,7 @@ public class AffichePDFActivity extends AppCompatActivity implements toolbar {
     byte[] donnes = null;
 
     CardView card;
+    private TextView affErreur;
     private TextView textTitre;
     private TextView textDocTitre;
     private Button editDoc;
@@ -77,14 +80,17 @@ public class AffichePDFActivity extends AppCompatActivity implements toolbar {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        page.close();
-        pdfRenderer.close();
+        if(page != null){
+            page.close();
+            pdfRenderer.close();
+        }
     }
 
     private void getID(){
         card = findViewById(R.id.card);
         pdf = findViewById(R.id.pdf_surface_view);
 
+        affErreur = findViewById(R.id.textErreur);
         textTitre = findViewById(R.id.textTitre);
         textDocTitre = findViewById(R.id.textDocTitre);
         editDoc = findViewById(R.id.editDoc);
@@ -104,13 +110,28 @@ public class AffichePDFActivity extends AppCompatActivity implements toolbar {
     }
 
     private void getDonnes() {
-        candidat = new CandidatInscrit(id);
-        candidat.getDonnesCVouLettre(this, partie, new CandidatInscrit.VolleyCallback() {
-            @Override
-            public void onSuccess() {choix();}
-            @Override
-            public void onError() {Toast.makeText(AffichePDFActivity.this, "Un probleme est survenu. Veillez recommencer !!", Toast.LENGTH_SHORT).show();}
-        });
+        Intent intent = getIntent();
+        int ident = intent.getIntExtra("id", 0);
+        if(ident == 0) {
+            candidat = new CandidatInscrit(id);
+            candidat.getDonnesCVouLettre(this, partie, new CandidatInscrit.VolleyCallback() {
+                @Override
+                public void onSuccess() {choix();}
+                @Override
+                public void onError() {Toast.makeText(AffichePDFActivity.this, "Un probleme est survenu. Veillez recommencer !!", Toast.LENGTH_SHORT).show();}
+            });
+        }else{
+            candidature = new Candidature(ident);
+            candidature.recupDonnesCVouLet(this, partie, new Candidature.VolleyCallback() {
+                @Override
+                public void onSuccess() {choixE();}
+                @Override
+                public void onError() {Toast.makeText(AffichePDFActivity.this, "Un probleme est survenu. Veillez recommencer !!", Toast.LENGTH_SHORT).show();}
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onEmpty() {affErreur.setText("Le candidat n'a pas renseigne ce document !!");}
+            });
+        }
     }
 
     private void choix(){
@@ -132,6 +153,23 @@ public class AffichePDFActivity extends AppCompatActivity implements toolbar {
             textTitre.setText(textA);
             if (partie.equals("cv")) textDocTitre.setText(R.string.textInsCV);
             else textDocTitre.setText(String.valueOf(textL));
+            pdf.setVisibility(View.GONE);
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void choixE(){
+        card.setVisibility(View.GONE);
+        if (partie.equals("cv")) avoir = (candidature.cv == null) ? "false" : "true";
+        else avoir = (candidature.lettre == null) ? "false" : "true";
+
+        if(avoir.equals("true")) {
+            pdf.setVisibility(View.VISIBLE);
+            if (partie.equals("cv")) donnes = candidature.cv;
+            else donnes = candidature.lettre;
+            affichage();
+        }else{
+            affErreur.setText("Le candidat n'a pas renseigne ce document !!");
             pdf.setVisibility(View.GONE);
         }
     }
