@@ -3,6 +3,7 @@ package com.example.projet_mobile.Controler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,32 +11,32 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.projet_mobile.Modele.Abonnement;
-import com.example.projet_mobile.Modele.Accueil;
-import com.example.projet_mobile.Modele.Annonce;
+import com.example.projet_mobile.Modele.Agence;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
 
 public class AbonnementActivity extends AppCompatActivity implements toolbar {
-
     SharedPreferences sharedPreferences;
     Abonnement abonnement;
-    private ListView listView;
-    public Button bouttonSouscrire;
+    String role;
+    int id;
 
     private TextView affErreur;
+    private ListView listView;
+    public Button bouttonSouscrire;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_abonnement);
         sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+        role = sharedPreferences.getString("role", "");
+        id = sharedPreferences.getInt("id", 0);
 
         getID();
         click();
@@ -43,36 +44,45 @@ public class AbonnementActivity extends AppCompatActivity implements toolbar {
     }
 
     private void getID(){
+        affErreur = findViewById(R.id.affError);
         listView = findViewById(R.id.idListView);
-        affErreur = (TextView) findViewById(R.id.affError);
 
         ImageView im = findViewById(R.id.imCompte);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
-    private void click() {
+    private void click() {}
 
-    }
-
-    public void click2(int i, String type) { // dans Abonnement pour le click du button dans listView
+    public void click2(int i, String type) {
         if("souscrire".equals(type)){
             sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
-            int id = sharedPreferences.getInt("id", 0);
             if(id == 0){
-                System.out.println("Il faut qu'il se reconnecte. Code pas encore gerer.");
+                Intent intent = new Intent( AbonnementActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
             }else{
-                Employeur e = new Employeur(id);
-                e.changeAbonnement(this, i, new Employeur.VolleyCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Intent intent = new Intent( AbonnementActivity.this, AccueilActivity.class);
-                        startActivity(intent);
-                    }
-                    @Override
-                    public void onError() {
-                        affichageError();
-                    }
-                });
+                if(role.equals("agence")){
+                    Agence a = new Agence(id);
+                    a.changeAbonnement(this, i, new Agence.VolleyCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Intent intent = new Intent( AbonnementActivity.this, AccueilActivity.class);
+                            startActivity(intent);
+                        }
+                        @Override
+                        public void onError() {affichageError();}
+                    });
+                }else{
+                    Employeur e = new Employeur(id);
+                    e.changeAbonnement(this, i, new Employeur.VolleyCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Intent intent = new Intent( AbonnementActivity.this, AccueilActivity.class);
+                            startActivity(intent);
+                        }
+                        @Override
+                        public void onError() {affichageError();}
+                    });
+                }
             }
         }
     }
@@ -95,16 +105,11 @@ public class AbonnementActivity extends AppCompatActivity implements toolbar {
         Abonnement.AbonnementAdapter aboAdap = new Abonnement.AbonnementAdapter(this, this, abonnement);
         listView.setAdapter(aboAdap);
     }
+    @SuppressLint("SetTextI18n")
+    private void affichageError(){affErreur.setText("Probleme de connexion. Veillez reesayez !!");}
 
-    private void affichageError(){
-        affErreur.setText("Probleme de connexion. Veillez reesayez !!");
-    }
-
-    public void onHomeClick(View view) {
-        onHomeClick(this);
-    }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {}
 }

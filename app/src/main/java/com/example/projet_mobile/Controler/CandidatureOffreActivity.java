@@ -248,6 +248,6 @@ public class CandidatureOffreActivity extends AppCompatActivity implements toolb
 
     public void onHomeClick(View view) {onHomeClick(this);}
     public void onRechercheClick(View view) {onRechercheClick(this);}
-    public void onCandidatureClick(View view) {}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {onCompteClick(this);}
 }

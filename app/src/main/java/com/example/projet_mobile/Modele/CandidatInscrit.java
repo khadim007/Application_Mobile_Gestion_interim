@@ -51,14 +51,13 @@ public class CandidatInscrit {
         this.password = password;
     }
 
-    public CandidatInscrit(int id, String nationalite, String dateNais, String telephone, String email, String password, String ville){
+    public CandidatInscrit(int id, String nationalite, String dateNais, String telephone, String email, String ville){
         this.id = id;
         this.nationalite = nationalite;
         this.dateNais = dateNais;
         this.telephone = telephone;
         this.email = email;
         this.ville = ville;
-        this.password = password;
     }
 
     public CandidatInscrit(String prenom, String nom, String nationalite, String dateNais, String telephone, String email, String password, String ville, byte[] cv, boolean accepte){
@@ -362,6 +361,41 @@ public class CandidatInscrit {
         queue.add(request);
     }
 
+    public void verifierID(Context context, VolleyCallback callback){
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select password");
+            postData.put("id", id);
+            postData.put("password", password);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("success").equals("true")) callback.onSuccess();
+                        else callback.onError();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    }else{
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+                    }
+                    Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
 
     // ----------------------------- update ------------------------------
     public void modifierInfos(Context context,  CandidatInscrit.VolleyCallback callback) {
@@ -374,8 +408,44 @@ public class CandidatInscrit {
             postData.put("dateNais", dateNais);
             postData.put("telephone", telephone);
             postData.put("email", email);
-            postData.put("password", password);
             postData.put("ville", ville);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    } else {
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+                    }
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void modifierPassword(Context context,  CandidatInscrit.VolleyCallback callback) {
+        String url = context.getString(R.string.url) + "" + URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "update password");
+            postData.put("id", id);
+            postData.put("password", password);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
         }

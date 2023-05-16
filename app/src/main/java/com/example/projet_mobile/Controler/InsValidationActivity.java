@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projet_mobile.Modele.Agence;
 import com.example.projet_mobile.Modele.CandidatInscrit;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
@@ -40,12 +41,12 @@ import javax.mail.internet.MimeMessage;
 
 
 public class InsValidationActivity extends AppCompatActivity implements toolbar {
-
     private static final int PERMISSION_REQUEST_CODE = 1;
-    SmsManager smsManager;
-    CandidatInscrit candidat;
-    Employeur employeur;
     SharedPreferences sharedPreferences;
+    CandidatInscrit candidat;
+    SmsManager smsManager;
+    Employeur employeur;
+    Agence agence;
 
     String codeSaisi;
     String codeEnyoye;
@@ -68,7 +69,7 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
     private byte[] cv;
     private boolean accepte;
 
-    //-----------------------------------Employeur
+    //-----------------------------------Employeur ou agence
     private String nomEntreprise;
     private String nomService;
     private String nomSousService;
@@ -94,7 +95,7 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
 
         Intent intent = getIntent();
         role = intent.getStringExtra("role");
-        if("employeur".equals(role)){
+        if("employeur".equals(role) || "agence".equals(role)){
             nomEntreprise = intent.getStringExtra("nomEntreprise");
             nomService = intent.getStringExtra("nomService");
             nomSousService = intent.getStringExtra("nomSousService");
@@ -137,22 +138,48 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
 
     private void click(){
         bouttonModifier.setOnClickListener(v -> {
-            if("employeur".equals(role)){
+            if("employeur".equals(role) || "agence".equals(role)){
                 Intent intent = new Intent( InsValidationActivity.this, InscriptionEmpActivity.class);
+                if(role.equals("agence")) intent.putExtra("role", "agence");
+                else intent.putExtra("role", "employeur");
+                intent.putExtra("nomEntreprise", nomEntreprise);
+                intent.putExtra("nomService", nomService);
+                intent.putExtra("nomSousService", nomSousService);
+                intent.putExtra("numeroNationale", numeroNationale);
+                intent.putExtra("nomContact1", nomContact1);
+                intent.putExtra("nomContact2", nomContact2);
+                intent.putExtra("email1", email1);
+                intent.putExtra("email2", email2);
+                intent.putExtra("telephone1", telephone1);
+                intent.putExtra("telephone2", telephone2);
+                intent.putExtra("password", password);
+                intent.putExtra("adresse", adresse);
+                intent.putExtra("liens", liens);
                 startActivity(intent);
             }else{
                 Intent intent = new Intent( InsValidationActivity.this, InscriptionCandActivity.class);
+                intent.putExtra("prenom", prenom);
+                intent.putExtra("nom", nom);
+                intent.putExtra("nationalite", nationalite);
+                intent.putExtra("dateNais", dateNais);
+                intent.putExtra("telephone", telephone);
+                intent.putExtra("email", email);
+                intent.putExtra("password", password);
+                intent.putExtra("ville", ville);
+                intent.putExtra("cv", cv);
+                intent.putExtra("accepte", accepte);
                 startActivity(intent);
             }
         });
         bouttonRenvoyer.setOnClickListener(v -> {
-
+            if("employeur".equals(role) || "agence".equals(role)) envoyerEmp();
+            else envoyerCand();
         });
     }
 
     public void onImageValidationClick(View view) {
         codeSaisi = editCode.getText().toString();
-        verifyCode(codeSaisi);
+        verifyCode();
     }
 
 
@@ -179,12 +206,19 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
     }
 
     @SuppressLint("SetTextI18n")
-    private void verifyCode(String code) {
+    private void verifyCode() {
         if (codeEnyoye.equals(codeSaisi)) {
             if("employeur".equals(role)) {
                 employeur = new Employeur(nomEntreprise, nomService, nomSousService, numeroNationale, nomContact1, nomContact2, email1, email2, telephone1, telephone2, password, adresse, liens);
                 employeur.ajouter(this);
                 Intent intent = new Intent(InsValidationActivity.this, AbonnementActivity.class);
+                intent.putExtra("role", role);
+                startActivity(intent);
+            }else if("agence".equals(role)) {
+                agence = new Agence(nomEntreprise, nomService, nomSousService, numeroNationale, nomContact1, nomContact2, email1, email2, telephone1, telephone2, password, adresse, liens);
+                agence.ajouter(this);
+                Intent intent = new Intent(InsValidationActivity.this, AbonnementActivity.class);
+                intent.putExtra("role", role);
                 startActivity(intent);
             }else{
                 candidat = new CandidatInscrit(prenom, nom, nationalite, dateNais, telephone, email, password, ville, cv, accepte);
@@ -258,7 +292,6 @@ public class InsValidationActivity extends AppCompatActivity implements toolbar 
             message.setSubject("Code de validation envoye par KAO Interim");
 
             String messageBody = "Code : "+codeEnyoye;
-            System.out.println("=========="+codeEnyoye);
             message.setText(messageBody);
 
             SendMailTask sendMailTask = new SendMailTask();

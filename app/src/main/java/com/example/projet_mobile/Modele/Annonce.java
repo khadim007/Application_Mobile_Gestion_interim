@@ -22,7 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projet_mobile.Controler.AccueilActivity;
 import com.example.projet_mobile.Controler.GestionCandidatureActivity;
-import com.example.projet_mobile.Controler.OffreActivity;
+import com.example.projet_mobile.Controler.GestionOffreActivity;
 import com.example.projet_mobile.Controler.RechercheActivity;
 import com.example.projet_mobile.R;
 
@@ -33,7 +33,7 @@ import org.json.JSONObject;
 public class Annonce {
     private static final String URL = "annonce";
     public String[][] donnes;
-    int nbrAttributs = 13;
+    int nbrAttributs = 14;
 
     public int id;
     public String nom;
@@ -48,10 +48,13 @@ public class Annonce {
     public String mot_cles;
     public String categorie;
     public String descriptionEn;
+    public String agence;
 
     public Annonce(){}
+
     public Annonce(int id){this.id = id;}
-    public Annonce(String nom, String description, String descriptionEn, String employeur, String remuneration, String date_debut, String metier, String ville, String duree, String mot_cles, String categorie){
+
+    public Annonce(String nom, String description, String descriptionEn, String employeur, String remuneration, String date_debut, String metier, String ville, String duree, String mot_cles, String categorie, String agence){
         this.nom = nom;
         this.description = description;
         this.descriptionEn = descriptionEn;
@@ -63,13 +66,15 @@ public class Annonce {
         this.duree = duree;
         this.mot_cles = mot_cles;
         this.categorie = categorie;
+        this.agence = agence;
     }
+
 
     // -------------------------------------ADAPTER--------------------------------------------
     public static class AnnonceAdapter extends BaseAdapter {
         private AccueilActivity accueil;
         private RechercheActivity recherche;
-        private OffreActivity offre;
+        private GestionOffreActivity offre;
         private GestionCandidatureActivity candidature;
         private final LayoutInflater inflater;
         public String[][] donnes;
@@ -92,7 +97,7 @@ public class Annonce {
             }
         }
 
-        public AnnonceAdapter(Context context, OffreActivity offre, String[][] donnes) {
+        public AnnonceAdapter(Context context, GestionOffreActivity offre, String[][] donnes) {
             this.offre = offre;
             this.inflater = LayoutInflater.from(context);
             this.donnes = new String[donnes.length][donnes[0].length];
@@ -136,19 +141,27 @@ public class Annonce {
 
             String id = this.donnes[i][0];
             if(accueil != null) {
+                SharedPreferences sharedPreferences = accueil.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+                String role = sharedPreferences.getString("role", "");
                 accueil.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 accueil.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 accueil.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
-                accueil.bouttonPartager.setOnClickListener(v -> accueil.click2(id, "partager", ""));
-                accueil.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
-                accueil.bouttonCandidater.setOnClickListener(v -> accueil.click2(id, "candidater", this.donnes[i][1]));
+                if("employeur".equals(role) || "agence".equals(role)){
+                    accueil.bouttonPartager.setVisibility(View.GONE);
+                    accueil.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
+                    accueil.bouttonCandidater.setVisibility(View.GONE);
+                }else{
+                    accueil.bouttonPartager.setOnClickListener(v -> accueil.click2(id, "partager", ""));
+                    accueil.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
+                    accueil.bouttonCandidater.setOnClickListener(v -> accueil.click2(id, "candidater", this.donnes[i][1]));
+                }
             }else if(offre != null) {
                 SharedPreferences sharedPreferences = offre.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
                 String role = sharedPreferences.getString("role", "");
                 offre.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 offre.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 offre.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
-                if("employeur".equals(role)){
+                if("employeur".equals(role) || "agence".equals(role)){
                     offre.bouttonPartager.setText("Supprimer"); offre.bouttonPartager.setOnClickListener(v -> offre.click2(id, "supprimer", ""));
                     offre.bouttonConsulter.setOnClickListener(v -> offre.click2(id, "consulter", ""));
                     offre.bouttonCandidater.setText("Modifier"); offre.bouttonCandidater.setOnClickListener(v -> offre.click2(id, "modifier", this.donnes[i][1]));
@@ -194,6 +207,7 @@ public class Annonce {
             postData.put("duree", duree);
             postData.put("mot_cles", mot_cles);
             postData.put("categorie", categorie);
+            postData.put("agence", agence);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
             return;
@@ -220,6 +234,45 @@ public class Annonce {
                     }else{
                         Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
                     }
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void ajouterAgence(Context context, String json, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "insert agence");
+            postData.put("agence", agence);
+            postData.put("json", json);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            Toast.makeText(context, "succes !!", Toast.LENGTH_SHORT).show();
+                            callback.onSuccess();
+                        } else {
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    callback.onError();
                 });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
@@ -259,6 +312,7 @@ public class Annonce {
                             mot_cles = dataElement.getString("mot_cles");
                             categorie = dataElement.getString("categorie");
                             descriptionEn = dataElement.getString("descriptionEn");
+                            agence = dataElement.getString("agence");
 
                             callback.onSuccess();
                         }
@@ -280,12 +334,17 @@ public class Annonce {
         queue.add(request);
     }
 
-    public void recupDonnesEmp(Context context, Annonce.VolleyCallback callback) {
+    public void recupDonnesEmp(Context context, String role, Annonce.VolleyCallback callback) {
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {
-            postData.put("choix", "select emp");
-            postData.put("employeur", employeur);
+            if(role.equals("agence")) {
+                postData.put("choix", "select agen");
+                postData.put("agence", agence);
+            }else{
+                postData.put("choix", "select emp");
+                postData.put("employeur", employeur);
+            }
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
             return;
@@ -336,12 +395,17 @@ public class Annonce {
         queue.add(request);
     }
 
-    public void recupDonnesEmpRech(Context context, Annonce.VolleyCallback callback) {
+    public void recupDonnesEmpRech(Context context, String role, Annonce.VolleyCallback callback) {
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {
-            postData.put("choix", "select emp rech");
-            postData.put("employeur", employeur);
+            if(role.equals("agence")) {
+                postData.put("choix", "select agen rech");
+                postData.put("agence", agence);
+            }else {
+                postData.put("choix", "select emp rech");
+                postData.put("employeur", employeur);
+            }
             postData.put("nom", nom);
             postData.put("date_debut", date_debut);
         } catch (JSONException e) {
@@ -432,6 +496,7 @@ public class Annonce {
                                 donnes[i][10] = dataElement.getString("mot_cles");
                                 donnes[i][11] = dataElement.getString("categorie");
                                 donnes[i][12] = dataElement.getString("descriptionEn");
+                                donnes[i][13] = dataElement.getString("agence");
                             }
                             callback.onSuccess();
                         }
@@ -472,6 +537,7 @@ public class Annonce {
             postData.put("duree", duree);
             postData.put("mot_cles", mot_cles);
             postData.put("categorie", categorie);
+            postData.put("agence", agence);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create JSON object", e);
             return;

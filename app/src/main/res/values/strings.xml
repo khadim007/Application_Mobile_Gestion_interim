@@ -64,6 +64,7 @@
     <string-array name="spinnerAuthRole">
         <item>candidat</item>
         <item>employeur</item>
+        <item>agence</item>
     </string-array>
 
     <string name="textAuthIdentifiant">Identifiant(*) :</string>

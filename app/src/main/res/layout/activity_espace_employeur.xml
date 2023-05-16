@@ -253,10 +253,10 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_weight="0"
-                            android:src="@drawable/icone_password" />
+                            android:src="@drawable/icone_link" />
 
                         <EditText
-                            android:id="@+id/editPassword"
+                            android:id="@+id/editLiens"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -272,16 +272,32 @@
                         android:layout_marginTop="5dp"
                         android:background="@color/col" />
 
-                    <Button
-                        android:id="@+id/buttonModifier"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        android:backgroundTint="@color/col2"
                         android:gravity="center"
-                        android:text="@string/buttonModifier" />
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/buttonModifier"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:backgroundTint="@color/col2"
+                            android:text="@string/buttonModifier" />
+
+                        <Button
+                            android:id="@+id/buttonPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:backgroundTint="@color/white"
+                            android:text="mot passe"
+                            android:textColor="@color/col2" />
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -455,41 +471,6 @@
                             android:layout_height="50dp"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_offre" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_weight="1"
-                    android:onClick="onCardEmplois"
-                    android:orientation="vertical"
-                    app:cardBackgroundColor="@color/col"
-                    app:cardCornerRadius="25dp"
-                    app:cardElevation="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        tools:ignore="UseCompoundDrawables">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="Emplois"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/icone_job" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

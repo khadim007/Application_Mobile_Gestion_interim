@@ -4,13 +4,11 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Abonnement {
-    int id;
+    private static final String URL = "abonnement";
     String[][] donnes;
-    private static String URL = "abonnement";
+    int id;
 
     public String nom;
     public String prix;
@@ -39,14 +37,66 @@ public class Abonnement {
 
     public Abonnement(){}
 
-    public Abonnement(int id){
-        this.id = id;
-    }
+    public Abonnement(int id){this.id = id;}
 
     public Abonnement(String nom, String prix, String condition){
         this.nom = nom;
         this.prix = prix;
         this.condition = condition;
+    }
+
+
+    // -------------------------------------ADAPTER--------------------------------------------
+    public static class AbonnementAdapter extends BaseAdapter {
+        private int nbr = 6;
+        private Context context;
+        private final LayoutInflater inflater;
+        private final String[] titres;
+        private final String[] prix;
+        private final String[] periodes = {"par annonce", "par mois", "par trimestre", "par semestre", "par annee", "a vie"};
+        private final String[] conditions;
+        private final AbonnementActivity abonnement;
+
+        public AbonnementAdapter(Context context, AbonnementActivity abonnement, Abonnement a){
+            this.context = context;
+            this.inflater = LayoutInflater.from(context);
+            this.abonnement = abonnement;
+            nbr = a.donnes.length;
+            titres = new String[nbr];
+            conditions = new String[nbr];
+            prix = new String[nbr];
+            for(int i = 0; i < a.donnes.length; i++){
+                titres[i] = a.donnes[i][1];
+                prix[i] = a.donnes[i][2];
+                conditions[i] = a.donnes[i][3];
+            }
+        }
+
+        @Override
+        public int getCount() {return nbr;}
+        @Override
+        public Object getItem(int i) {return null;}
+        @Override
+        public long getItemId(int i) {return 0;}
+
+        @SuppressLint({"ViewHolder", "SetTextI18n"})
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = inflater.inflate(R.layout.activity_abonnement_type, null);
+
+            TextView titre = view.findViewById(R.id.textTitre);
+            TextView pr = view.findViewById(R.id.textprix);
+            TextView condition = view.findViewById(R.id.textCondition);
+
+            titre.setText(titres[i]);
+            pr.setText(prix[i]+" "+periodes[i]);
+            condition.setText(conditions[i]);
+
+            abonnement.bouttonSouscrire = view.findViewById(R.id.buttonSouscrire);
+            abonnement.bouttonSouscrire.setOnClickListener(v -> abonnement.click2((i+1), "souscrire"));
+
+            return view;
+        }
     }
 
 
@@ -65,8 +115,7 @@ public class Abonnement {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
             response -> {
                 try {
-                    JSONArray jsonArray = null;
-                    jsonArray = response.getJSONArray("donnes");
+                    JSONArray jsonArray = response.getJSONArray("donnes");
                     donnes = new String[jsonArray.length()][4];
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject dataElement = jsonArray.getJSONObject(i);
@@ -112,8 +161,7 @@ public class Abonnement {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
             response -> {
                 try {
-                    JSONArray jsonArray = null;
-                    jsonArray = response.getJSONArray("donnes");
+                    JSONArray jsonArray = response.getJSONArray("donnes");
                     JSONObject dataElement = jsonArray.getJSONObject(0);
                     nom = dataElement.getString("nom");
                     prix = dataElement.getString("prix");
@@ -143,74 +191,5 @@ public class Abonnement {
     public interface VolleyCallback {
         void onSuccess();
         void onError();
-    }
-
-
-
-
-    // -------------------------------------ADAPTER--------------------------------------------
-    public static class AbonnementAdapter extends BaseAdapter {
-        private int nbr = 6;
-        private Context context;
-        private LayoutInflater inflater;
-        private String titres[];
-        private String prix[];
-        private String periodes[] = {"par annonce", "par mois", "par trimestre", "par semestre", "par annee", "a vie"};
-        private String conditions[];
-        private AbonnementActivity abonnement;
-
-        public AbonnementAdapter(Context context, AbonnementActivity abonnement, Abonnement a){
-            this.context = context;
-            this.inflater = LayoutInflater.from(context);
-            this.abonnement = abonnement;
-            nbr = a.donnes.length;
-            titres = new String[nbr];
-            conditions = new String[nbr];
-            prix = new String[nbr];
-            for(int i = 0; i < a.donnes.length; i++){
-                titres[i] = a.donnes[i][1];
-                prix[i] = a.donnes[i][2];
-                conditions[i] = a.donnes[i][3];
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return nbr;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @SuppressLint("ViewHolder")
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = inflater.inflate(R.layout.activity_abonnement_type, null);
-
-            TextView titre = (TextView) view.findViewById(R.id.textTitre);
-            TextView pr = (TextView) view.findViewById(R.id.textprix);
-            TextView condition = (TextView) view.findViewById(R.id.textCondition);
-
-            titre.setText(titres[i]);
-            pr.setText(prix[i]+" "+periodes[i]);
-            condition.setText(conditions[i]);
-
-            abonnement.bouttonSouscrire = (Button) view.findViewById(R.id.buttonSouscrire);
-            abonnement.bouttonSouscrire.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    abonnement.click2((i+1), "souscrire");
-                }
-            });
-
-            return view;
-        }
     }
 }

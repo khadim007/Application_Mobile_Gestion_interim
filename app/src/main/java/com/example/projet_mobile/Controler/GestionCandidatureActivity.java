@@ -54,9 +54,6 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
 
     private ListView listView;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +82,7 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
     }
 
     private void aff() {
-        if("employeur".equals(role)){
+        if("employeur".equals(role) || "agence".equals(role)){
             List<String> listeValeurs = new ArrayList<>();
             listeValeurs.add("Consulter les candidatures");
             listeValeurs.add("Chercher une candidature");
@@ -98,7 +95,16 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {}
             });
-        }else getDonnes();
+        }else {
+            layoutRecherche.setVisibility(View.GONE);
+            spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {getDonnes();}
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+            getDonnes();
+        }
     }
 
     public void click2(String id, String annonce, String nom, String nomAnnonce) {
@@ -161,15 +167,27 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
         if(offre.isEmpty()) offre = "--------"; if(date.isEmpty()) date = "--------";
 
         annonce = new Annonce();
-        annonce.employeur = String.valueOf(id); annonce.nom = offre; annonce.date_debut = date;
-        annonce.recupDonnesEmpRech(this, new Annonce.VolleyCallback() {
-            @Override
-            public void onSuccess() {affichageE();}
-            @Override
-            public void onError() {affichageError();}
-            @Override
-            public void onEmpty() {affichageEmpty();}
-        });
+        if(role.equals("agence")){
+            annonce.agence = String.valueOf(id); annonce.nom = offre; annonce.date_debut = date;
+            annonce.recupDonnesEmpRech(this, role, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichageE();}
+                @Override
+                public void onError() {affichageError();}
+                @Override
+                public void onEmpty() {affichageEmpty();}
+            });
+        }else{
+            annonce.employeur = String.valueOf(id); annonce.nom = offre; annonce.date_debut = date;
+            annonce.recupDonnesEmpRech(this, role, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichageE();}
+                @Override
+                public void onError() {affichageError();}
+                @Override
+                public void onEmpty() {affichageEmpty();}
+            });
+        }
     }
 
 
@@ -190,7 +208,7 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
                 candidature = new Candidature(id, "passees");
                 break;
             case "Cand. potentielles":
-                Intent intent = new Intent( GestionCandidatureActivity.this, OffreActivity.class);
+                Intent intent = new Intent( GestionCandidatureActivity.this, GestionOffreActivity.class);
                 startActivity(intent);
                 return;
             default:
@@ -219,15 +237,27 @@ public class GestionCandidatureActivity extends AppCompatActivity implements too
             layoutRecherche.setVisibility(View.GONE);
             textTitre.setText("Consulter les candidatures");
             annonce = new Annonce();
-            annonce.employeur = String.valueOf(id);
-            annonce.recupDonnesEmp(this, new Annonce.VolleyCallback() {
-                @Override
-                public void onSuccess() {affichageE();}
-                @Override
-                public void onError() {affichageError();}
-                @Override
-                public void onEmpty() {affichageEmpty();}
-            });
+            if(role.equals("agence")){
+                annonce.agence = String.valueOf(id);
+                annonce.recupDonnesEmp(this, role, new Annonce.VolleyCallback() {
+                    @Override
+                    public void onSuccess() {affichageE();}
+                    @Override
+                    public void onError() {affichageError();}
+                    @Override
+                    public void onEmpty() {affichageEmpty();}
+                });
+            }else{
+                annonce.employeur = String.valueOf(id);
+                annonce.recupDonnesEmp(this, role, new Annonce.VolleyCallback() {
+                    @Override
+                    public void onSuccess() {affichageE();}
+                    @Override
+                    public void onError() {affichageError();}
+                    @Override
+                    public void onEmpty() {affichageEmpty();}
+                });
+            }
         }
     }
 

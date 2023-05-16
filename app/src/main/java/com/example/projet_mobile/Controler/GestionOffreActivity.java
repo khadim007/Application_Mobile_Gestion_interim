@@ -19,7 +19,7 @@ import com.example.projet_mobile.Modele.Annonce;
 import com.example.projet_mobile.Modele.Notification;
 import com.example.projet_mobile.R;
 
-public class OffreActivity extends AppCompatActivity implements toolbar {
+public class GestionOffreActivity extends AppCompatActivity implements toolbar {
 
     SharedPreferences sharedPreferences;
     Notification notification;
@@ -28,7 +28,6 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
     int id;
 
     private ListView listView;
-
     private TextView affErreur;
 
     public Button bouttonPartager;
@@ -50,7 +49,6 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
 
     private void getID(){
         affErreur = findViewById(R.id.affError);
-
         listView = findViewById(R.id.idListView);
 
         ImageView im = findViewById(R.id.imCompte);
@@ -60,29 +58,29 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
     public void click2(String ident, String nom, String nomAnnonce) {
         if("partager".equals(nom)){
             if(role.equals("candidat")) {
-                Intent intent = new Intent( OffreActivity.this, PartageActivity.class);
+                Intent intent = new Intent( GestionOffreActivity.this, PartageActivity.class);
                 intent.putExtra("id", Integer.parseInt(ident));
                 startActivity(intent);
             }else{
-                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                Intent intent = new Intent( GestionOffreActivity.this, AuthentificationActivity.class);
                 startActivity(intent);
             }
         }else if("consulter".equals(nom)){
-            Intent intent = new Intent( OffreActivity.this, VoirAnnonceActivity.class);
+            Intent intent = new Intent( GestionOffreActivity.this, VoirAnnonceActivity.class);
             intent.putExtra("id", Integer.parseInt(ident));
             startActivity(intent);
         }else if("candidater".equals(nom)){
             if(role.equals("candidat")){
-                Intent intent = new Intent( OffreActivity.this, CandidatureOffreActivity.class);
+                Intent intent = new Intent( GestionOffreActivity.this, CandidatureOffreActivity.class);
                 intent.putExtra("id", Integer.parseInt(ident));
                 intent.putExtra("nom", nomAnnonce);
                 startActivity(intent);
             }else {
-                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                Intent intent = new Intent( GestionOffreActivity.this, AuthentificationActivity.class);
                 startActivity(intent);
             }
         }else if("supprimer".equals(nom)){
-            if(role.equals("employeur")){
+            if(role.equals("employeur") || role.equals("agence")){
                 annonce.id = Integer.parseInt(ident);
                 annonce.supp(this, new Annonce.VolleyCallback() {
                     @Override
@@ -93,16 +91,16 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
                     public void onEmpty() {}
                 });
             }else {
-                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                Intent intent = new Intent( GestionOffreActivity.this, AuthentificationActivity.class);
                 startActivity(intent);
             }
         }else if("modifier".equals(nom)){
-            if(role.equals("employeur")){
-                Intent intent = new Intent( OffreActivity.this, CandidatureSpontaneActivity.class);
+            if(role.equals("employeur") || role.equals("agence")){
+                Intent intent = new Intent( GestionOffreActivity.this, CandidatureSpontaneActivity.class);
                 intent.putExtra("idE", Integer.parseInt(ident));
                 startActivity(intent);
             }else {
-                Intent intent = new Intent( OffreActivity.this, AuthentificationActivity.class);
+                Intent intent = new Intent( GestionOffreActivity.this, AuthentificationActivity.class);
                 startActivity(intent);
             }
         }
@@ -134,15 +132,28 @@ public class OffreActivity extends AppCompatActivity implements toolbar {
 
     public void getDonnesE(){
         annonce = new Annonce();
-        annonce.employeur = String.valueOf(id);
-        annonce.recupDonnesEmp(this, new Annonce.VolleyCallback() {
-            @Override
-            public void onSuccess() {affichage();}
-            @Override
-            public void onError() {affichageError();}
-            @Override
-            public void onEmpty() {affichageEmpty();}
-        });
+        if(role.equals("agence")){
+            annonce.agence = String.valueOf(id);
+            annonce.recupDonnesEmp(this, role, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichage();}
+                @Override
+                public void onError() {affichageError();}
+                @Override
+                public void onEmpty() {affichageEmpty();}
+            });
+        }else {
+            annonce.employeur = String.valueOf(id);
+            annonce.recupDonnesEmp(this, role, new Annonce.VolleyCallback() {
+                @Override
+                public void onSuccess() {affichage();}
+                @Override
+                public void onError() {affichageError();}
+                @Override
+                public void onEmpty() {affichageEmpty();}
+            });
+        }
+
     }
 
     @SuppressLint("SetTextI18n")

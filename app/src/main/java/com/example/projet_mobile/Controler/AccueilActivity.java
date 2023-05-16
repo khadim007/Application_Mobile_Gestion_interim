@@ -34,13 +34,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class AccueilActivity extends AppCompatActivity implements toolbar {
-
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
-    private Annonyme annonyme;
-    private boolean accepte;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
+    static final int REQUEST_LOCATION_PERMISSION = 1;
     SharedPreferences sharedPreferences;
+    LocationListener locationListener;
+    LocationManager locationManager;
+    Annonyme annonyme;
+    boolean accepte;
 
     private Accueil accueil;
     private ListView listView;

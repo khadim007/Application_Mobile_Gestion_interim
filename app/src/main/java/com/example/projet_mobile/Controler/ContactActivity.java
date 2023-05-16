@@ -65,7 +65,7 @@ public class ContactActivity extends AppCompatActivity implements toolbar {
                 Intent intent = getIntent();
                 int candidature = intent.getIntExtra("id", 0);
                 int candidat = intent.getIntExtra("id", 0);
-                text = "Pour votre candidature avec l'identifiant ["+candidature+"], l'employeur vous envoie le message suivant : "+editSaisi.getText().toString();
+                text = "Pour votre candidature avec l'identifiant ["+candidature+"], l'"+role+" vous envoie le message suivant : "+editSaisi.getText().toString();
                 CandidatInscrit c = new CandidatInscrit(candidat);
                 c.getDonnes(this, new CandidatInscrit.VolleyCallback() {
                     @Override

@@ -60,8 +60,6 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
     private Button editCV;
     private TextView textCV;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +67,7 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
 
         getID();
         click();
+        aff();
     }
 
     private void getID(){
@@ -150,8 +149,31 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
         startActivity(intent);
     }
 
+    private void aff() {
+        Intent intent = getIntent();
+        prenom = intent.getStringExtra("prenom");
+        if(prenom != null) {
+            nom = intent.getStringExtra("nom");
+            nationalite = intent.getStringExtra("nationalite");
+            dateNais = intent.getStringExtra("dateNais");
+            telephone = intent.getStringExtra("telephone");
+            email = intent.getStringExtra("email");
+            password1 = intent.getStringExtra("password");
+            password2 = intent.getStringExtra("password");
+            ville = intent.getStringExtra("ville");
 
-// Pour le fichier a choisir
+            editPrenom.setText(prenom);
+            editNom.setText(nom);
+            editNationalite.setText(nationalite);
+            editTelephone.setText(telephone);
+            editEmail.setText(email);
+            editPassword1.setText(password1);
+            editPassword2.setText(password2);
+            editVille.setText(ville);
+        }
+    }
+
+
     @SuppressLint("Range")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -160,8 +182,6 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
         if (requestCode == FILE_PICKER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 Uri selectedFileUri = data.getData();
-
-                // recuperer le nom du fichier
                 String fileName = null;
                 if (selectedFileUri != null) {
                     Cursor cursor = getContentResolver().query(selectedFileUri, null, null, null, null);
@@ -174,8 +194,6 @@ public class InscriptionCandActivity extends AppCompatActivity implements toolba
                     }
                 }
                 textCV.setText(fileName);
-
-                // recuperer les donnes du fichier
                 try {
                     InputStream inputStream = getContentResolver().openInputStream(selectedFileUri);
                     byte[] fileContent = new byte[inputStream.available()];

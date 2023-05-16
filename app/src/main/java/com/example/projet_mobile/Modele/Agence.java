@@ -21,17 +21,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Employeur {
+public class Agence {
 
     SharedPreferences sharedPreferences;
-    private static final String URL = "employeur";
+    private static final String URL = "agence";
     public static String succes = "good !!";
 
     private String identifiant;
     public int id;
     public String affiche;
 
-    public String nomEntreprise;
+    public String nomAgence;
     public String nomService;
     public String nomSousService;
     public String numeroNationale;
@@ -46,16 +46,16 @@ public class Employeur {
     public String liens;
     public String abonnement;
 
-    public Employeur(int id){this.id = id;}
+    public Agence(int id){this.id = id;}
 
-    public Employeur(String identifiant, String password){
+    public Agence(String identifiant, String password){
         this.identifiant = identifiant;
         this.password = password;
     }
 
-    public Employeur(int id, String nomEntreprise, String numeroNationale, String nomService, String nomSousService, String nomContact1, String nomContact2, String telephone1, String email1, String liens, String adresse){
+    public Agence(int id, String nomAgence, String numeroNationale, String nomService, String nomSousService, String nomContact1, String nomContact2, String telephone1, String email1, String liens, String adresse){
         this.id = id;
-        this.nomEntreprise = nomEntreprise;
+        this.nomAgence = nomAgence;
         this.nomService = nomService;
         this.nomSousService = nomSousService;
         this.numeroNationale = numeroNationale;
@@ -67,8 +67,8 @@ public class Employeur {
         this.adresse = adresse;
     }
 
-    public Employeur(String nomEntreprise, String nomService, String nomSousService, String numeroNationale, String nomContact1, String nomContact2, String email1, String email2, String telephone1, String telephone2, String password, String adresse, String liens){
-        this.nomEntreprise = nomEntreprise;
+    public Agence(String nomAgence, String nomService, String nomSousService, String numeroNationale, String nomContact1, String nomContact2, String email1, String email2, String telephone1, String telephone2, String password, String adresse, String liens){
+        this.nomAgence = nomAgence;
         this.nomService = nomService;
         this.nomSousService = nomSousService;
         this.numeroNationale = numeroNationale;
@@ -90,7 +90,7 @@ public class Employeur {
         JSONObject postData = new JSONObject();
         try {
             postData.put("choix", "insert");
-            postData.put("nomEntreprise", nomEntreprise);
+            postData.put("nomAgence", nomAgence);
             postData.put("nomService", nomService);
             postData.put("nomSousService", nomSousService);
             postData.put("numeroNationale", numeroNationale);
@@ -109,35 +109,35 @@ public class Employeur {
         }
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
-            response -> {
-                try {
-                    id = response.getInt("id");
-                    sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("id", id);
-                    editor.putString("role", "employeur");
-                    editor.commit();
-                    Toast.makeText(context, "Votre compte est cree avec succes !", Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            },
-            error -> {
-                if (error instanceof NetworkError) {
-                    Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
-                } else if (error instanceof ParseError) {
-                    Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
-                }
-            });
+                response -> {
+                    try {
+                        id = response.getInt("id");
+                        sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("id", id);
+                        editor.putString("role", "employeur");
+                        editor.commit();
+                        Toast.makeText(context, "Votre compte est cree avec succes !", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
 
 
     // ----------------------------- select ------------------------------
-    public void verifier(Context context, Employeur.VolleyCallback callback){
+    public void verifier(Context context, VolleyCallback callback){
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {
@@ -149,39 +149,39 @@ public class Employeur {
         }
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
-            response -> {
-                try {
-                    if(response.getString("success").equals("true")) {
-                        this.affiche = "Authentification reussie !!";
-                        id = response.getInt("id");
-                        Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
-                        callback.onSuccess();
-                    } else {
-                        this.affiche = "Identifiant ou mot de passe incorrect !!";
-                        Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
-                        callback.onError();
+                response -> {
+                    try {
+                        if(response.getString("success").equals("true")) {
+                            this.affiche = "Authentification reussie !!";
+                            id = response.getInt("id");
+                            Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                            callback.onSuccess();
+                        } else {
+                            this.affiche = "Identifiant ou mot de passe incorrect !!";
+                            Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            },
-            error -> {
-                if (error instanceof NetworkError) {
-                    this.affiche = "Pas de connexion Internet !!";
-                } else if (error instanceof ParseError) {
-                    this.affiche = "Probleme lors de la verification !!";
-                }else{
-                    this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    }else{
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
 
-                }
-                Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
-                callback.onError();
-            });
+                    }
+                    Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                    callback.onError();
+                });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
 
-    public void verifierID(Context context, Employeur.VolleyCallback callback){
+    public void verifierId(Context context, VolleyCallback callback){
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {
@@ -193,31 +193,31 @@ public class Employeur {
         }
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
-            response -> {
-                try {
-                    if(response.getString("success").equals("true")) callback.onSuccess();
-                    else callback.onError();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            },
-            error -> {
-                if (error instanceof NetworkError) {
-                    this.affiche = "Pas de connexion Internet !!";
-                } else if (error instanceof ParseError) {
-                    this.affiche = "Probleme lors de la verification !!";
-                }else{
-                    this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
-                }
-                Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
-                callback.onError();
-            });
+                response -> {
+                    try {
+                        if(response.getString("success").equals("true")) callback.onSuccess();
+                        else callback.onError();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        this.affiche = "Pas de connexion Internet !!";
+                    } else if (error instanceof ParseError) {
+                        this.affiche = "Probleme lors de la verification !!";
+                    }else{
+                        this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
+                    }
+                    Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                    callback.onError();
+                });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
 
 
-    public void recupDonnes(Context context, Employeur.VolleyCallback callback) {
+    public void recupDonnes(Context context, VolleyCallback callback) {
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
         try {
@@ -230,43 +230,43 @@ public class Employeur {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
-            response -> {
-                try {
-                    JSONArray jsonArray = response.getJSONArray("donnees");
-                    JSONObject dataElement = jsonArray.getJSONObject(0);
+                response -> {
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("donnees");
+                        JSONObject dataElement = jsonArray.getJSONObject(0);
 
-                    nomEntreprise = dataElement.getString("nomEntreprise");
-                    nomService = dataElement.getString("nomService");
-                    nomSousService = dataElement.getString("nomSousService");
-                    numeroNationale = dataElement.getString("numeroNationale");
-                    nomContact1 = dataElement.getString("nomContact1");
-                    nomContact2 = dataElement.getString("nomContact2");
-                    email1 = dataElement.getString("email1");
-                    email2 = dataElement.getString("email2");
-                    telephone1 = dataElement.getString("telephone1");
-                    telephone2 = dataElement.getString("telephone2");
-                    password = dataElement.getString("password");
-                    adresse = dataElement.getString("adresse");
-                    liens = dataElement.getString("liens");
-                    abonnement = dataElement.getString("abonnement");
-                    affiche = "good !!";
+                        nomAgence = dataElement.getString("nomAgence");
+                        nomService = dataElement.getString("nomService");
+                        nomSousService = dataElement.getString("nomSousService");
+                        numeroNationale = dataElement.getString("numeroNationale");
+                        nomContact1 = dataElement.getString("nomContact1");
+                        nomContact2 = dataElement.getString("nomContact2");
+                        email1 = dataElement.getString("email1");
+                        email2 = dataElement.getString("email2");
+                        telephone1 = dataElement.getString("telephone1");
+                        telephone2 = dataElement.getString("telephone2");
+                        password = dataElement.getString("password");
+                        adresse = dataElement.getString("adresse");
+                        liens = dataElement.getString("liens");
+                        abonnement = dataElement.getString("abonnement");
+                        affiche = "good !!";
 
-                    callback.onSuccess();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            },
-            error -> {
-                if (error instanceof NetworkError) {
-                    Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
-                } else if (error instanceof ParseError) {
-                    Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
-                }
-                affiche = "Veillez recommencer !!";
-                callback.onError();
-            });
+                        callback.onSuccess();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    affiche = "Veillez recommencer !!";
+                    callback.onError();
+                });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
@@ -274,7 +274,7 @@ public class Employeur {
 
 
     // ----------------------------- update ------------------------------
-    public void changeAbonnement(Context context, int abon, Employeur.VolleyCallback callback) {
+    public void changeAbonnement(Context context, int abon, VolleyCallback callback) {
         String url = context.getString(R.string.url) + "" + URL;
         JSONObject postData = new JSONObject();
         try {
@@ -312,14 +312,13 @@ public class Employeur {
         queue.add(request);
     }
 
-
-    public void modifierInfos(Context context,  Employeur.VolleyCallback callback) {
+    public void modifierInfos(Context context,  VolleyCallback callback) {
         String url = context.getString(R.string.url) + "" + URL;
         JSONObject postData = new JSONObject();
         try {
             postData.put("choix", "update infos");
             postData.put("id", id);
-            postData.put("nomEntreprise", nomEntreprise);
+            postData.put("nomAgence", nomAgence);
             postData.put("numeroNationale", numeroNationale);
             postData.put("nomService", nomService);
             postData.put("nomSousService", nomSousService);
@@ -360,7 +359,7 @@ public class Employeur {
         queue.add(request);
     }
 
-    public void modifierPassword(Context context,  Employeur.VolleyCallback callback) {
+    public void modifierPassword(Context context,  VolleyCallback callback) {
         String url = context.getString(R.string.url) + "" + URL;
         JSONObject postData = new JSONObject();
         try {
@@ -396,8 +395,6 @@ public class Employeur {
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
-
-
 
     public interface VolleyCallback {
         void onSuccess();

@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projet_mobile.Modele.Agence;
 import com.example.projet_mobile.Modele.CandidatInscrit;
 import com.example.projet_mobile.Modele.Employeur;
 import com.example.projet_mobile.R;
@@ -25,6 +26,7 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
     SharedPreferences sharedPreferences;
     private CandidatInscrit candidat;
     private Employeur employeur;
+    private Agence agence;
 
     private String role;
     private String identifiant;
@@ -70,14 +72,17 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
             password = editPassword.getText().toString();
             if(role.equals("employeur")) {
                 execEmp();
+            }else if(role.equals("agence")) {
+                execAgen();
             }else{
                 execCand();
             }
         });
         bouttonCreer.setOnClickListener(v -> {
             role = editRole.getSelectedItem().toString();
-            if(role.equals("employeur")) {
+            if(role.equals("employeur") || role.equals("agence")) {
                 Intent intent = new Intent(AuthentificationActivity.this, InscriptionEmpActivity.class);
+                intent.putExtra("role", role);
                 startActivity(intent);
             }else{
                 Intent intent = new Intent(AuthentificationActivity.this, InscriptionCandActivity.class);
@@ -112,13 +117,23 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
         employeur = new Employeur(identifiant, password);
         employeur.verifier(this, new Employeur.VolleyCallback() {
             @Override
-            public void onSuccess() {
-                affichage(employeur.affiche);
-            }
+            public void onSuccess() {affichage(employeur.affiche);}
             @Override
-            public void onError() {
-                affichageError(employeur.affiche);
-            }
+            public void onError() {affichageError(employeur.affiche);}
+        });
+    }
+
+    private void execAgen(){
+        if (identifiant.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Tous les champs doivent etre remplis !!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        agence = new Agence(identifiant, password);
+        agence.verifier(this, new Agence.VolleyCallback() {
+            @Override
+            public void onSuccess() {affichage(agence.affiche);}
+            @Override
+            public void onError() {affichageError(agence.affiche);}
         });
     }
 
@@ -127,6 +142,13 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
             if("employeur".equals(role)) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("id", employeur.id);
+                editor.putString("role", role);
+                editor.commit();
+                Intent intent = new Intent( AuthentificationActivity.this, AccueilActivity.class);
+                startActivity(intent);
+            }else if("agence".equals(role)) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("id", agence.id);
                 editor.putString("role", role);
                 editor.commit();
                 Intent intent = new Intent( AuthentificationActivity.this, AccueilActivity.class);

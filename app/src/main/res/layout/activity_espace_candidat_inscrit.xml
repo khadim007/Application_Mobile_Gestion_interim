@@ -166,22 +166,6 @@
                             android:inputType="textWebEmailAddress"
                             android:text=""
                             tools:ignore="LabelFor" />
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_weight="0"
-                            android:src="@drawable/icone_password" />
-
-                        <EditText
-                            android:id="@+id/editPassword"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:autofillHints=""
-                            android:inputType="text"
-                            android:text=""
-                            tools:ignore="TextFields" />
                     </LinearLayout>
 
                     <View
@@ -190,16 +174,32 @@
                         android:layout_marginTop="5dp"
                         android:background="@color/col" />
 
-                    <Button
-                        android:id="@+id/buttonModifier"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        android:backgroundTint="@color/col2"
                         android:gravity="center"
-                        android:text="@string/buttonModifier" />
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/buttonModifier"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:backgroundTint="@color/col2"
+                            android:text="@string/buttonModifier" />
+
+                        <Button
+                            android:id="@+id/buttonPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:backgroundTint="@color/white"
+                            android:text="mot passe"
+                            android:textColor="@color/col2" />
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

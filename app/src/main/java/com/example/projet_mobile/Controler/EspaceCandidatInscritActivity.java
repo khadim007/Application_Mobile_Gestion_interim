@@ -34,7 +34,6 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
     private EditText editNationalite;
     private EditText editDateNais;
     private EditText editEmail;
-    private EditText editPassword;
     private EditText editVille;
 
     private EditText editEmployeur;
@@ -43,6 +42,7 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
     private EditText editVille2;
 
     private Button bouttonModifier;
+    private Button bouttonPassword;
     private Button bouttonModifier2;
 
 
@@ -65,7 +65,6 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
         editDateNais = findViewById(R.id.editDateNais);
         editTelephone = findViewById(R.id.editTelephone);
         editEmail = findViewById(R.id.editEmail);
-        editPassword = findViewById(R.id.editPassword);
         editVille = findViewById(R.id.editVille);
 
         editEmployeur = findViewById(R.id.editEmployeur);
@@ -74,6 +73,7 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
         editVille2 = findViewById(R.id.editVille2);
 
         bouttonModifier = findViewById(R.id.buttonModifier);
+        bouttonPassword = findViewById(R.id.buttonPassword);
         bouttonModifier2 = findViewById(R.id.buttonModifier2);
 
         ImageView im = findViewById(R.id.imCompte);
@@ -87,18 +87,12 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
             String dateNais = editDateNais.getText().toString();
             String telephone = editTelephone.getText().toString();
             String email = editEmail.getText().toString();
-            String password = editPassword.getText().toString();
             String ville = editVille.getText().toString();
-
-            if (password.isEmpty()) {
-                Toast.makeText(this, "Password doit pas etre vide !!", Toast.LENGTH_SHORT).show();
-                return;
-            }
             if (email.isEmpty() && telephone.isEmpty()) {
                 Toast.makeText(this, "Il faut renseigne soit l'email, soit le telephne !!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            candidat = new CandidatInscrit(id, nationalite, dateNais, telephone, email, password, ville);
+            candidat = new CandidatInscrit(id, nationalite, dateNais, telephone, email, ville);
             candidat.modifierInfos(EspaceCandidatInscritActivity.this,  new CandidatInscrit.VolleyCallback() {
                 @Override
                 public void onSuccess() {
@@ -112,7 +106,6 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
                 }
             });
         });
-
         bouttonModifier2.setOnClickListener(v -> {
             String employeur = editEmployeur.getText().toString();
             String dateDebut = editDateDebut.getText().toString();
@@ -131,6 +124,10 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
                 @Override
                 public void onEmpty() {}
             });
+        });
+        bouttonPassword.setOnClickListener(v -> {
+            Intent intent = new Intent( EspaceCandidatInscritActivity.this, ChangePasswordActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -163,7 +160,6 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
             editDateNais.setText(candidat.dateNais);
             editTelephone.setText(candidat.telephone);
             editEmail.setText(candidat.email);
-            editPassword.setText(candidat.password);
             editVille.setText(candidat.ville);
         }else{
             affichageError(s);
@@ -193,7 +189,7 @@ public class EspaceCandidatInscritActivity extends AppCompatActivity implements 
         startActivity(intent);
     }
     public void onCardOffres(View view) {
-        Intent intent = new Intent( EspaceCandidatInscritActivity.this, OffreActivity.class);
+        Intent intent = new Intent( EspaceCandidatInscritActivity.this, GestionOffreActivity.class);
         startActivity(intent);
     }
     public void onCardEmplois(View view) {

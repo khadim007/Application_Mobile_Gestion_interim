@@ -3,6 +3,7 @@ package com.example.projet_mobile.Controler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projet_mobile.R;
 
 public class InscriptionEmpActivity extends AppCompatActivity implements toolbar {
+    String role;
 
     private Button bouttonValider;
     private Button bouttonDeja;
@@ -34,6 +37,7 @@ public class InscriptionEmpActivity extends AppCompatActivity implements toolbar
     private String adresse;
     private String liens;
 
+    private TextView textNomEntreprise;
     private EditText editNomEntreprise;
     private EditText editNomService;
     private EditText editNomSousService;
@@ -53,62 +57,61 @@ public class InscriptionEmpActivity extends AppCompatActivity implements toolbar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription_emp);
+        role = getIntent().getStringExtra("role");
 
         getID();
         click();
+        aff();
     }
 
+    @SuppressLint("SetTextI18n")
     private void getID(){
-        editNomEntreprise = (EditText) findViewById(R.id.editNomEntreprise);
-        editNomService = (EditText) findViewById(R.id.editNomService);
-        editNomSousService = (EditText) findViewById(R.id.editNomSousService);
-        editNumeroNationale = (EditText) findViewById(R.id.editNumeroNationale);
-        editNomContact1 = (EditText) findViewById(R.id.editNomContact1);
-        editNomContact2 = (EditText) findViewById(R.id.editNomContact2);
-        editEmail1 = (EditText) findViewById(R.id.editEmail1);
-        editEmail2 = (EditText) findViewById(R.id.editEmail2);
-        editTelephone1 = (EditText) findViewById(R.id.editTéléphone1);
-        editTelephone2 = (EditText) findViewById(R.id.editTéléphone2);
-        editPassword1 = (EditText) findViewById(R.id.editPassword1);
-        editPassword2 = (EditText) findViewById(R.id.editPassword2);
-        editAdresse = (EditText) findViewById(R.id.editAdresse);
-        editLiens = (EditText) findViewById(R.id.editLiens);
+        textNomEntreprise = findViewById(R.id.textNomEntreprise);
+        editNomEntreprise = findViewById(R.id.editNomEntreprise);
+        if(role.equals("agence")) {textNomEntreprise.setText("Nom Agence(*) : "); editNomEntreprise.setHint("Nom de Agence");}
+        editNomService = findViewById(R.id.editNomService);
+        editNomSousService = findViewById(R.id.editNomSousService);
+        editNumeroNationale = findViewById(R.id.editNumeroNationale);
+        editNomContact1 = findViewById(R.id.editNomContact1);
+        editNomContact2 = findViewById(R.id.editNomContact2);
+        editEmail1 = findViewById(R.id.editEmail1);
+        editEmail2 = findViewById(R.id.editEmail2);
+        editTelephone1 = findViewById(R.id.editTéléphone1);
+        editTelephone2 = findViewById(R.id.editTéléphone2);
+        editPassword1 = findViewById(R.id.editPassword1);
+        editPassword2 = findViewById(R.id.editPassword2);
+        editAdresse = findViewById(R.id.editAdresse);
+        editLiens = findViewById(R.id.editLiens);
 
-        bouttonValider = (Button) findViewById(R.id.buttonValider);
-        bouttonDeja = (Button) findViewById(R.id.buttonConnecter);
+        bouttonValider = findViewById(R.id.buttonValider);
+        bouttonDeja = findViewById(R.id.buttonConnecter);
 
         ImageView im = findViewById(R.id.imCompte);
         im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void click(){
-        bouttonValider.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nomEntreprise = editNomEntreprise.getText().toString();
-                nomService = editNomService.getText().toString();
-                nomSousService = editNomSousService.getText().toString();
-                numeroNationale = editNumeroNationale.getText().toString();
-                nomContact1 = editNomContact1.getText().toString();
-                nomContact2 = editNomContact2.getText().toString();
-                email1 = editEmail1.getText().toString();
-                email2 = editEmail2.getText().toString();
-                telephone1 = editTelephone1.getText().toString();
-                telephone2 = editTelephone2.getText().toString();
-                password1 = editPassword1.getText().toString();
-                password2 = editPassword2.getText().toString();
-                adresse = editAdresse.getText().toString();
-                liens = editLiens.getText().toString();
+        bouttonValider.setOnClickListener(v -> {
+            nomEntreprise = editNomEntreprise.getText().toString();
+            nomService = editNomService.getText().toString();
+            nomSousService = editNomSousService.getText().toString();
+            numeroNationale = editNumeroNationale.getText().toString();
+            nomContact1 = editNomContact1.getText().toString();
+            nomContact2 = editNomContact2.getText().toString();
+            email1 = editEmail1.getText().toString();
+            email2 = editEmail2.getText().toString();
+            telephone1 = editTelephone1.getText().toString();
+            telephone2 = editTelephone2.getText().toString();
+            password1 = editPassword1.getText().toString();
+            password2 = editPassword2.getText().toString();
+            adresse = editAdresse.getText().toString();
+            liens = editLiens.getText().toString();
 
-                exec();
-            }
+            exec();
         });
-        bouttonDeja.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent( InscriptionEmpActivity.this, AuthentificationActivity.class);
-                startActivity(intent);
-            }
+        bouttonDeja.setOnClickListener(v -> {
+            Intent intent = new Intent( InscriptionEmpActivity.this, AuthentificationActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -122,7 +125,8 @@ public class InscriptionEmpActivity extends AppCompatActivity implements toolbar
             return;
         }
         Intent intent = new Intent( InscriptionEmpActivity.this, InsValidationActivity.class);
-        intent.putExtra("role", "employeur");
+        if(role.equals("agence")) intent.putExtra("role", "agence");
+        else intent.putExtra("role", "employeur");
         intent.putExtra("nomEntreprise", nomEntreprise);
         intent.putExtra("nomService", nomService);
         intent.putExtra("nomSousService", nomSousService);
@@ -139,11 +143,43 @@ public class InscriptionEmpActivity extends AppCompatActivity implements toolbar
         startActivity(intent);
     }
 
-    public void onHomeClick(View view) {
-        onHomeClick(this);
+    private void aff(){
+        Intent intent = getIntent();
+        numeroNationale = intent.getStringExtra("numeroNationale");
+        if(numeroNationale != null) {
+            nomEntreprise = intent.getStringExtra("nomEntreprise");
+            nomService = intent.getStringExtra("nomService");
+            nomSousService = intent.getStringExtra("nomSousService");
+            nomContact1 = intent.getStringExtra("nomContact1");
+            nomContact2 = intent.getStringExtra("nomContact2");
+            email1 = intent.getStringExtra("email1");
+            email2 = intent.getStringExtra("email2");
+            telephone1 = intent.getStringExtra("telephone1");
+            telephone2 = intent.getStringExtra("telephone2");
+            password1 = intent.getStringExtra("password");
+            password2 = intent.getStringExtra("password");
+            adresse = intent.getStringExtra("adresse");
+            liens = intent.getStringExtra("liens");
+
+            editNumeroNationale.setText(numeroNationale);
+            editNomEntreprise.setText(nomEntreprise);
+            editNomService.setText(nomService);
+            editNomSousService.setText(nomSousService);
+            editNomContact1.setText(nomContact1);
+            editNomContact2.setText(nomContact2);
+            editEmail1.setText(email1);
+            editEmail2.setText(email2);
+            editTelephone1.setText(telephone1);
+            editTelephone2.setText(telephone2);
+            editPassword1.setText(password1);
+            editPassword2.setText(password2);
+            editAdresse.setText(adresse);
+            editLiens.setText(liens);
+        }
     }
-    public void onRechercheClick(View view) {
-        onRechercheClick(this);
-    }
+
+    public void onHomeClick(View view) {onHomeClick(this);}
+    public void onRechercheClick(View view) {onRechercheClick(this);}
+    public void onCandidatureClick(View view) {onCandidatureClick(this);}
     public void onCompteClick(View view) {}
 }
