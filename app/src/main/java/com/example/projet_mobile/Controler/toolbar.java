@@ -39,6 +39,9 @@ interface toolbar {
             if("employeur".equals(role) || "agence".equals(role)){
                 Intent intent = new Intent( context, EspaceEmployeurActivity.class);
                 context.startActivity(intent);
+            }else if("gestionnaire".equals(role)){
+                Intent intent = new Intent( context, EspaceGestionnaireActivity.class);
+                context.startActivity(intent);
             }else{
                 Intent intent = new Intent( context, EspaceCandidatInscritActivity.class);
                 context.startActivity(intent);

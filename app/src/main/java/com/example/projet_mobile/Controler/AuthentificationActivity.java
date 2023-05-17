@@ -3,12 +3,14 @@ package com.example.projet_mobile.Controler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,11 +21,13 @@ import android.widget.Toast;
 import com.example.projet_mobile.Modele.Agence;
 import com.example.projet_mobile.Modele.CandidatInscrit;
 import com.example.projet_mobile.Modele.Employeur;
+import com.example.projet_mobile.Modele.Gestionnaire;
 import com.example.projet_mobile.R;
 
 public class AuthentificationActivity extends AppCompatActivity implements toolbar {
 
     SharedPreferences sharedPreferences;
+    private Gestionnaire gestionnaire;
     private CandidatInscrit candidat;
     private Employeur employeur;
     private Agence agence;
@@ -53,6 +57,15 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
 
     private void getID(){
         editRole = findViewById(R.id.editRole);
+        editRole.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(editRole.getSelectedItem().toString().equals("gestionnaire")) bouttonCreer.setVisibility(View.GONE);
+                else bouttonCreer.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
         editIdentifiant = findViewById(R.id.editIdentifiant);
         editPassword = findViewById(R.id.editPassword);
 
@@ -70,13 +83,10 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
             role = editRole.getSelectedItem().toString();
             identifiant = editIdentifiant.getText().toString();
             password = editPassword.getText().toString();
-            if(role.equals("employeur")) {
-                execEmp();
-            }else if(role.equals("agence")) {
-                execAgen();
-            }else{
-                execCand();
-            }
+            if(role.equals("employeur")) execEmp();
+            else if(role.equals("agence")) execAgen();
+            else if(role.equals("gestionnaire")) execGes();
+            else execCand();
         });
         bouttonCreer.setOnClickListener(v -> {
             role = editRole.getSelectedItem().toString();
@@ -100,11 +110,11 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
         candidat.verifier(this, new CandidatInscrit.VolleyCallback() {
             @Override
             public void onSuccess() {
-                affichage(candidat.affiche);
+                affichage();
             }
             @Override
             public void onError() {
-                affichageError(candidat.affiche);
+                affichageError();
             }
         });
     }
@@ -117,9 +127,9 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
         employeur = new Employeur(identifiant, password);
         employeur.verifier(this, new Employeur.VolleyCallback() {
             @Override
-            public void onSuccess() {affichage(employeur.affiche);}
+            public void onSuccess() {affichage();}
             @Override
-            public void onError() {affichageError(employeur.affiche);}
+            public void onError() {affichageError();}
         });
     }
 
@@ -131,41 +141,39 @@ public class AuthentificationActivity extends AppCompatActivity implements toolb
         agence = new Agence(identifiant, password);
         agence.verifier(this, new Agence.VolleyCallback() {
             @Override
-            public void onSuccess() {affichage(agence.affiche);}
+            public void onSuccess() {affichage();}
             @Override
-            public void onError() {affichageError(agence.affiche);}
+            public void onError() {affichageError();}
         });
     }
 
-    private void affichage(String s){
-        if(CandidatInscrit.succes.equals(s)){
-            if("employeur".equals(role)) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("id", employeur.id);
-                editor.putString("role", role);
-                editor.commit();
-                Intent intent = new Intent( AuthentificationActivity.this, AccueilActivity.class);
-                startActivity(intent);
-            }else if("agence".equals(role)) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("id", agence.id);
-                editor.putString("role", role);
-                editor.commit();
-                Intent intent = new Intent( AuthentificationActivity.this, AccueilActivity.class);
-                startActivity(intent);
-            }else{
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("id", candidat.id);
-                editor.putString("role", role);
-                editor.commit();
-                Intent intent = new Intent( AuthentificationActivity.this, AccueilActivity.class);
-                startActivity(intent);
-            }
-        }else{
-            affichageError(s);
+    private void execGes(){
+        if (identifiant.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Tous les champs doivent etre remplis !!", Toast.LENGTH_SHORT).show();
+            return;
         }
+        gestionnaire = new Gestionnaire(identifiant, password);
+        gestionnaire.verifier(this, new Gestionnaire.VolleyCallback() {
+            @Override
+            public void onSuccess() {affichage();}
+            @Override
+            public void onError() {affichageError();}
+        });
     }
-    private void affichageError(String s){textErreur.setText(s);}
+
+    private void affichage(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if("employeur".equals(role)) editor.putInt("id", employeur.id);
+        else if("agence".equals(role)) editor.putInt("id", agence.id);
+        else if("gestionnaire".equals(role)) editor.putInt("id", gestionnaire.id);
+        else editor.putInt("id", candidat.id);
+        editor.putString("role", role);
+        editor.commit();
+        Intent intent = new Intent( AuthentificationActivity.this, AccueilActivity.class);
+        startActivity(intent);
+    }
+    @SuppressLint("SetTextI18n")
+    private void affichageError(){textErreur.setText("Identifiant ou mot de passe incorrect !!");}
 
     public void onHomeClick(View view) {onHomeClick(this);}
     public void onRechercheClick(View view) {onRechercheClick(this);}

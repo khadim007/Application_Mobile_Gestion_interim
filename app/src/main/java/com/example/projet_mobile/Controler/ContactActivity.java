@@ -28,8 +28,8 @@ public class ContactActivity extends AppCompatActivity implements toolbar {
     String role;
     int id;
 
-    SMSetMAIL smsMail;
-    String partie;
+    public SMSetMAIL smsMail;
+    public String partie;
 
     TextView affErreur;
     EditText editSaisi;
@@ -64,7 +64,7 @@ public class ContactActivity extends AppCompatActivity implements toolbar {
             if(partie.equals("voirCandidature")){
                 Intent intent = getIntent();
                 int candidature = intent.getIntExtra("id", 0);
-                int candidat = intent.getIntExtra("id", 0);
+                int candidat = intent.getIntExtra("candidat", 0);
                 text = "Pour votre candidature avec l'identifiant ["+candidature+"], l'"+role+" vous envoie le message suivant : "+editSaisi.getText().toString();
                 CandidatInscrit c = new CandidatInscrit(candidat);
                 c.getDonnes(this, new CandidatInscrit.VolleyCallback() {
@@ -75,8 +75,13 @@ public class ContactActivity extends AppCompatActivity implements toolbar {
                     }
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void onError() {affErreur.setText("Le groupe n'existe pas !!");}
+                    public void onError() {affErreur.setText("Error !!");}
                 });
+            }else if(partie.equals("gestGestionnaire")){
+                Intent intent = getIntent();
+                String email = intent.getStringExtra("email");
+                text = "Le gestionnaire de l'application Kao Interim vous envoie le message suivant : "+editSaisi.getText().toString();
+                envoyerEmail(email);
             }
         });
     }

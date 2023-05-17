@@ -146,7 +146,7 @@ public class Annonce {
                 accueil.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 accueil.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 accueil.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
-                if("employeur".equals(role) || "agence".equals(role)){
+                if("employeur".equals(role) || "agence".equals(role) || "gestionnaire".equals(role)){
                     accueil.bouttonPartager.setVisibility(View.GONE);
                     accueil.bouttonConsulter.setOnClickListener(v -> accueil.click2(id, "consulter", ""));
                     accueil.bouttonCandidater.setVisibility(View.GONE);
@@ -161,7 +161,7 @@ public class Annonce {
                 offre.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 offre.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 offre.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
-                if("employeur".equals(role) || "agence".equals(role)){
+                if("employeur".equals(role) || "agence".equals(role) || "gestionnaire".equals(role)){
                     offre.bouttonPartager.setText("Supprimer"); offre.bouttonPartager.setOnClickListener(v -> offre.click2(id, "supprimer", ""));
                     offre.bouttonConsulter.setOnClickListener(v -> offre.click2(id, "consulter", ""));
                     offre.bouttonCandidater.setText("Modifier"); offre.bouttonCandidater.setOnClickListener(v -> offre.click2(id, "modifier", this.donnes[i][1]));
@@ -178,12 +178,20 @@ public class Annonce {
                 candidature.bouttonConsulter.setOnClickListener(v -> candidature.click2("", id, "consulter emp", this.donnes[i][1]));
                 candidature.bouttonCandidater.setVisibility(View.GONE);
             }else{
+                SharedPreferences sharedPreferences = offre.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+                String role = sharedPreferences.getString("role", "");
                 recherche.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 recherche.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
                 recherche.bouttonCandidater = view.findViewById(R.id.buttonCandidater);
-                recherche.bouttonPartager.setOnClickListener(v -> recherche.click2(id, "partager", ""));
-                recherche.bouttonConsulter.setOnClickListener(v -> recherche.click2(id, "consulter", ""));
-                recherche.bouttonCandidater.setOnClickListener(v -> recherche.click2(id, "candidater", this.donnes[i][1]));
+                if("employeur".equals(role) || "agence".equals(role) || "gestionnaire".equals(role)){
+                    recherche.bouttonPartager.setVisibility(View.GONE);
+                    recherche.bouttonConsulter.setOnClickListener(v -> recherche.click2(id, "consulter", ""));
+                    recherche.bouttonCandidater.setVisibility(View.GONE);
+                }else{
+                    recherche.bouttonPartager.setOnClickListener(v -> recherche.click2(id, "partager", ""));
+                    recherche.bouttonConsulter.setOnClickListener(v -> recherche.click2(id, "consulter", ""));
+                    recherche.bouttonCandidater.setOnClickListener(v -> recherche.click2(id, "candidater", this.donnes[i][1]));
+                }
             }
             return view;
         }

@@ -23,10 +23,10 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class CandidatInscrit {
-
-    SharedPreferences sharedPreferences;
     private static final String URL = "candidat_inscrit";
     public static String succes = "Authentification reussie !!";
+    SharedPreferences sharedPreferences;
+    public String[][] donnes;
 
     private String identifiant;
     public int id;
@@ -43,6 +43,8 @@ public class CandidatInscrit {
     public byte[] cv;
     public byte[] lettre;
     public boolean accepte;
+
+    public CandidatInscrit(){}
 
     public CandidatInscrit(int id){this.id = id;}
 
@@ -390,6 +392,58 @@ public class CandidatInscrit {
                         this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
                     }
                     Toast.makeText(context, affiche, Toast.LENGTH_SHORT).show();
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    public void recupAll(Context context, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select all");
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("donnes").equals("false")){
+                            callback.onError();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnes");
+                            donnes = new String[jsonArray.length()][9];
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject dataElement = jsonArray.getJSONObject(i);
+                                donnes[i][0] = dataElement.getString("id_");
+                                donnes[i][1] = dataElement.getString("prenom");
+                                donnes[i][2] = dataElement.getString("nom");
+                                donnes[i][3] = dataElement.getString("nationalite");
+                                donnes[i][4] = dataElement.getString("dateNaissance");
+                                donnes[i][5] = dataElement.getString("telephone");
+                                donnes[i][6] = dataElement.getString("email");
+                                donnes[i][7] = dataElement.getString("password");
+                                donnes[i][8] = dataElement.getString("ville");
+                            }
+                            callback.onSuccess();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    affiche = "Veillez recommencer !!";
                     callback.onError();
                 });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

@@ -40,6 +40,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
     LocationManager locationManager;
     Annonyme annonyme;
     boolean accepte;
+    String role;
 
     private Accueil accueil;
     private ListView listView;
@@ -56,6 +57,7 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
         sharedPreferences = getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+        role = sharedPreferences.getString("role", "");
 
         localisation(this);
         getID();
@@ -138,7 +140,6 @@ public class AccueilActivity extends AppCompatActivity implements toolbar {
     }
 
     public void click2(String id, String nom, String annonce) {
-        String role = sharedPreferences.getString("role", "");
         Intent intent = null;
         if("partager".equals(nom)){
             if(role.equals("candidat")) {

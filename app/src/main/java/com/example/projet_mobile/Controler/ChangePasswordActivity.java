@@ -18,10 +18,12 @@ import android.widget.TextView;
 import com.example.projet_mobile.Modele.Agence;
 import com.example.projet_mobile.Modele.CandidatInscrit;
 import com.example.projet_mobile.Modele.Employeur;
+import com.example.projet_mobile.Modele.Gestionnaire;
 import com.example.projet_mobile.R;
 
 public class ChangePasswordActivity extends AppCompatActivity implements toolbar {
     SharedPreferences sharedPreferences;
+    Gestionnaire gestionnaire;
     CandidatInscrit candidat;
     Employeur employeur;
     Agence agence;
@@ -99,6 +101,15 @@ public class ChangePasswordActivity extends AppCompatActivity implements toolbar
                 @Override
                 public void onError() {textErreur.setText("L'ancien mot de passe saisi est incorrct !!");}
             });
+        }else if("gestionnaire".equals(role)){
+            gestionnaire = new Gestionnaire(id); gestionnaire.password = ancienPassword;
+            gestionnaire.verifierId(this, new Gestionnaire.VolleyCallback() {
+                @Override
+                public void onSuccess() {exec2();}
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onError() {textErreur.setText("L'ancien mot de passe saisi est incorrct !!");}
+            });
         }else{
             candidat = new CandidatInscrit(id); candidat.password = ancienPassword;
             candidat.verifierID(this, new CandidatInscrit.VolleyCallback() {
@@ -130,6 +141,18 @@ public class ChangePasswordActivity extends AppCompatActivity implements toolbar
                 @Override
                 public void onSuccess() {
                     Intent intent = new Intent(ChangePasswordActivity.this, EspaceEmployeurActivity.class);
+                    startActivity(intent);
+                }
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onError() {textErreur.setText("Error. Veillez reconmmencer !!");}
+            });
+        }else if("gestionnaire".equals(role)){
+            gestionnaire.password = password;
+            gestionnaire.modifierPassword(this, new Gestionnaire.VolleyCallback() {
+                @Override
+                public void onSuccess() {
+                    Intent intent = new Intent(ChangePasswordActivity.this, EspaceGestionnaireActivity.class);
                     startActivity(intent);
                 }
                 @SuppressLint("SetTextI18n")

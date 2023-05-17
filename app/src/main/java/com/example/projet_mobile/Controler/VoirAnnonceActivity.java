@@ -85,7 +85,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
 
     @SuppressLint("SetTextI18n")
     private void click() {
-        if(role.equals("agence") || role.equals("employeur") || id == 0){
+        if(role.equals("agence") || role.equals("employeur") || id == 0 || role.equals("gestionnaire")){
             bouttonPartager.setVisibility(View.GONE);
             bouttonCandidater.setVisibility(View.GONE);
             bouttonEnregistrer.setVisibility(View.GONE);

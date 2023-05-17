@@ -2,9 +2,15 @@ package com.example.projet_mobile.Modele;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -14,6 +20,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.projet_mobile.Controler.AccueilActivity;
+import com.example.projet_mobile.Controler.GestionCandidatureActivity;
+import com.example.projet_mobile.Controler.GestionGestionnaireActivity;
+import com.example.projet_mobile.Controler.GestionOffreActivity;
+import com.example.projet_mobile.Controler.RechercheActivity;
 import com.example.projet_mobile.R;
 
 import org.json.JSONArray;
@@ -22,10 +33,10 @@ import org.json.JSONObject;
 
 
 public class Agence {
-
-    SharedPreferences sharedPreferences;
     private static final String URL = "agence";
     public static String succes = "good !!";
+    SharedPreferences sharedPreferences;
+    public String[][] donnes;
 
     private String identifiant;
     public int id;
@@ -45,6 +56,8 @@ public class Agence {
     public String adresse;
     public String liens;
     public String abonnement;
+
+    public Agence(){}
 
     public Agence(int id){this.id = id;}
 
@@ -84,6 +97,76 @@ public class Agence {
     }
 
 
+    // -------------------------------------ADAPTER--------------------------------------------
+    public static class AgenceAdapter extends BaseAdapter {
+        private GestionGestionnaireActivity gestion;
+        private final LayoutInflater inflater;
+        public String[][] donnes;
+        public String partie;
+
+        public AgenceAdapter(Context context, GestionGestionnaireActivity gestion, String[][] donnes, String partie) {
+            this.gestion = gestion;
+            this.inflater = LayoutInflater.from(context);
+            this.donnes = new String[donnes.length][donnes[0].length];
+            for(int i = 0; i < donnes.length; i++){
+                System.arraycopy(donnes[i], 0, this.donnes[i], 0, donnes[i].length);
+            }
+            this.partie = partie;
+        }
+
+        @Override
+        public int getCount() {return this.donnes.length;}
+        @Override
+        public Object getItem(int i) {return null;}
+        @Override
+        public long getItemId(int i) {return 0;}
+
+        @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = inflater.inflate(R.layout.activity_affichage_gest_gestionnaire, null);
+
+            TextView nom = view.findViewById(R.id.textNom);
+            TextView num = view.findViewById(R.id.textNumero);
+            TextView ser = view.findViewById(R.id.textService);
+            TextView nCo = view.findViewById(R.id.textNomContact);
+            TextView ema = view.findViewById(R.id.textEmail);
+            TextView tel = view.findViewById(R.id.textTelephone);
+
+            gestion.bouttonRefuser = view.findViewById(R.id.buttonRefuser);
+            gestion.bouttonContacter = view.findViewById(R.id.buttonContacter);
+
+            String id = this.donnes[i][0];
+            if(partie.equals("agence") || partie.equals("employeur")) {
+                nom.setText(this.donnes[i][1]);
+                num.setText(this.donnes[i][4]);
+                ser.setText(this.donnes[i][2] + " & " + this.donnes[i][3]);
+                nCo.setText(this.donnes[i][5] + " & " + this.donnes[i][6]);
+                ema.setText(this.donnes[i][7] + " & " + this.donnes[i][8]);
+                tel.setText(this.donnes[i][9] + " & " + this.donnes[i][10]);
+
+                gestion.bouttonRefuser.setOnClickListener(v -> gestion.click2(id, "refuser", this.donnes[i][7]));
+                gestion.bouttonContacter.setOnClickListener(v -> gestion.click2(id, "contacter", this.donnes[i][7]));
+
+            }else {
+                nom.setText(this.donnes[i][1]+" "+this.donnes[i][2]);
+                num.setVisibility(View.GONE);
+                ser.setText(this.donnes[i][4]);
+                nCo.setText(this.donnes[i][3]);
+                ema.setText(this.donnes[i][6]);
+                tel.setText(this.donnes[i][5]);
+
+                gestion.bouttonRefuser.setText("cv"); gestion.bouttonRefuser.setOnClickListener(v -> gestion.click2(id, "cv", ""));
+                gestion.bouttonContacter.setText("lettre"); gestion.bouttonContacter.setOnClickListener(v -> gestion.click2(id, "lettre", ""));
+            }
+            return view;
+        }
+    }
+
+
+
+
+
     // ----------------------------- insert ------------------------------
     public void ajouter(Context context) {
         String url = context.getString(R.string.url)+""+URL;
@@ -115,7 +198,7 @@ public class Agence {
                         sharedPreferences = context.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("id", id);
-                        editor.putString("role", "employeur");
+                        editor.putString("role", "agence");
                         editor.commit();
                         Toast.makeText(context, "Votre compte est cree avec succes !", Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
@@ -216,7 +299,6 @@ public class Agence {
         queue.add(request);
     }
 
-
     public void recupDonnes(Context context, VolleyCallback callback) {
         String url = context.getString(R.string.url)+""+URL;
         JSONObject postData = new JSONObject();
@@ -271,7 +353,63 @@ public class Agence {
         queue.add(request);
     }
 
+    public void recupAll(Context context, VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "select all");
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
 
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if(response.getString("donnees").equals("false")){
+                            callback.onError();
+                        }else {
+                            JSONArray jsonArray = response.getJSONArray("donnees");
+                            donnes = new String[jsonArray.length()][15];
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject dataElement = jsonArray.getJSONObject(i);
+                                donnes[i][0] = dataElement.getString("id_");
+                                donnes[i][1] = dataElement.getString("nomAgence");
+                                donnes[i][2] = dataElement.getString("nomService");
+                                donnes[i][3] = dataElement.getString("nomSousService");
+                                donnes[i][4] = dataElement.getString("numeroNationale");
+                                donnes[i][5] = dataElement.getString("nomContact1");
+                                donnes[i][6] = dataElement.getString("nomContact2");
+                                donnes[i][7] = dataElement.getString("email1");
+                                donnes[i][8] = dataElement.getString("email2");
+                                donnes[i][9] = dataElement.getString("telephone1");
+                                donnes[i][10] = dataElement.getString("telephone2");
+                                donnes[i][11] = dataElement.getString("password");
+                                donnes[i][12] = dataElement.getString("adresse");
+                                donnes[i][13] = dataElement.getString("liens");
+                                donnes[i][14] = dataElement.getString("abonnement");
+                            }
+                            callback.onSuccess();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme de json !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
+                    affiche = "Veillez recommencer !!";
+                    callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
 
     // ----------------------------- update ------------------------------
     public void changeAbonnement(Context context, int abon, VolleyCallback callback) {
@@ -391,6 +529,45 @@ public class Agence {
                         this.affiche = "Erreur lors de l'enregistrement. Veuillez reesayez !!";
                     }
                     callback.onError();
+                });
+        request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+    // ----------------------------- delete ------------------------------
+    public void supp(Context context, Agence.VolleyCallback callback) {
+        String url = context.getString(R.string.url)+""+URL;
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("choix", "supprimer line");
+            postData.put("id", id);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON object", e);
+            return;
+        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData,
+                response -> {
+                    try {
+                        if (response.getString("success").equals("true")) {
+                            Toast.makeText(context, "Suppression reussie !!", Toast.LENGTH_SHORT).show();
+                            callback.onSuccess();
+                        } else {
+                            Toast.makeText(context, "Un probleme est survenu. Veillez reessayer !!", Toast.LENGTH_SHORT).show();
+                            callback.onError();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    if (error instanceof NetworkError) {
+                        Toast.makeText(context, "Pas de connexion Internet !", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(context, "Probleme lors de la creation !", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Erreur lors de l'enregistrement. Veuillez reesayez !", Toast.LENGTH_SHORT).show();
+                    }
                 });
         request.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);

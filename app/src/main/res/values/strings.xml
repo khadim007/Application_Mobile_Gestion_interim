@@ -65,6 +65,7 @@
         <item>candidat</item>
         <item>employeur</item>
         <item>agence</item>
+        <item>gestionnaire</item>
     </string-array>
 
     <string name="textAuthIdentifiant">Identifiant(*) :</string>

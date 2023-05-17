@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.projet_mobile.Controler.AccueilActivity;
 import com.example.projet_mobile.Controler.ContactActivity;
+import com.example.projet_mobile.Controler.EspaceGestionnaireActivity;
 import com.example.projet_mobile.Controler.GestionCandidatureActivity;
 import com.example.projet_mobile.Controler.PartageActivity;
 
@@ -141,9 +142,15 @@ public class SMSetMAIL {
                     context.startActivity(intent);
                 }
             }else if(contactAc != null){
-                Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, GestionCandidatureActivity.class);
-                context.startActivity(intent);
+                if(contactAc.partie.equals("gestGestionnaire")){
+                    Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, EspaceGestionnaireActivity.class);
+                    context.startActivity(intent);
+                }else{
+                    Toast.makeText(context, "Succes !!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, GestionCandidatureActivity.class);
+                    context.startActivity(intent);
+                }
             }
         }
 
