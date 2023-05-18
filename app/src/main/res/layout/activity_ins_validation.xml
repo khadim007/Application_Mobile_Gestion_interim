@@ -4,26 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back"
+    android:background="@drawable/fond4"
     tools:context=".Controler.AuthentificationActivity">
 
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/back"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="10dp"
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/icone_account"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/icone_auth"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="155dp"
-            tools:layout_editor_absoluteY="86dp" />
+            tools:layout_editor_absoluteY="86dp"
+            app:tint="#FFFFFF"/>
 
         <TextView
             android:id="@+id/textErreur"
@@ -35,6 +35,15 @@
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="100dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/textInsValTitre"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
@@ -57,21 +66,6 @@
             android:padding="10dp"
             tools:ignore="MissingConstraints">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/textInsValTitre"
-                android:textColor="@color/col2"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/col2" />
 
             <TextView
                 android:layout_width="wrap_content"

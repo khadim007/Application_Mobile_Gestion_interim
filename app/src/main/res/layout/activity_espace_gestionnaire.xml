@@ -200,6 +200,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_candidature" />
                     </LinearLayout>
@@ -237,6 +238,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_candidature" />
                     </LinearLayout>
@@ -272,99 +274,48 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_offre" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:onClick="onCardDeconnexion"
+                app:cardBackgroundColor="@color/rouge"
                 android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
+                app:cardCornerRadius="25dp"
+                app:cardElevation="10dp">
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:orientation="horizontal"
-                android:paddingTop="15dp">
-
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:onClick="onCardAjouter"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    app:cardBackgroundColor="@color/col2"
-                    app:cardCornerRadius="25dp"
-                    app:cardElevation="10dp">
+                    tools:ignore="UseCompoundDrawables">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingBottom="10dp"
-                        tools:ignore="UseCompoundDrawables">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Deconnexion"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="Ajouter un gestionnaire"
-                            android:textColor="@color/white"
-                            android:textSize="19sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/icone_account" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_weight="1"
-                    android:onClick="onCardDeconnexion"
-                    app:cardBackgroundColor="@color/rouge"
-                    android:orientation="vertical"
-                    app:cardCornerRadius="25dp"
-                    app:cardElevation="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        tools:ignore="UseCompoundDrawables">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="Deconnexion"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/icone_deconnect" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:tint="#FFFFFF"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/icone_deconnect" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
 

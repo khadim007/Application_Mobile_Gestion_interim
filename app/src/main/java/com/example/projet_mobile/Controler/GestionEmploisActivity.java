@@ -1,14 +1,17 @@
 package com.example.projet_mobile.Controler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +62,9 @@ public class GestionEmploisActivity extends AppCompatActivity implements toolbar
         button4 = findViewById(R.id.button4);
 
         titres = new String[7][0];
+
+        ImageView im = findViewById(R.id.imCompte);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     private void click(){

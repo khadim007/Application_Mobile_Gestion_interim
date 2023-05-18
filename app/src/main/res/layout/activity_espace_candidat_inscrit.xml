@@ -244,7 +244,8 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center_horizontal"
-                            android:src="@drawable/icone_cv" />
+                            android:src="@drawable/icone_cv"
+                            app:tint="#FFFFFF"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -279,6 +280,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_lettre" />
                     </LinearLayout>
@@ -449,6 +451,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_candidature" />
                     </LinearLayout>
@@ -485,6 +488,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_offre" />
                     </LinearLayout>
@@ -520,6 +524,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:tint="#FFFFFF"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/icone_job" />
                     </LinearLayout>
@@ -558,6 +563,7 @@
                         android:layout_below="@id/textDeco"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="35dp"
+                        app:tint="#FFFFFF"
                         android:src="@drawable/icone_deconnect" />
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

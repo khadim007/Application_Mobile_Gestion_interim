@@ -56,7 +56,7 @@ public class ContactActivity extends AppCompatActivity implements toolbar {
         buttonEnvoyer = findViewById(R.id.buttonEnvoyer);
 
         ImageView im = findViewById(R.id.imRecherche);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     private void click() {

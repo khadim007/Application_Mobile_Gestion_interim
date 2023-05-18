@@ -58,7 +58,7 @@ public class EspaceGestionnaireActivity extends AppCompatActivity implements too
         bouttonPassword = findViewById(R.id.buttonPassword);
 
         ImageView im = findViewById(R.id.imCompte);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -118,9 +118,6 @@ public class EspaceGestionnaireActivity extends AppCompatActivity implements too
         Intent intent = new Intent( EspaceGestionnaireActivity.this, GestionGestionnaireActivity.class);
         intent.putExtra("partie", "agence");
         startActivity(intent);
-    }
-    public void onCardAjouter(View view) {
-
     }
     public void onCardDeconnexion(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();

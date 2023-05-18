@@ -97,7 +97,7 @@ public class AffichePDFActivity extends AppCompatActivity implements toolbar {
         textDoc = findViewById(R.id.textDoc);
 
         ImageView im = findViewById(R.id.imCompte);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     private void click() {

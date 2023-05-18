@@ -122,7 +122,7 @@ public class CandidatureSpontaneActivity extends AppCompatActivity implements to
         bouttonEnvoyerE = findViewById(R.id.buttonValiderE);
 
         ImageView im = findViewById(R.id.imCandidature);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     private void aff(){

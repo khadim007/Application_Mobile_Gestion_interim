@@ -86,7 +86,7 @@ public class EspaceEmployeurActivity extends AppCompatActivity implements toolba
         bouttonPassword = findViewById(R.id.buttonPassword);
 
         ImageView im = findViewById(R.id.imCompte);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     @SuppressLint("ClickableViewAccessibility")

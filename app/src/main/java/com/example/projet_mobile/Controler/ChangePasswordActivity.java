@@ -59,7 +59,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements toolbar
         bouttonModifier = findViewById(R.id.buttonModifier);
 
         ImageView im = findViewById(R.id.imCompte);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     @SuppressLint("SetTextI18n")

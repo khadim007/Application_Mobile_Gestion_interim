@@ -89,7 +89,7 @@ public class CandidatureOffreActivity extends AppCompatActivity implements toolb
         bouttonEnvoyer = findViewById(R.id.buttonValider);
 
         ImageView im = findViewById(R.id.imCandidature);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     private void click(){

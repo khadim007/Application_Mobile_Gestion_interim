@@ -74,7 +74,7 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         textMotCles = findViewById(R.id.textMotCles);
 
         ImageView im = findViewById(R.id.imRecherche);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
 
         bouttonPartager = findViewById(R.id.buttonPartager);
         bouttonCandidater = findViewById(R.id.buttonCandidater);

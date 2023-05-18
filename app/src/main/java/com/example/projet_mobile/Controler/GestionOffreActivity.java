@@ -52,7 +52,7 @@ public class GestionOffreActivity extends AppCompatActivity implements toolbar {
         listView = findViewById(R.id.idListView);
 
         ImageView im = findViewById(R.id.imCompte);
-        im.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_IN);
+        im.setColorFilter(ContextCompat.getColor(this, R.color.col2), PorterDuff.Mode.SRC_IN);
     }
 
     public void click2(String ident, String nom, String nomAnnonce) {
