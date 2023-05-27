@@ -148,7 +148,7 @@
                     android:autofillHints=""
                     android:ems="10"
                     android:hint="les villes .."
-                    android:inputType="date"
+                    android:inputType="text"
                     android:textSize="16sp"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>

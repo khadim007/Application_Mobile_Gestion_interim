@@ -83,26 +83,71 @@ public class VoirAnnonceActivity extends AppCompatActivity implements toolbar {
         bouttonSimilaires = findViewById(R.id.buttonSimilaires);
     }
 
-    @SuppressLint("SetTextI18n")
+//    @SuppressLint("SetTextI18n")
+//    private void click() {
+//        if(role.equals("agence") || role.equals("employeur") || id == 0 || role.equals("gestionnaire")){
+//            bouttonPartager.setVisibility(View.GONE);
+//            bouttonCandidater.setVisibility(View.GONE);
+//            bouttonEnregistrer.setVisibility(View.GONE);
+//        }
+//        bouttonPartager.setOnClickListener(v -> {
+//            Intent intent = new Intent( VoirAnnonceActivity.this, PartageActivity.class);
+//            intent.putExtra("id", idAnnonce);
+//            startActivity(intent);
+//        });
+//        bouttonCandidater.setOnClickListener(v -> {
+//            Intent intent = new Intent( VoirAnnonceActivity.this, CandidatureOffreActivity.class);
+//            intent.putExtra("id", idAnnonce);
+//            intent.putExtra("nom", annonce.nom);
+//            startActivity(intent);
+//        });
+//        bouttonTraduire.setOnClickListener(v -> textDescription.setText(annonce.descriptionEn));
+//        bouttonEnregistrer.setOnClickListener(v -> Toast.makeText(this, "Cette fonctionnalite n'est pas encore gere !!", Toast.LENGTH_SHORT).show());
+//        bouttonSimilaires.setOnClickListener(v -> {
+//            Intent intent = new Intent( VoirAnnonceActivity.this, RechercheActivity.class);
+//            intent.putExtra("specialite", annonce.metier);
+//            intent.putExtra("lieu", annonce.ville);
+//            startActivity(intent);
+//        });
+//    }
+
     private void click() {
-        if(role.equals("agence") || role.equals("employeur") || id == 0 || role.equals("gestionnaire")){
+        int ident = sharedPreferences.getInt("id", 0);
+        if(role.equals("agence") || role.equals("employeur") || role.equals("gestionnaire")){
             bouttonPartager.setVisibility(View.GONE);
             bouttonCandidater.setVisibility(View.GONE);
             bouttonEnregistrer.setVisibility(View.GONE);
         }
         bouttonPartager.setOnClickListener(v -> {
-            Intent intent = new Intent( VoirAnnonceActivity.this, PartageActivity.class);
-            intent.putExtra("id", idAnnonce);
-            startActivity(intent);
+            if(ident == 0){
+                Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent( VoirAnnonceActivity.this, PartageActivity.class);
+                intent.putExtra("id", idAnnonce);
+                startActivity(intent);
+            }
         });
         bouttonCandidater.setOnClickListener(v -> {
-            Intent intent = new Intent( VoirAnnonceActivity.this, CandidatureOffreActivity.class);
-            intent.putExtra("id", idAnnonce);
-            intent.putExtra("nom", annonce.nom);
-            startActivity(intent);
+            if(ident == 0){
+                Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent( VoirAnnonceActivity.this, CandidatureOffreActivity.class);
+                intent.putExtra("id", idAnnonce);
+                intent.putExtra("nom", annonce.nom);
+                startActivity(intent);
+            }
         });
-        bouttonTraduire.setOnClickListener(v -> textDescription.setText(annonce.descriptionEn));
-        bouttonEnregistrer.setOnClickListener(v -> Toast.makeText(this, "Cette fonctionnalite n'est pas encore gere !!", Toast.LENGTH_SHORT).show());
+        bouttonTraduire.setOnClickListener(v -> textDescription.setText(annonce.description));
+        bouttonEnregistrer.setOnClickListener(v -> {
+            if(ident == 0){
+                Intent intent = new Intent( VoirAnnonceActivity.this, AuthentificationActivity.class);
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, "Cette fonctionnalite n'est pas encore gere !!", Toast.LENGTH_SHORT).show();
+            }
+        });
         bouttonSimilaires.setOnClickListener(v -> {
             Intent intent = new Intent( VoirAnnonceActivity.this, RechercheActivity.class);
             intent.putExtra("specialite", annonce.metier);

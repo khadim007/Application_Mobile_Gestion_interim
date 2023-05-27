@@ -178,7 +178,7 @@ public class Annonce {
                 candidature.bouttonConsulter.setOnClickListener(v -> candidature.click2("", id, "consulter emp", this.donnes[i][1]));
                 candidature.bouttonCandidater.setVisibility(View.GONE);
             }else{
-                SharedPreferences sharedPreferences = offre.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = recherche.getSharedPreferences("CandidatInscrit", Context.MODE_PRIVATE);
                 String role = sharedPreferences.getString("role", "");
                 recherche.bouttonPartager = view.findViewById(R.id.buttonPartage);
                 recherche.bouttonConsulter = view.findViewById(R.id.buttonConsuler);
